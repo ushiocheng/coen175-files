@@ -20,3 +20,4 @@ int main(void)
     scanf("%d", &n);
     printf("%d\n", fib(n));
 }
+
