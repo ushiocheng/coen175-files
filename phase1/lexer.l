@@ -22,8 +22,8 @@ using namespace std;
 ==              { cout << "operator " << yytext << endl; }
 !=              { cout << "operator " << yytext << endl; }
 =               { cout << "operator " << yytext << endl; }
-<=              { cout << "operator " << yytext << endl; }
-<               { cout << "operator " << yytext << endl; }
+\<=              { cout << "operator " << yytext << endl; }
+\<               { cout << "operator " << yytext << endl; }
 >=              { cout << "operator " << yytext << endl; }
 >               { cout << "operator " << yytext << endl; }
 \+\+            { cout << "operator " << yytext << endl; }
