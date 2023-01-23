@@ -1,0 +1,17 @@
+void match(int token_type = lookahead, string caller = "");
+void start();
+void translation_unit();
+void rest_of_global_declarator_list();
+void global_declarator();
+void pointers();
+void specifier();
+inline bool lh_is_specifier();
+void rest_of_function_definition();
+void parameters();
+void parameter();
+void declarations();
+void declarator_list();
+void declarator();
+void statements();
+void statement();
+void assignment();
