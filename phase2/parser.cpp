@@ -5,10 +5,10 @@
 #include "lexer.h"
 #include "tokens.h"
 
-#define DEBUG
+// #define DEBUG
 #ifdef DEBUG
-    #define DEBUG_PRINT_FUNC_TRACE
-    #define DEBUG_PRINT_MATCHING
+#define DEBUG_PRINT_FUNC_TRACE
+#define DEBUG_PRINT_MATCHING
 #endif
 
 using namespace std;
