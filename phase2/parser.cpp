@@ -207,12 +207,12 @@ void match(int token_type)
 {
     if (lookahead == token_type)
     {
+        lookahead = yylex();
 #ifdef DEBUG_PRINT_MATCHING
         cout << "[DEBUG] lookahead: ";
         prettyPrint(lookahead);
         cout << endl;
 #endif
-        lookahead = yylex();
         // TODO: pass token content back to caller for sematics?
     }
     else
