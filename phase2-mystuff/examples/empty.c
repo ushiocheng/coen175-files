@@ -1,0 +1,1 @@
+// An empty file is valid c file isn't it
