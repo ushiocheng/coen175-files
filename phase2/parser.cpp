@@ -41,6 +41,10 @@ int main() {
 }
 
 void prettyPrint(int tmp) {
+    if (tmp == 0) {
+        cout << "Done";
+        return;
+    }
     if (tmp < 256) {
         cout << (char)tmp;
     } else {
@@ -179,9 +183,6 @@ void prettyPrint(int tmp) {
                 break;
             case NUM:
                 cout << "NUM";
-                break;
-            case Done:
-                cout << "Done";
                 break;
             default:
                 cout << "????";
