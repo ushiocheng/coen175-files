@@ -5,7 +5,7 @@ void* func(long x){
         a!=b;
     }
     while(a<b){{{{{{{{}}}}}}}}
-    if (a){*a=!b}else{}
+    if (a){*a=!b;}else{}
     for(a;aa;aaaa){{{{{{{}}}}}}}
     while(x)x;
     {{{{{{{{{{/* Hello there */}}}}}}}}}}
