@@ -1,30 +1,30 @@
-mkdir -p test-1
-rm test-1/*
-cp ../phase2/* test-1/
-cd test-1
+#!/bin/sh
+
+if [[ -e ~/coen175-files/phase2-mystuff/ ]]; then
+    cd ~/coen175-files/
+    printf "\x1b[102;30m[INFO]\x1b[0m working in $(pwd)\n"
+else
+    printf "\x1b[33;41m[ERROR]\x1b[0m Working Dir does not exist\n"
+    exit 1
+fi
+
+printf "\x1b[102;30m[INFO]\x1b[0m Building phase 2\n"
 make
-cd ../../examples
 
-for f in *.c
-do
-../phase2-mystuff/test-1/scc < $f > ../phase2-mystuff/test-output/$f.out
+cd ~/coen175-files/phase2-mystuff/
+cd examples
+
+for f in *.c; do
+    printf "\x1b[102;30m[INFO]\x1b[0m Testing $FILE ... "
+    ulimit -t 1
+    ../../phase2/scc \
+        <$f \
+        >../test-output/$f.out \
+        2>/dev/null
+    cmp -s ../test-output/$f.out $(basename $f .c).out 2>/dev/null &&
+        printf "ok\n" ||
+        (
+            printf "failed\n"
+            printf "\x1b[33;41m[ERROR]\x1b[0m Test case $f failed!\n"
+        )
 done
-
-echo "Testing fib"
-diff fib.out ../phase2-mystuff/test-output/fib.c.out
-echo "Testing hello"
-diff hello.out ../phase2-mystuff/test-output/hello.c.out
-echo "Testing list"
-diff list.out ../phase2-mystuff/test-output/list.c.out
-echo "Testing malloc"
-diff malloc.out ../phase2-mystuff/test-output/malloc.c.out
-echo "Testing sum"
-diff sum.out ../phase2-mystuff/test-output/sum.c.out
-echo "Testing tricky"
-diff tricky.out ../phase2-mystuff/test-output/tricky.c.out
-echo "Testing fib_tricky"
-diff fib_nasty.out ../phase2-mystuff/test-output/fib_nasty.c.out
-echo "Testing my_stuff"
-diff my_stuff.out ../phase2-mystuff/test-output/my_stuff.c.out
-
-cd ../phase2-mystuff && rm -r test-1 && rm -r test-output
