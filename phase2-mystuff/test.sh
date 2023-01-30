@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if [[ -e ~/coen175-files/phase2-mystuff/ ]]; then
-    cd ~/coen175-files/
+    cd ~/coen175-files/phase2
     printf "\x1b[102;30m[INFO]\x1b[0m working in $(pwd)\n"
 else
     printf "\x1b[33;41m[ERROR]\x1b[0m Working Dir does not exist\n"
