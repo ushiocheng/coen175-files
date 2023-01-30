@@ -15,7 +15,7 @@ cd ~/coen175-files/phase2-mystuff/
 cd examples
 
 for f in *.c; do
-    printf "\x1b[102;30m[INFO]\x1b[0m Testing $FILE ... "
+    printf "\x1b[102;30m[INFO]\x1b[0m Testing $f ... "
     ulimit -t 1
     ../../phase2/scc \
         <$f \
