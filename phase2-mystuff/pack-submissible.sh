@@ -8,6 +8,12 @@ else
     exit 1
 fi
 
+printf "\x1b[102;30m[INFO]\x1b[0m Cleaning up workspace...\n"
+cd phase2 \
+    && make clean \
+    || printf "\x1b[33;41m[ERROR]\x1b[0m Working Dir does not exist\n"
+cd ~/coen175-files/
+
 tar -cf phase2-mystuff/phase2.tar phase2 &&
     printf "\x1b[102;30m[INFO]\x1b[0m packed phase2-mystuff/phase2.tar\n" ||
     printf "\x1b[33;41m[ERROR]\x1b[0m Failed to pack phase2-mystuff/phase2.tar\n"
