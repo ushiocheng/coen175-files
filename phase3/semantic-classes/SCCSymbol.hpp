@@ -1,13 +1,13 @@
 #if !defined(SCC_SYMBOL_HPP)
 #define SCC_SYMBOL_HPP
 
-class SCCSymbol
+#include <string>
+#include "SCCType.hpp"
+
+typedef struct _SCC_Symbol
 {
-private:
-    /* data */
-public:
-    SCCSymbol(/* args */);
-    ~SCCSymbol();
-};
+    std::string name;
+    SCCType type;
+} SCCSymbol;
 
 #endif // SCC_SYMBOL_HPP

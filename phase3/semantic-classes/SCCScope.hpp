@@ -37,7 +37,7 @@ public:
      * Lookup a symbol in symbol table
      * @return symbol with type error if symbol not found
     */
-    SCCSymbol lookupSymbolType(const std::string id);
+    SCCSymbol lookupSymbol(const std::string id);
     ~SCCScope();
 };
 

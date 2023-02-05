@@ -1,8 +1,10 @@
 #ifndef SCC_TYPE_HPP
 #define SCC_TYPE_HPP
 
-#include <vector>
 #include <ostream>
+#include <string>
+#include <vector>
+
 #include "GlobalConfig.hpp"
 
 typedef std::vector<class SCCType> SCCType_Parameters;
@@ -14,10 +16,17 @@ class SCCType {
     SCCType_Specifier _specifier;
     size_t _indirection;
     SCCType_DeclaratorType _declaratorType;
-    size_t _arrLength;
-    SCCType_Parameters* _parameters;
+    // Optionals
+    size_t _arrLength;  // Valid & required for _declaratorType == ARRAY
+    SCCType_Parameters*
+        _parameters;  // Valid & optional for _declaratorType == FUNCTION
 
    public:
+   /**
+    * Default constructor
+    * Return type of ERROR
+   */
+   SCCType();
     SCCType(const SCCType_Specifier specifier,
             const SCCType_DeclaratorType declaratorType,
             const unsigned int indirection = 0, size_t arrLength = 0,
@@ -26,7 +35,7 @@ class SCCType {
     SCCType_Specifier specifier() const;
     bool operator==(const SCCType& that) const;
     bool operator!=(const SCCType& that) const;
-    std::ostream& printTo(const std::ostream& out);
+    std::ostream& printTo(const std::ostream& out, const std::string base = "");
     ~SCCType();
 };
 
