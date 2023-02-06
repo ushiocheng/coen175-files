@@ -34,6 +34,8 @@ class SCCType {
     SCCType(const SCCType & that);
     SCCType& operator=(const SCCType& rhs);
     bool isArray() const;
+    bool isFunc() const;
+    bool noParam() const;
     SCCType_Specifier specifier() const;
     bool operator==(const SCCType& that) const;
     bool operator!=(const SCCType& that) const;

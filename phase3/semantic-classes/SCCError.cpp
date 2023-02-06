@@ -21,6 +21,9 @@ void reportSemanticError(const SCCSemanticError errorType,
         case SCCSemanticError::VOID_VARIABLE:
             report("E5. '%s' has type void", symbolName);
             break;
+        case SCCSemanticError::EXTRA_ERROR:
+        //! Extra errors that should not be report to stderr
+            break;
         default:
             report("SCCSemanticError: unknown error type!!",NULL);
             std::cout << "[ERROR] SCCSemanticError: unknown error type!!" << std::endl;

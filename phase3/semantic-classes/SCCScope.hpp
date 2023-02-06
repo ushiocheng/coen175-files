@@ -25,19 +25,24 @@ public:
     SCCScope* createScope();
     /**
      * Exit to outer scope
+     * @remark returns this & print warning if already at root/global scope
     */
     SCCScope* exitScope();
+    /**
+     * Check if this scope is Global scope i.e. do not have parent scope
+     */
+    bool isGLobal();
     /**
      * add symbol to this scope
      * @param symbol will be copied
      * @remark this function will report eror if a new symbol are attempt to be added that is of a different type
     */
-    void addSymbol(const SCCSymbol symbol);
+    void addSymbol(const SCCSymbol& symbol);
     /**
      * Lookup a symbol in symbol table
      * @return symbol with type error if symbol not found
     */
-    SCCSymbol lookupSymbol(const std::string id);
+    SCCSymbol lookupSymbol(const std::string& id);
     ~SCCScope();
 };
 

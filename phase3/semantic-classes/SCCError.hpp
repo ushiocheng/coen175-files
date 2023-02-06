@@ -4,7 +4,7 @@
 #include <string>
 
 enum SCCSemanticError {
-    REDEFINITION, CONFLICT_TYPE, REDECLARATION, UNDECLARED, VOID_VARIABLE
+    REDEFINITION, CONFLICT_TYPE, REDECLARATION, UNDECLARED, VOID_VARIABLE, EXTRA_ERROR
 };
 
 void reportSemanticError(const SCCSemanticError errorType, const std::string &symbolName);

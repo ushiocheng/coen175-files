@@ -4,10 +4,21 @@
 #include <string>
 #include "SCCType.hpp"
 
-typedef struct _SCC_Symbol
+class SCCSymbol
 {
-    std::string name;
-    SCCType type;
-} SCCSymbol;
+private:
+    std::string _id;
+    SCCType _type;
+
+public:
+    /**
+     * Default Constructor, returns error type
+     * @remark only use for returning an error
+     */
+    SCCSymbol(const std::string &id);
+    SCCSymbol(const std::string &id, const SCCType &type);
+    const std::string &id() const;
+    const SCCType &type() const;
+};
 
 #endif // SCC_SYMBOL_HPP
