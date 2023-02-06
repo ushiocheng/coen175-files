@@ -1,12 +1,12 @@
 #include "SCCScope.hpp"
 
+#include <iostream>
+#include "../GlobalConfig.hpp"
+#include "SCCError.hpp"
 #ifndef DEBUG
 #define NDEBUG // to suppress assert
 #endif
 #include <cassert>
-#include <iostream>
-#include "GlobalConfig.hpp"
-#include "SCCError.hpp"
 
 #ifdef DEBUG
 #define DEBUG_ADDITIONAL_WARNING
@@ -30,7 +30,7 @@ static void printAndReport(const std::string &str, SCCSemanticError errType = EX
  * Constructor
  * @remark should only be used to make global scope
  */
-SCCScope::SCCScope(SCCScope *outerScope = nullptr)
+SCCScope::SCCScope(SCCScope *outerScope)
     : _symbols(), _outerScope(outerScope), _innerScopes()
 {
     if (outerScope)
@@ -59,7 +59,7 @@ SCCScope *SCCScope::exitScope()
     return this->_outerScope;
 }
 
-bool SCCScope::isGLobal()
+bool SCCScope::isGlobal()
 {
     return !(this->_outerScope);
 }
@@ -81,7 +81,7 @@ void SCCScope::addSymbol(const SCCSymbol &symbol)
         const SCCSymbol &symbolInArr = this->_symbols.at(i);
         if (symbolInArr.id() == symbol.id())
         {
-            if (!this->isGLobal())
+            if (!this->isGlobal())
             {
                 printAndReport("Redeclaration in non-global scope", SCCSemanticError::REDECLARATION, symbol.id());
                 return;

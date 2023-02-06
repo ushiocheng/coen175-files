@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "GlobalConfig.hpp"
+#include "../GlobalConfig.hpp"
 
 typedef std::vector<class SCCType> SCCType_Parameters;
 enum SCCType_Specifier { VOID, INT, LONG, CHAR };
@@ -39,7 +39,7 @@ class SCCType {
     SCCType_Specifier specifier() const;
     bool operator==(const SCCType& that) const;
     bool operator!=(const SCCType& that) const;
-    std::ostream& printTo(const std::ostream& out, const std::string base = "");
+    std::string& toString(const std::string& base = "");
     ~SCCType();
 };
 

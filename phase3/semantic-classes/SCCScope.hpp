@@ -31,7 +31,7 @@ public:
     /**
      * Check if this scope is Global scope i.e. do not have parent scope
      */
-    bool isGLobal();
+    bool isGlobal();
     /**
      * add symbol to this scope
      * @param symbol will be copied
