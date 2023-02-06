@@ -31,6 +31,8 @@ class SCCType {
             const SCCType_DeclaratorType declaratorType,
             const unsigned int indirection = 0, size_t arrLength = 0,
             SCCType_Parameters* parameters = nullptr);
+    SCCType(const SCCType & that);
+    SCCType& operator=(const SCCType& rhs);
     bool isArray() const;
     SCCType_Specifier specifier() const;
     bool operator==(const SCCType& that) const;

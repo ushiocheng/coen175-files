@@ -51,6 +51,23 @@ SCCType::SCCType(const SCCType_Specifier specifier,
     // }
 }
 
+SCCType::SCCType(const SCCType & that) {
+    this->_declaratorType = that._declaratorType;
+    this->_specifier = that._specifier;
+    this->_indirection = that._indirection;
+    this->_arrLength = that._arrLength;
+    this->_parameters = that._parameters;
+}
+
+SCCType& SCCType::operator=(const SCCType & rhs) {
+    if (this->_parameters) delete this->_parameters;
+    this->_declaratorType = rhs._declaratorType;
+    this->_specifier = rhs._specifier;
+    this->_indirection = rhs._indirection;
+    this->_arrLength = rhs._arrLength;
+    this->_parameters = rhs._parameters;
+}
+
 bool SCCType::isArray() const { return this->_declaratorType == ARRAY; }
 
 SCCType_Specifier SCCType::specifier() const { return this->_specifier; }
