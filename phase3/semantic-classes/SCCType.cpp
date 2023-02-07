@@ -15,25 +15,28 @@ static void printOutWarning(std::string str);
 
 // ===== Function Implementation =====
 
-static void printOutWarning(std::string str) {
+static void printOutWarning(std::string str)
+{
 #ifdef DEBUG_ADDITIONAL_WARNING
     std::cout << "[WARN] " << str << std::endl;
 #endif
 }
 
-SCCType::SCCType() {
+SCCType::SCCType()
+{
     this->_declaratorType = ERROR;
 }
 
 SCCType::SCCType(const SCCType_Specifier specifier,
                  const SCCType_DeclaratorType declaratorType,
                  const unsigned int indirection, size_t arrLength,
-                 SCCType_Parameters* parameters)
+                 SCCType_Parameters *parameters)
     : _specifier(specifier),
       _indirection(indirection),
       _declaratorType(declaratorType),
       _arrLength(arrLength),
-      _parameters(parameters) {
+      _parameters(parameters)
+{
     // //! Enforce array cannot be of size 0
     // if (this->_declaratorType == ARRAY) {
     //     if (this->_arrLength == 0) {
@@ -51,7 +54,8 @@ SCCType::SCCType(const SCCType_Specifier specifier,
     // }
 }
 
-SCCType::SCCType(const SCCType & that) {
+SCCType::SCCType(const SCCType &that)
+{
     this->_declaratorType = that._declaratorType;
     this->_specifier = that._specifier;
     this->_indirection = that._indirection;
@@ -59,8 +63,10 @@ SCCType::SCCType(const SCCType & that) {
     this->_parameters = that._parameters;
 }
 
-SCCType& SCCType::operator=(const SCCType & rhs) {
-    if (this->_parameters) delete this->_parameters;
+SCCType &SCCType::operator=(const SCCType &rhs)
+{
+    if (this->_parameters)
+        delete this->_parameters;
     this->_declaratorType = rhs._declaratorType;
     this->_specifier = rhs._specifier;
     this->_indirection = rhs._indirection;
@@ -75,73 +81,97 @@ bool SCCType::noParam() const { return !(this->_parameters); }
 
 SCCType_Specifier SCCType::specifier() const { return this->_specifier; }
 
-bool SCCType::operator==(const SCCType& that) const {
+bool SCCType::operator==(const SCCType &that) const
+{
     //! Ignore type check if declaratorType is ERROR
-    if (this->_declaratorType == ERROR) return true;
-    if (that._declaratorType == ERROR) return true;
+    if (this->_declaratorType == ERROR)
+        return true;
+    if (that._declaratorType == ERROR)
+        return true;
 
     //! Check Declarator type
-    if (this->_declaratorType != that._declaratorType) return false;
+    if (this->_declaratorType != that._declaratorType)
+        return false;
     //! Check Specifier
-    if (this->_specifier != that._specifier) return false;
+    if (this->_specifier != that._specifier)
+        return false;
     //! Check indirection
-    if (this->_indirection != that._indirection) return false;
+    if (this->_indirection != that._indirection)
+        return false;
 
     //! For SCALAR, no more checks
-    if (this->_declaratorType == SCALAR) return true;
-    if (this->_declaratorType == ARRAY) {
+    if (this->_declaratorType == SCALAR)
+        return true;
+    if (this->_declaratorType == ARRAY)
+    {
         //! declaratorType is ARRAY
         return this->_arrLength == that._arrLength;
-    } else {
+    }
+    else
+    {
         //! declaratorType is FUNCTION
-        if (!this->_parameters) return true;
-        if (!that._parameters) return true;
+        if (!this->_parameters)
+            return true;
+        if (!that._parameters)
+            return true;
         return this->_parameters == that._parameters;
     }
 }
 
-bool SCCType::operator!=(const SCCType& that) const {
+bool SCCType::operator!=(const SCCType &that) const
+{
     return !((*this) == that);
 }
 
-std::string& SCCType::toString(const std::string& base) {
-    std::string res = base + "SCCType {\n";
-    if (this->_declaratorType == ERROR) {
-        return res + base + "    Declarator Type: ERROR\n" +
-                + base + "}";
-    } else if (this->_declaratorType == SCALAR) {
-        return res + base + "    Declarator Type: SCALAR\n"
-                    + base + "    Specifier:" + this->specifier() + "\n"
-                + base + "    Indirection: " + this->_indirection + "\n"
-                    + base + "}";
-    } else if (this->_declaratorType == ARRAY) {
-        return (res + base + "    Declarator Type: ARRAY\n"
-                    + base + "    Specifier:" + this->specifier() + "\n"
-                    + base + "    Indirection: " + this->_indirection + "\n"
-                    + base + "    Array Length: " + this->_arrLength + "\n"
-                    + base + "}" ;
-    } else if (this->_declaratorType == FUNCTION) {
-        res = (res + base + "    Declarator Type: FUNCTION\n"
-                   + base + "    Specifier:" + this->specifier() + "\n"
-                   + base + "    Indirection: " + this->_indirection + "\n"
-                   + base + "    Parameters: ["
-                   + "\n");
-        for (SCCType paramType : this->_parameters) {
-            res += paramType.toString(base + "    ");
+void SCCType::printTo(std::ostream &out, const std::string &base) const
+{
+    out << base << "SCCType {\n";
+    switch (this->_declaratorType)
+    {
+    case ERROR:
+        out << base << "    Declarator Type: ERROR\n";
+        break;
+    case SCALAR:
+        out << base << "    Declarator Type: SCALAR\n"
+            << base << "    Specifier:" << this->specifier() << "\n";
+        break;
+    case ARRAY:
+        out << base << "    Declarator Type: ARRAY\n"
+            << base << "    Specifier:" << this->specifier() << "\n"
+            << base << "    Indirection: " << this->_indirection << "\n"
+            << base << "    Array Length: " << this->_arrLength << "\n";
+        break;
+    case FUNCTION:
+        out << base << "    Declarator Type: FUNCTION\n"
+            << base << "    Specifier:" << this->specifier() << "\n"
+            << base << "    Indirection: " << this->_indirection << "\n"
+            << base << "    Parameters: [";
+        if (!this->_parameters)
+        {
+            out << "undefined ]\n";
+            break;
         }
-        res = (res + base + "    ]");
-        return (res + base + "}" ;
-    } else {
-        return (res + base + "    Declarator Type: UNKNOWN\n"
-                    + base + "}" ;
+        out << "\n";
+        for (size_t i = 0; i < (this->_parameters->size()); i++)
+        {
+            this->_parameters->at(i).printTo(out, base + "    ");
+        }
+        out << base << "    ]\n";
+        break;
+    default:
+        out << base << "    Declarator Type: UNKNOWN\n";
+        break;
     }
-    return res;
+    out << base << "}" << std::endl;
 }
 
-SCCType::~SCCType() {
+SCCType::~SCCType()
+{
     delete this->_parameters;
 }
 
-std::ostream& operator<<(const std::ostream& out, const SCCType& rhs) {
-    return (out << rhs.toString());
+std::ostream &operator<<(std::ostream &out, const SCCType &rhs)
+{
+    rhs.printTo(out);
+    return out;
 }

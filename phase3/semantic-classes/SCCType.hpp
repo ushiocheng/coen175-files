@@ -39,10 +39,10 @@ class SCCType {
     SCCType_Specifier specifier() const;
     bool operator==(const SCCType& that) const;
     bool operator!=(const SCCType& that) const;
-    std::string& toString(const std::string& base = "");
+    void printTo(std::ostream& out, const std::string& base = "") const;
     ~SCCType();
 };
 
-std::ostream& operator<<(const std::ostream& out, const SCCType& rhs);
+std::ostream& operator<<(std::ostream& out, const SCCType& rhs);
 
 #endif
