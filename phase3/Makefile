@@ -11,7 +11,7 @@ all:		$(PROG)
 $(PROG):	$(EXTRAS) $(OBJS)
 		$(CXX) -o $(PROG) $(OBJS)
 
-clean:;		$(RM) $(EXTRAS) $(PROG) core *.o
+clean:;		$(RM) $(EXTRAS) $(PROG) core *.o **/*.o
 
 lexer.cpp:	lexer.l
 		$(LEX) $(LFLAGS) -t lexer.l > lexer.cpp

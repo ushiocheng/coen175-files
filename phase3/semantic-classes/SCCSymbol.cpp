@@ -3,7 +3,7 @@
 
 SCCSymbol::SCCSymbol(const std::string &id)
     : _id(id),
-      _type(SCCType_Specifier::VOID, SCCType_DeclaratorType::ERROR)
+      _type(SCCType::SCCType_Specifier::VOID, SCCType::SCCType_DeclaratorType::ERROR)
 {
 }
 

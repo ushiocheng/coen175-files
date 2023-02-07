@@ -4,11 +4,20 @@
 
 #include "lexer.h"
 #include "tokens.h"
+#include "semantic-classes/SCCScope.hpp"
+#include "semantic-classes/SCCSymbol.hpp"
+#include "semantic-classes/SCCType.hpp"
+#include "GlobalConfig.hpp"
+#include "cassert"
+#include <string>
 
-// #define DEBUG
+
+static SCCScope* globalScope = new SCCScope();
+static SCCScope* currentScope = globalScope;
+
 #ifdef DEBUG
-#define DEBUG_PRINT_FUNC_TRACE
-#define DEBUG_PRINT_MATCHING
+// #define DEBUG_PRINT_FUNC_TRACE
+// #define DEBUG_PRINT_MATCHING
 #endif
 
 using namespace std;
@@ -221,6 +230,12 @@ void match(int token_type) {
     }
 }
 
+string matchAndReturn(int token_type) {
+    string s = yytext;
+    match(token_type);
+    return s;
+}
+
 void start() {
 #ifdef DEBUG_PRINT_FUNC_TRACE
     cout << "[DEBUG] Running " << __func__ << " on line " << __LINE__ << endl;
@@ -237,6 +252,7 @@ void translation_unit() {
     cout << "[DEBUG] Running " << __func__ << " on line " << __LINE__ << endl;
 #endif
     while (lookahead != Done) {
+        assert(currentScope == globalScope);
         // global declaration or function definition
         // take up 'specifier pointer id'
         specifier();

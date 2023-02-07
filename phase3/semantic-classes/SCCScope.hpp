@@ -13,6 +13,7 @@ private:
     std::vector<SCCSymbol> _symbols;
     SCCScope* _outerScope;
     std::vector<SCCScope*> _innerScopes;
+    SCCSymbol* _findSymbol(const std::string& id) const;
 public:
     /**
      * Constructor
@@ -42,7 +43,7 @@ public:
      * Lookup a symbol in symbol table
      * @return symbol with type error if symbol not found
     */
-    SCCSymbol lookupSymbol(const std::string& id);
+    SCCSymbol* lookupSymbol(const std::string& id) const;
     ~SCCScope();
 };
 

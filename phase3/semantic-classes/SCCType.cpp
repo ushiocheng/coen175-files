@@ -11,16 +11,7 @@
 
 // ===== Function Definition =====
 
-static void printOutWarning(std::string str);
-
 // ===== Function Implementation =====
-
-static void printOutWarning(std::string str)
-{
-#ifdef DEBUG_ADDITIONAL_WARNING
-    std::cout << "[WARN] " << str << std::endl;
-#endif
-}
 
 SCCType::SCCType()
 {
@@ -79,7 +70,7 @@ bool SCCType::isArray() const { return this->_declaratorType == ARRAY; }
 bool SCCType::isFunc() const { return this->_declaratorType == FUNCTION; }
 bool SCCType::noParam() const { return !(this->_parameters); }
 
-SCCType_Specifier SCCType::specifier() const { return this->_specifier; }
+SCCType::SCCType_Specifier SCCType::specifier() const { return this->_specifier; }
 
 bool SCCType::operator==(const SCCType &that) const
 {

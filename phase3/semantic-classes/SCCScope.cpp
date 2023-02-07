@@ -2,11 +2,8 @@
 
 #include <iostream>
 #include "../GlobalConfig.hpp"
-#include "SCCError.hpp"
-#ifndef DEBUG
-#define NDEBUG // to suppress assert
-#endif
 #include <cassert>
+#include "SCCError.hpp"
 
 #ifdef DEBUG
 #define DEBUG_ADDITIONAL_WARNING
@@ -116,17 +113,31 @@ void SCCScope::addSymbol(const SCCSymbol &symbol)
  * Lookup a symbol in symbol table
  * @return symbol with type error if symbol not found
  */
-SCCSymbol SCCScope::lookupSymbol(const std::string &id)
+SCCSymbol *SCCScope::lookupSymbol(const std::string &id) const
 {
-    for (SCCSymbol &symbolInArr : this->_symbols)
+    SCCSymbol *ptr = this->_findSymbol(id);
+    if (!ptr)
+        printAndReport("Symbol not declared", SCCSemanticError::UNDECLARED, id);
+    return ptr;
+}
+
+SCCSymbol *SCCScope::_findSymbol(const std::string &id) const
+{
+    for (const SCCSymbol &symbolInArr : this->_symbols)
     {
         if (symbolInArr.id() == id)
         {
-            return symbolInArr;
+            return new SCCSymbol(symbolInArr);
         }
     }
-    printAndReport("Symbol not declared", SCCSemanticError::UNDECLARED, id);
-    return SCCSymbol(id);
+    if (this->_outerScope)
+    {
+        return this->_outerScope->_findSymbol(id);
+    }
+    else
+    {
+        return nullptr;
+    }
 }
 
 SCCScope::~SCCScope() {}
