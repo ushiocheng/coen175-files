@@ -67,14 +67,14 @@ void SCCScope::addSymbol(const SCCSymbol &symbol) {
     for (size_t i = 0; i < this->_symbols.size(); i++) {
         const SCCSymbol &symbolInArr = this->_symbols.at(i);
         if (symbolInArr.id() == symbol.id()) {
-            if (!this->isGlobal()) {
-                printAndReport("Redeclaration in non-global scope",
-                               SCCSemanticError::REDECLARATION, symbol.id());
-                return;
-            }
             if (symbolInArr.type() != symbol.type()) {
                 printAndReport("Conflict type declaration",
                                SCCSemanticError::CONFLICT_TYPE, symbol.id());
+                return;
+            }
+            if (!this->isGlobal()) {
+                printAndReport("Redeclaration in non-global scope",
+                               SCCSemanticError::REDECLARATION, symbol.id());
                 return;
             }
             if (symbol.type().isFunc()) {
