@@ -1,33 +1,34 @@
 #if !defined(SCC_SCOPE_HPP)
 #define SCC_SCOPE_HPP
 
+#include <string>
+#include <vector>
+
 #include "../GlobalConfig.hpp"
 #include "SCCSymbol.hpp"
 #include "SCCType.hpp"
-#include <vector>
-#include <string>
 
-class SCCScope
-{
-private:
+class SCCScope {
+   private:
     std::vector<SCCSymbol> _symbols;
     SCCScope* _outerScope;
     std::vector<SCCScope*> _innerScopes;
-    SCCSymbol* _findSymbol(const std::string& id) const;
-public:
+    const SCCSymbol* _findSymbol(const std::string& id) const;
+
+   public:
     /**
      * Constructor
      * @remark should only be used to make global scope
-    */
+     */
     SCCScope(SCCScope* outerScope = nullptr);
     /**
-     * Create a inner 
-    */
+     * Create a inner
+     */
     SCCScope* createScope();
     /**
      * Exit to outer scope
      * @remark returns this & print warning if already at root/global scope
-    */
+     */
     SCCScope* exitScope();
     /**
      * Check if this scope is Global scope i.e. do not have parent scope
@@ -36,15 +37,16 @@ public:
     /**
      * add symbol to this scope
      * @param symbol will be copied
-     * @remark this function will report eror if a new symbol are attempt to be added that is of a different type
-    */
+     * @remark this function will report eror if a new symbol are attempt to be
+     * added that is of a different type
+     */
     void addSymbol(const SCCSymbol& symbol);
     /**
      * Lookup a symbol in symbol table
      * @return symbol with type error if symbol not found
-    */
-    SCCSymbol* lookupSymbol(const std::string& id) const;
+     */
+    const SCCSymbol* lookupSymbol(const std::string& id) const;
     ~SCCScope();
 };
 
-#endif // SCC_SCOPE_HPP
+#endif  // SCC_SCOPE_HPP
