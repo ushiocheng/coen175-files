@@ -1,16 +1,15 @@
 #include "parser.hpp"
 
 #include <iostream>
+#include <string>
 
+#include "GlobalConfig.hpp"
+#include "cassert"
 #include "lexer.h"
-#include "tokens.h"
 #include "semantic-classes/SCCScope.hpp"
 #include "semantic-classes/SCCSymbol.hpp"
 #include "semantic-classes/SCCType.hpp"
-#include "GlobalConfig.hpp"
-#include "cassert"
-#include <string>
-
+#include "tokens.h"
 
 static SCCScope* globalScope = new SCCScope();
 static SCCScope* currentScope = globalScope;

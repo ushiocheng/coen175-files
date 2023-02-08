@@ -1,7 +1,8 @@
 #include "SCCError.hpp"
 
-#include "../lexer.h"
 #include <iostream>
+
+#include "../lexer.h"
 
 void reportSemanticError(const SCCSemanticError errorType,
                          const std::string &symbolName) {
@@ -22,11 +23,12 @@ void reportSemanticError(const SCCSemanticError errorType,
             report("E5. '%s' has type void", symbolName);
             break;
         case SCCSemanticError::EXTRA_ERROR:
-        //! Extra errors that should not be report to stderr
+            //! Extra errors that should not be report to stderr
             break;
         default:
-            report("SCCSemanticError: unknown error type!!",NULL);
-            std::cout << "[ERROR] SCCSemanticError: unknown error type!!" << std::endl;
+            report("SCCSemanticError: unknown error type!!", NULL);
+            std::cout << "[ERROR] SCCSemanticError: unknown error type!!"
+                      << std::endl;
             exit(1);
     }
 }

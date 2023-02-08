@@ -7,35 +7,22 @@
 
 #include "../GlobalConfig.hpp"
 
-class SCCType
-{
-public:
+class SCCType {
+   public:
     typedef std::vector<class SCCType> SCCType_Parameters;
-    enum SCCType_Specifier
-    {
-        VOID,
-        INT,
-        LONG,
-        CHAR
-    };
-    enum SCCType_DeclaratorType
-    {
-        SCALAR,
-        ARRAY,
-        FUNCTION,
-        ERROR
-    };
+    enum SCCType_Specifier { VOID, INT, LONG, CHAR };
+    enum SCCType_DeclaratorType { SCALAR, ARRAY, FUNCTION, ERROR };
 
-private:
+   private:
     SCCType_Specifier _specifier;
     size_t _indirection;
     SCCType_DeclaratorType _declaratorType;
     // Optionals
-    size_t _arrLength; // Valid & required for _declaratorType == ARRAY
-    SCCType_Parameters *
-        _parameters; // Valid & optional for _declaratorType == FUNCTION
+    size_t _arrLength;  // Valid & required for _declaratorType == ARRAY
+    SCCType_Parameters
+        *_parameters;  // Valid & optional for _declaratorType == FUNCTION
 
-public:
+   public:
     /**
      * Default constructor
      * Return type of ERROR

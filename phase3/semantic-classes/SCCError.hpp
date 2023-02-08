@@ -4,9 +4,15 @@
 #include <string>
 
 enum SCCSemanticError {
-    REDEFINITION, CONFLICT_TYPE, REDECLARATION, UNDECLARED, VOID_VARIABLE, EXTRA_ERROR
+    REDEFINITION,
+    CONFLICT_TYPE,
+    REDECLARATION,
+    UNDECLARED,
+    VOID_VARIABLE,
+    EXTRA_ERROR
 };
 
-void reportSemanticError(const SCCSemanticError errorType, const std::string &symbolName);
+void reportSemanticError(const SCCSemanticError errorType,
+                         const std::string &symbolName);
 
-#endif // SCC_SEMANTIC_ERROR_HPP
+#endif  // SCC_SEMANTIC_ERROR_HPP

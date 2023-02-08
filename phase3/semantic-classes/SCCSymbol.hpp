@@ -2,15 +2,15 @@
 #define SCC_SYMBOL_HPP
 
 #include <string>
+
 #include "SCCType.hpp"
 
-class SCCSymbol
-{
-private:
+class SCCSymbol {
+   private:
     std::string _id;
     SCCType _type;
 
-public:
+   public:
     /**
      * Default Constructor, returns error type
      * @remark only use for returning an error
@@ -21,4 +21,4 @@ public:
     const SCCType &type() const;
 };
 
-#endif // SCC_SYMBOL_HPP
+#endif  // SCC_SYMBOL_HPP

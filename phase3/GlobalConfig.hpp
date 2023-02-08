@@ -3,7 +3,7 @@
 
 #define DEBUG
 #ifndef DEBUG
-#define NDEBUG // to suppress assert
+#define NDEBUG  // to suppress assert
 #endif
 
-#endif // GLOBAL_CONFIG_HPP
+#endif  // GLOBAL_CONFIG_HPP
