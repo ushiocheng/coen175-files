@@ -85,16 +85,13 @@ void SCCScope::addSymbol(const SCCSymbol &symbol) {
     for (size_t i = 0; i < this->_symbols.size(); i++) {
         const SCCSymbol &symbolInArr = this->_symbols.at(i);
         if (symbolInArr.id() == symbol.id()) {
+            //! E1 cannot happen if E2, thus check E2 first
             if (symbolInArr.type() != symbol.type()) {
                 printAndReport("Conflict type declaration",
                                SCCSemanticError::CONFLICT_TYPE, symbol.id());
                 return;
             }
-            if (!this->isGlobal()) {
-                printAndReport("Redeclaration in non-global scope",
-                               SCCSemanticError::REDECLARATION, symbol.id());
-                return;
-            }
+            //! Check E1
             if (symbol.type().isFunc()) {
                 if (symbolInArr.type().noParam()) {
                     // function have not been defined
@@ -106,6 +103,12 @@ void SCCScope::addSymbol(const SCCSymbol &symbol) {
                     printAndReport("Redefinition of function",
                                    SCCSemanticError::REDEFINITION, symbol.id());
                 }
+                return;
+            }
+            //! Check E3
+            if (!this->isGlobal()) {
+                printAndReport("Redeclaration in non-global scope",
+                               SCCSemanticError::REDECLARATION, symbol.id());
                 return;
             }
             return;  // If this is a good old redeclaration to global variable
