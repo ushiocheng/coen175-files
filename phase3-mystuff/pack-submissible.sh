@@ -1,7 +1,9 @@
 #!/bin/sh
 
-if [[ -e ~/coen175-files/phase2-mystuff/ ]]; then
-    cd ~/coen175-files/
+basedir='/Users/ushio/Documents/VSCode/coen175-files'
+
+if [[ -e $basedir/phase3-mystuff ]]; then
+    cd $basedir
     printf "\x1b[102;30m[INFO]\x1b[0m working in $(pwd)\n"
 else
     printf "\x1b[33;41m[ERROR]\x1b[0m Working Dir does not exist\n"
@@ -9,23 +11,23 @@ else
 fi
 
 printf "\x1b[102;30m[INFO]\x1b[0m Cleaning up workspace...\n"
-cd phase2 \
+cd $basedir/phase3 \
     && make clean \
     || printf "\x1b[33;41m[ERROR]\x1b[0m Working Dir does not exist\n"
-cd ~/coen175-files/
+cd $basedir
 
-tar -cf phase2-mystuff/phase2.tar phase2 &&
-    printf "\x1b[102;30m[INFO]\x1b[0m packed phase2-mystuff/phase2.tar\n" ||
-    printf "\x1b[33;41m[ERROR]\x1b[0m Failed to pack phase2-mystuff/phase2.tar\n"
+tar -cf phase3-mystuff/phase3.tar phase3 &&
+    printf "\x1b[102;30m[INFO]\x1b[0m packed phase3-mystuff/phase3.tar\n" ||
+    printf "\x1b[33;41m[ERROR]\x1b[0m Failed to pack phase3-mystuff/phase3.tar\n"
 
-cd ~/coen175-files/phase2-mystuff/
+cd $basedir/phase3-mystuff/
 
-tar -cf p2-examples.tar examples &&
-    printf "\x1b[102;30m[INFO]\x1b[0m packed phase2-mystuff/p2-examples.tar\n" ||
-    printf "\x1b[33;41m[ERROR]\x1b[0m Failed to pack phase2-mystuff/p2-examples.tar\n"
+tar -cf p3-examples.tar examples &&
+    printf "\x1b[102;30m[INFO]\x1b[0m packed phase3-mystuff/p3-examples.tar\n" ||
+    printf "\x1b[33;41m[ERROR]\x1b[0m Failed to pack phase3-mystuff/p3-examples.tar\n"
 
 printf "\x1b[102;30m[INFO]\x1b[0m calling checksub.sh\n"
-sh checksub.sh phase2.tar p2-examples.tar
+sh checksub.sh phase3.tar p3-examples.tar
 
-printf "\x1b[102;30m[INFO]\x1b[0m Removing p2-examples.tar\n"
-rm p2-examples.tar
+printf "\x1b[102;30m[INFO]\x1b[0m Removing p3-examples.tar\n"
+rm p3-examples.tar
