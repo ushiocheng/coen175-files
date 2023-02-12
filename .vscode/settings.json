@@ -1,13 +1,9 @@
 {
     "files.associations": {
-        "new": "cpp",
-        "stdexcept": "cpp",
-        "system_error": "cpp",
-        "*.tcc": "cpp",
-        "iosfwd": "cpp",
-        "iostream": "cpp",
-        "istream": "cpp",
-        "streambuf": "cpp",
-        "type_traits": "cpp"
-    }
+        "*.cpp": "cpp",
+        "*.hpp": "cpp",
+        "*.c": "c",
+        "*.h": "c"
+    },
+    "C_Cpp.autoAddFileAssociations": false
 }
