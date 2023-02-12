@@ -643,7 +643,7 @@ void expression_level_1() {
     while (lookahead == OP_OR) {
         match();
         expression_level_2();
-        cout << "or" << endl;
+        // cout << "or" << endl;
     }
 }
 
@@ -653,7 +653,7 @@ void expression_level_2() {
     while (lookahead == OP_AND) {
         match();
         expression_level_3();
-        cout << "and" << endl;
+        // cout << "and" << endl;
     }
 }
 
@@ -666,11 +666,11 @@ void expression_level_3() {
         expression_level_4();
         switch (tmp) {
             case OP_EQ:
-                cout << "eql" << endl;
+                // cout << "eql" << endl;
                 break;
 
             default:  // OP_NE
-                cout << "neq" << endl;
+                // cout << "neq" << endl;
                 break;
         }
     }
@@ -681,24 +681,24 @@ void expression_level_4() {
     expression_level_5();
     while (lookahead == OP_LT || lookahead == OP_GT || lookahead == OP_LE ||
            lookahead == OP_GE) {
-        int tmp = lookahead;
+        // int tmp = lookahead;
         match();
         expression_level_5();
-        switch (tmp) {
-            case OP_LT:
-                cout << "ltn" << endl;
-                break;
-            case OP_GT:
-                cout << "gtn" << endl;
-                break;
-            case OP_LE:
-                cout << "leq" << endl;
-                break;
+        // switch (tmp) {
+        //     case OP_LT:
+        //         cout << "ltn" << endl;
+        //         break;
+        //     case OP_GT:
+        //         cout << "gtn" << endl;
+        //         break;
+        //     case OP_LE:
+        //         cout << "leq" << endl;
+        //         break;
 
-            default:  // OP_GE
-                cout << "geq" << endl;
-                break;
-        }
+        //     default:  // OP_GE
+        //         cout << "geq" << endl;
+        //         break;
+        // }
     }
 }
 
@@ -706,18 +706,18 @@ void expression_level_5() {
     PRINT_FUNC_IF_ENABLED;
     expression_level_6();
     while (lookahead == '+' || lookahead == '-') {
-        int tmp = lookahead;
+        // int tmp = lookahead;
         match();
         expression_level_6();
-        switch (tmp) {
-            case '+':
-                cout << "add" << endl;
-                break;
+        // switch (tmp) {
+        //     case '+':
+        //         cout << "add" << endl;
+        //         break;
 
-            default:
-                cout << "sub" << endl;
-                break;
-        }
+        //     default:
+        //         cout << "sub" << endl;
+        //         break;
+        // }
     }
 }
 
@@ -725,53 +725,53 @@ void expression_level_6() {
     PRINT_FUNC_IF_ENABLED;
     expression_level_7();
     while (lookahead == '*' || lookahead == '/' || lookahead == '%') {
-        int tmp = lookahead;
+        // int tmp = lookahead;
         match();
         expression_level_7();
-        switch (tmp) {
-            case '*':
-                cout << "mul" << endl;
-                break;
-            case '/':
-                cout << "div" << endl;
-                break;
-            default:
-                cout << "rem" << endl;
-                break;
-        }
+        // switch (tmp) {
+        //     case '*':
+        //         cout << "mul" << endl;
+        //         break;
+        //     case '/':
+        //         cout << "div" << endl;
+        //         break;
+        //     default:
+        //         cout << "rem" << endl;
+        //         break;
+        // }
     }
 }
 
 void expression_level_7() {
     PRINT_FUNC_IF_ENABLED;
-    int tmp = -1;
+    // int tmp = -1;
     if (lookahead == '&' || lookahead == '*' || lookahead == '!' ||
         lookahead == '-' || lookahead == SIZEOF) {
-        tmp = lookahead;
+        // tmp = lookahead;
         match();
         expression_level_7();
     } else {
         expression_level_8();
     }
-    switch (tmp) {
-        case '&':
-            cout << "addr" << endl;
-            break;
-        case '*':
-            cout << "deref" << endl;
-            break;
-        case '!':
-            cout << "not" << endl;
-            break;
-        case '-':
-            cout << "neg" << endl;
-            break;
-        case SIZEOF:
-            cout << "sizeof" << endl;
-            break;
-        default:
-            break;
-    }
+    // switch (tmp) {
+    //     case '&':
+    //         cout << "addr" << endl;
+    //         break;
+    //     case '*':
+    //         cout << "deref" << endl;
+    //         break;
+    //     case '!':
+    //         cout << "not" << endl;
+    //         break;
+    //     case '-':
+    //         cout << "neg" << endl;
+    //         break;
+    //     case SIZEOF:
+    //         cout << "sizeof" << endl;
+    //         break;
+    //     default:
+    //         break;
+    // }
 }
 
 void expression_level_8() {
@@ -781,7 +781,7 @@ void expression_level_8() {
         match();
         expression();
         match(OP_R_BRACKET);
-        cout << "index" << endl;
+        // cout << "index" << endl;
     }
 }
 

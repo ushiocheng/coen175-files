@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <string>
+#include "SCCError.hpp"
 
 #include "../GlobalConfig.hpp"
 
@@ -11,7 +12,19 @@
 
 // ===== Function Definition =====
 
+static void printAndReport(const std::string &str, SCCSemanticError errType,
+                           const std::string &id);
+
 // ===== Function Implementation =====
+
+static void printAndReport(const std::string &str,
+                           SCCSemanticError errType = EXTRA_ERROR,
+                           const std::string &id = "") {
+#ifdef DEBUG_ADDITIONAL_WARNING
+    std::cout << "[WARN] " << str << std::endl;
+#endif
+    reportSemanticError(errType, id);
+}
 
 SCCType::SCCType() { this->_declaratorType = ERROR; }
 
@@ -24,19 +37,15 @@ SCCType::SCCType(const SCCType_Specifier specifier,
       _declaratorType(declaratorType),
       _arrLength(arrLength),
       _parameters(parameters) {
+    if (_specifier == VOID && indirection == 0) {
+        printAndReport("VOID cannot be a valid type!", SCCSemanticError::VOID_VARIABLE, "some-id");
+        std::cout << this;
+    }
     // //! Enforce array cannot be of size 0
     // if (this->_declaratorType == ARRAY) {
     //     if (this->_arrLength == 0) {
     //         reportError("SCCType: Declaration Invalid: array cannot be of
     //         size 0"); this->_declaratorType = SCCType_DeclaratorType::ERROR;
-    //     }
-    // }
-    // //! Enforce function must have parameters
-    // if (this->_declaratorType == FUNCTION) {
-    //     if (!this->_parameters) {
-    //         reportError("SCCType: Declaration Invalid: function must have
-    //         parameters"); this->_declaratorType =
-    //         SCCType_DeclaratorType::ERROR;
     //     }
     // }
 }
