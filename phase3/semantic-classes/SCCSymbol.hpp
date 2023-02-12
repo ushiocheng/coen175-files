@@ -19,6 +19,11 @@ class SCCSymbol {
     SCCSymbol(const std::string &id, const SCCType &type);
     const std::string &id() const;
     const SCCType &type() const;
+    /**
+     * Deleting Params which is allocated dynamically.
+     * @remark this is dangerous and should ONLY be used for deallocating objects.
+    */
+    void _deleteParams();
 };
 
 #endif  // SCC_SYMBOL_HPP

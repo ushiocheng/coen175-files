@@ -5,9 +5,22 @@
 
 #include "../GlobalConfig.hpp"
 #include "SCCError.hpp"
+#include "SCCType.hpp"
 
 #ifdef DEBUG
 #define DEBUG_ADDITIONAL_WARNING
+#define DEBUG_PRINT_FUNC_TRACE_FLG
+// #define DEBUG_PRINT_MATCHING
+#define PRINT_IF_DEBUG(sth) std::cout << sth << std::endl;
+#else
+#define PRINT_IF_DEBUG(sth) /* debug print: sth */
+#endif
+
+#ifdef DEBUG_PRINT_FUNC_TRACE_FLG
+#define PRINT_FUNC_IF_ENABLED \
+    std::cout << "[DEBUG] Running " << __func__ << " on line " << __LINE__ << std::endl
+#else
+#define PRINT_FUNC_IF_ENABLED ;
 #endif
 
 // ===== Function Definition =====
@@ -40,12 +53,16 @@ SCCScope::SCCScope(SCCScope *outerScope)
 /**
  * Create a inner
  */
-SCCScope *SCCScope::createScope() { return new SCCScope(this); }
+SCCScope *SCCScope::createScope() {
+    PRINT_FUNC_IF_ENABLED;
+    return new SCCScope(this);
+}
 
 /**
  * Exit to outer scope
  */
 SCCScope *SCCScope::exitScope() {
+    PRINT_FUNC_IF_ENABLED;
     if (!this->_outerScope) {
         printAndReport("Trying to exit global!");
     }
@@ -61,6 +78,7 @@ bool SCCScope::isGlobal() { return !(this->_outerScope); }
  * added that is of a different type
  */
 void SCCScope::addSymbol(const SCCSymbol &symbol) {
+    PRINT_FUNC_IF_ENABLED;
     if (symbol.type().isFunc()) {
         assert(this->isGlobal());
     }
@@ -101,6 +119,7 @@ void SCCScope::addSymbol(const SCCSymbol &symbol) {
  * @return symbol with type error if symbol not found
  */
 const SCCSymbol *SCCScope::lookupSymbol(const std::string &id) const {
+    PRINT_FUNC_IF_ENABLED;
     const SCCSymbol *ptr = this->_findSymbol(id);
     if (!ptr)
         printAndReport("Symbol not declared", SCCSemanticError::UNDECLARED, id);
@@ -121,4 +140,10 @@ const SCCSymbol *SCCScope::_findSymbol(const std::string &id) const {
     }
 }
 
-SCCScope::~SCCScope() {}
+SCCScope::~SCCScope() {
+    for (SCCSymbol symbol: _symbols) symbol._deleteParams();
+    for (SCCScope* scope: _innerScopes) {
+        if (scope) delete scope;
+    }
+    _innerScopes.clear();
+}

@@ -11,3 +11,6 @@ SCCSymbol::SCCSymbol(const std::string &id, const SCCType &type)
     : _id(id), _type(type) {}
 const std::string &SCCSymbol::id() const { return this->_id; }
 const SCCType &SCCSymbol::type() const { return this->_type; }
+void SCCSymbol::_deleteParams(){
+    this->_type._deleteParams();
+}

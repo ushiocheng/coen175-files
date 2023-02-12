@@ -4,13 +4,14 @@
 #include <ostream>
 #include <string>
 #include <vector>
+#include "../tokens.h"
 
 #include "../GlobalConfig.hpp"
 
 class SCCType {
    public:
     typedef std::vector<class SCCType> SCCType_Parameters;
-    enum SCCType_Specifier { VOID, INT, LONG, CHAR };
+    enum SCCType_Specifier { VOID = VOID, INT = INT, LONG = LONG, CHAR = CHAR };
     enum SCCType_DeclaratorType { SCALAR, ARRAY, FUNCTION, ERROR };
 
    private:
@@ -41,6 +42,11 @@ class SCCType {
     bool operator==(const SCCType &that) const;
     bool operator!=(const SCCType &that) const;
     void printTo(std::ostream &out, const std::string &base = "") const;
+    /**
+     * Deleting Params which is allocated dynamically.
+     * @remark this is dangerous and should ONLY be used for deallocating objects.
+    */
+    void _deleteParams();
     ~SCCType();
 };
 

@@ -134,7 +134,16 @@ void SCCType::printTo(std::ostream &out, const std::string &base) const {
     out << base << "}" << std::endl;
 }
 
-SCCType::~SCCType() { delete this->_parameters; }
+void SCCType::_deleteParams() {
+    if (this->_parameters) delete this->_parameters;
+    this->_parameters = nullptr;
+}
+
+SCCType::~SCCType() {
+    //! Intentionally choose not to delete _parameters
+    //! Since SCCType are passed by value.
+    //! Deletion is handled by `SCCScope` when main scope exits
+}
 
 std::ostream &operator<<(std::ostream &out, const SCCType &rhs) {
     rhs.printTo(out);
