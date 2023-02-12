@@ -8,7 +8,6 @@
 #include "SCCType.hpp"
 
 #ifdef DEBUG
-#define DEBUG_ADDITIONAL_WARNING
 #define DEBUG_PRINT_FUNC_TRACE_FLG
 // #define DEBUG_PRINT_MATCHING
 #define PRINT_IF_DEBUG(sth) std::cout << sth << std::endl;
@@ -17,27 +16,12 @@
 #endif
 
 #ifdef DEBUG_PRINT_FUNC_TRACE_FLG
-#define PRINT_FUNC_IF_ENABLED \
-    std::cout << "[DEBUG] Running " << __func__ << " on line " << __LINE__ << std::endl
+#define PRINT_FUNC_IF_ENABLED                                              \
+    std::cout << "[DEBUG] Running " << __func__ << " on line " << __LINE__ \
+              << std::endl
 #else
 #define PRINT_FUNC_IF_ENABLED ;
 #endif
-
-// ===== Function Definition =====
-
-static void printAndReport(const std::string &str, SCCSemanticError errType,
-                           const std::string &id);
-
-// ===== Function Implementation =====
-
-static void printAndReport(const std::string &str,
-                           SCCSemanticError errType = EXTRA_ERROR,
-                           const std::string &id = "") {
-#ifdef DEBUG_ADDITIONAL_WARNING
-    std::cout << "[WARN] " << str << std::endl;
-#endif
-    reportSemanticError(errType, id);
-}
 
 /**
  * Constructor
@@ -95,7 +79,12 @@ void SCCScope::addSymbol(const SCCSymbol &symbol) {
             if (symbol.type().isFunc()) {
                 if (symbolInArr.type().noParam()) {
                     // function have not been defined
-                    this->_symbols.at(i) = symbol;
+                    if (symbol.type().parameters()->size() > 0) {
+                        // if incoming symbol is func definition
+                        this->_symbols.at(i) = symbol;
+                        //! Check E5 here just before return
+                        symbol.validateType();
+                    }
                     return;
                 }
                 // Function is already defined
@@ -111,9 +100,12 @@ void SCCScope::addSymbol(const SCCSymbol &symbol) {
                                SCCSemanticError::REDECLARATION, symbol.id());
                 return;
             }
+            //* Not Checking E5 since redeclaration means already checked.
             return;  // If this is a good old redeclaration to global variable
         }
     }
+    //! Check E5
+    symbol.validateType();
     this->_symbols.push_back(symbol);
 }
 
@@ -144,8 +136,8 @@ const SCCSymbol *SCCScope::_findSymbol(const std::string &id) const {
 }
 
 SCCScope::~SCCScope() {
-    for (SCCSymbol symbol: _symbols) symbol._deleteParams();
-    for (SCCScope* scope: _innerScopes) {
+    for (SCCSymbol symbol : _symbols) symbol._deleteParams();
+    for (SCCScope *scope : _innerScopes) {
         if (scope) delete scope;
     }
     _innerScopes.clear();

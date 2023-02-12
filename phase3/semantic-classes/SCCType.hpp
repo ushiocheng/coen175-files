@@ -35,9 +35,14 @@ class SCCType {
             SCCType_Parameters *parameters = nullptr);
     SCCType(const SCCType &that);
     SCCType &operator=(const SCCType &rhs);
+    /**
+     * Check for E5: type not void
+    */
+    bool typeIsNotValid() const;
     bool isArray() const;
     bool isFunc() const;
     bool noParam() const;
+    const SCCType_Parameters *parameters() const;
     SCCType_Specifier specifier() const;
     bool operator==(const SCCType &that) const;
     bool operator!=(const SCCType &that) const;

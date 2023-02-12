@@ -15,4 +15,8 @@ enum SCCSemanticError {
 void reportSemanticError(const SCCSemanticError errorType,
                          const std::string &symbolName);
 
+void printAndReport(const std::string &str,
+                    SCCSemanticError errType = EXTRA_ERROR,
+                    const std::string &id = "");
+
 #endif  // SCC_SEMANTIC_ERROR_HPP

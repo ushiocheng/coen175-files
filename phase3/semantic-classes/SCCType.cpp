@@ -2,29 +2,12 @@
 
 #include <iostream>
 #include <string>
-#include "SCCError.hpp"
 
 #include "../GlobalConfig.hpp"
 
 #ifdef DEBUG
 #define DEBUG_ADDITIONAL_WARNING
 #endif
-
-// ===== Function Definition =====
-
-static void printAndReport(const std::string &str, SCCSemanticError errType,
-                           const std::string &id);
-
-// ===== Function Implementation =====
-
-static void printAndReport(const std::string &str,
-                           SCCSemanticError errType = EXTRA_ERROR,
-                           const std::string &id = "") {
-#ifdef DEBUG_ADDITIONAL_WARNING
-    std::cout << "[WARN] " << str << std::endl;
-#endif
-    reportSemanticError(errType, id);
-}
 
 SCCType::SCCType() { this->_declaratorType = ERROR; }
 
@@ -37,10 +20,6 @@ SCCType::SCCType(const SCCType_Specifier specifier,
       _declaratorType(declaratorType),
       _arrLength(arrLength),
       _parameters(parameters) {
-    if (_specifier == VOID && indirection == 0) {
-        printAndReport("VOID cannot be a valid type!", SCCSemanticError::VOID_VARIABLE, "some-id");
-        std::cout << this;
-    }
     // //! Enforce array cannot be of size 0
     // if (this->_declaratorType == ARRAY) {
     //     if (this->_arrLength == 0) {
@@ -68,9 +47,18 @@ SCCType &SCCType::operator=(const SCCType &rhs) {
     return *this;
 }
 
+bool SCCType::typeIsNotValid() const {
+    return (_specifier == VOID) && (_indirection == 0) &&
+           (_declaratorType != FUNCTION);
+}
+
 bool SCCType::isArray() const { return this->_declaratorType == ARRAY; }
 bool SCCType::isFunc() const { return this->_declaratorType == FUNCTION; }
 bool SCCType::noParam() const { return !(this->_parameters); }
+
+const SCCType::SCCType_Parameters *SCCType::parameters() const {
+    return this->_parameters;
+}
 
 SCCType::SCCType_Specifier SCCType::specifier() const {
     return this->_specifier;

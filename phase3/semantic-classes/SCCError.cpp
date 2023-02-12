@@ -2,25 +2,30 @@
 
 #include <iostream>
 
+#include "../GlobalConfig.hpp"
 #include "../lexer.h"
+
+#ifdef DEBUG
+#define DEBUG_ADDITIONAL_WARNING
+#endif
 
 void reportSemanticError(const SCCSemanticError errorType,
                          const std::string &symbolName) {
     switch (errorType) {
         case SCCSemanticError::REDEFINITION:
-            report("E1. redefinition of '%s'", symbolName);
+            report("redefinition of '%s'", symbolName);
             break;
         case SCCSemanticError::REDECLARATION:
-            report("E2. conflicting types for '%s'", symbolName);
+            report("redeclaration of '%s'", symbolName);
             break;
         case SCCSemanticError::CONFLICT_TYPE:
-            report("E3. redeclaration of '%s'", symbolName);
+            report("conflicting types for '%s'", symbolName);
             break;
         case SCCSemanticError::UNDECLARED:
-            report("E4. '%s' undeclared", symbolName);
+            report("'%s' undeclared", symbolName);
             break;
         case SCCSemanticError::VOID_VARIABLE:
-            report("E5. '%s' has type void", symbolName);
+            report("'%s' has type void", symbolName);
             break;
         case SCCSemanticError::EXTRA_ERROR:
             //! Extra errors that should not be report to stderr
@@ -31,4 +36,12 @@ void reportSemanticError(const SCCSemanticError errorType,
                       << std::endl;
             exit(1);
     }
+}
+
+void printAndReport(const std::string &str, SCCSemanticError errType,
+                    const std::string &id) {
+#ifdef DEBUG_ADDITIONAL_WARNING
+    std::cout << "[WARN] " << str << std::endl;
+#endif
+    reportSemanticError(errType, id);
 }
