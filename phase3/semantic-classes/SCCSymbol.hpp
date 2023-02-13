@@ -1,8 +1,9 @@
 #if !defined(SCC_SYMBOL_HPP)
 #define SCC_SYMBOL_HPP
 
-#include <string>
 #include <ostream>
+#include <string>
+
 #include "SCCType.hpp"
 
 class SCCSymbol {
@@ -22,11 +23,12 @@ class SCCSymbol {
     void validateType() const;
     /**
      * Deleting Params which is allocated dynamically.
-     * @remark this is dangerous and should ONLY be used for deallocating objects.
-    */
+     * @remark this is dangerous and should ONLY be used for deallocating
+     * objects.
+     */
     void _deleteParams();
 };
 
-std::ostream& operator<<(std::ostream& out, const SCCSymbol& rhs);
+std::ostream &operator<<(std::ostream &out, const SCCSymbol &rhs);
 
 #endif  // SCC_SYMBOL_HPP

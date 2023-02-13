@@ -13,7 +13,7 @@ class SCCScope {
     std::vector<SCCSymbol> _symbols;
     SCCScope* _outerScope;
     std::vector<SCCScope*> _innerScopes;
-    
+
     const SCCSymbol* _findSymbol(const std::string& id) const;
 
    public:

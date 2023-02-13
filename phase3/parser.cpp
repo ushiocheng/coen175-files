@@ -445,11 +445,11 @@ std::vector<SCCType>* parameters() {
             currentScope->addSymbol(SCCSymbol(id, type));
         }
     } else {
-        params->push_back(SCCType(parameter()));  // Parameter 0
+        params->push_back(parameter());  // Parameter 0
     }
     while (lookahead == ',') {
         match();
-        params->push_back(SCCType(parameter()));
+        params->push_back(parameter());
     }
     return params;
 }

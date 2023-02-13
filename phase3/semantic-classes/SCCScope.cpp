@@ -69,18 +69,22 @@ void SCCScope::addSymbol(const SCCSymbol &symbol) {
     for (size_t i = 0; i < this->_symbols.size(); i++) {
         const SCCSymbol &symbolInArr = this->_symbols.at(i);
         if (symbolInArr.id() == symbol.id()) {
-            //! Not Checking E5 in this scope since any redeclaration/definition means E5 already checked.
+            //! Not Checking E5 in this scope since any redeclaration/definition
+            //! means E5 already checked.
             //! ----- For Variables -----
             if (!symbol.type().isFunc()) {
                 if (symbolInArr.type() != symbol.type()) {
-                //! Check E2 for variable
-                printAndReport("Conflict type declaration",
-                               SCCSemanticError::CONFLICT_TYPE, symbol.id());
-                return;}
+                    //! Check E2 for variable
+                    printAndReport("Conflict type declaration",
+                                   SCCSemanticError::CONFLICT_TYPE,
+                                   symbol.id());
+                    return;
+                }
                 //! Check E3
                 if (!this->isGlobal()) {
                     printAndReport("Redeclaration in non-global scope",
-                                   SCCSemanticError::REDECLARATION, symbol.id());
+                                   SCCSemanticError::REDECLARATION,
+                                   symbol.id());
                     return;
                 }
                 // Good old redeclearation of variable in global scope

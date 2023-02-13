@@ -4,14 +4,14 @@
 #include <ostream>
 #include <string>
 #include <vector>
-#include "../tokens.h"
 
 #include "../GlobalConfig.hpp"
+#include "../tokens.h"
 
 class SCCType {
    public:
     typedef std::vector<class SCCType> SCCType_Parameters;
-    enum SCCType_Specifier { VOID, INT, LONG ,CHAR };
+    enum SCCType_Specifier { VOID, INT, LONG, CHAR };
     enum SCCType_DeclaratorType { SCALAR, ARRAY, FUNCTION, ERROR };
 
    private:
@@ -37,7 +37,7 @@ class SCCType {
     SCCType &operator=(const SCCType &rhs);
     /**
      * Check for E5: type not void
-    */
+     */
     bool typeIsNotValid() const;
     bool isArray() const;
     bool isFunc() const;
@@ -49,8 +49,9 @@ class SCCType {
     void printTo(std::ostream &out, const std::string &base = "") const;
     /**
      * Deleting Params which is allocated dynamically.
-     * @remark this is dangerous and should ONLY be used for deallocating objects.
-    */
+     * @remark this is dangerous and should ONLY be used for deallocating
+     * objects.
+     */
     void _deleteParams();
     ~SCCType();
 };
