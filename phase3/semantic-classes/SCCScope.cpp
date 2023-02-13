@@ -93,7 +93,10 @@ void SCCScope::addSymbol(const SCCSymbol &symbol) {
                 // If both are definition
                 printAndReport("Redefinition of function",
                                SCCSemanticError::REDEFINITION, symbol.id());
-                return; //! IGNORE inbound definition
+                //! ACCEPT inbound definition per specification
+                this->_symbols.at(i) = symbol;
+                symbol.validateType();
+                return;
             }
             //! Check E2 for func
             if (symbolInArr.type() != symbol.type()) {
