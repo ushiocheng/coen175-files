@@ -5,5 +5,16 @@
         "*.c": "c",
         "*.h": "c"
     },
-    "C_Cpp.autoAddFileAssociations": false
+    "C_Cpp.autoAddFileAssociations": false,
+    "files.exclude": {
+        "**/.git": true,
+        ".devcontainer": true,
+        "phase1*": true,
+        "phase2*": true,
+        "phase3*": true,
+        "phase4*": false,
+        "phase5*": false,
+        "phase6*": false,
+        ".vscode": false,
+    }
 }
