@@ -34,3 +34,8 @@ for f in *.c; do
             cp $(basename $f .c).err ../test-output/$f.err.expected
         )
 done
+
+# !Make clean but not delete executable
+cd $basedir/phase3
+rm lexer.cpp
+rm **/*.o
