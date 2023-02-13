@@ -1,6 +1,12 @@
 #!/bin/sh
 
-basedir='/Users/ushio/Documents/VSCode/coen175-files'
+if [[ -z $1 ]]; then
+    printf "\x1b[33;41m[ERROR]\x1b[0m Usage: $0 <path-to-coen175-workspace>\n"
+    exit 1
+fi
+
+cd $1
+basedir=$(pwd)
 
 if [[ -e $basedir/phase3-mystuff/ ]]; then
     cd $basedir/phase3
