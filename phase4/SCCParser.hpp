@@ -1,15 +1,15 @@
-#if !defined(PARSER_HPP)
-#define PARSER_HPP
+#if !defined(SCC_PARSER_HPP)
+#define SCC_PARSER_HPP
 
 #include <string>
 
 #include "semantic-classes/SCCSymbol.hpp"
 #include "semantic-classes/SCCType.hpp"
+#include "tokens.h"
 
-int lookahead;
-void prettyPrint(int tmp);
-void match(int token_type = lookahead);
-std::string matchAndReturn(int token_type);
+Token lookahead;
+void match(Token token_type = lookahead);
+std::string matchAndReturn(Token token_type);
 void start();
 void translation_unit();
 void rest_of_global_declarator_list(
@@ -40,4 +40,4 @@ void expression_level_7();
 void expression_level_8();
 void expression_term();
 
-#endif  // PARSER_HPP
+#endif  // SCC_PARSER_HPP

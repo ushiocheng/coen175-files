@@ -1,4 +1,4 @@
-#include "parser.hpp"
+#include "SCCParser.hpp"
 
 #include <iostream>
 #include <string>
@@ -11,8 +11,8 @@
 #include "semantic-classes/SCCType.hpp"
 #include "tokens.h"
 
-static SCCScope* globalScope = new SCCScope();
-static SCCScope* currentScope = globalScope;
+static SCCScope *globalScope = new SCCScope();
+static SCCScope *currentScope = globalScope;
 
 #ifdef DEBUG
 // #define DEBUG_PRINT_FUNC_TRACE_FLG
@@ -31,11 +31,12 @@ static SCCScope* currentScope = globalScope;
 
 using namespace std;
 
-int main() {
-    lookahead = yylex();
+int main()
+{
+    lookahead = (Token)yylex();
 #ifdef DEBUG_PRINT_MATCHING
     cout << "[DEBUG] lookahead: ";
-    prettyPrint(lookahead);
+    prettyPrintToken(lookahead);
     cout << endl;
 #endif
     start();
@@ -58,157 +59,6 @@ int main() {
     // }
 }
 
-void prettyPrint(int tmp) {
-    if (tmp == 0) {
-        cout << "Done";
-        return;
-    }
-    if (tmp < 256) {
-        cout << (char)tmp;
-    } else {
-        switch (tmp) {
-            case AUTO:
-                cout << "AUTO";
-                break;
-            case BREAK:
-                cout << "BREAK";
-                break;
-            case CASE:
-                cout << "CASE";
-                break;
-            case CHAR:
-                cout << "CHAR";
-                break;
-            case CONST:
-                cout << "CONST";
-                break;
-            case CONTINUE:
-                cout << "CONTINUE";
-                break;
-            case DEFAULT:
-                cout << "DEFAULT";
-                break;
-            case DO:
-                cout << "DO";
-                break;
-            case DOUBLE:
-                cout << "DOUBLE";
-                break;
-            case ELSE:
-                cout << "ELSE";
-                break;
-            case ENUM:
-                cout << "ENUM";
-                break;
-            case EXTERN:
-                cout << "EXTERN";
-                break;
-            case FLOAT:
-                cout << "FLOAT";
-                break;
-            case FOR:
-                cout << "FOR";
-                break;
-            case GOTO:
-                cout << "GOTO";
-                break;
-            case IF:
-                cout << "IF";
-                break;
-            case INT:
-                cout << "INT";
-                break;
-            case LONG:
-                cout << "LONG";
-                break;
-            case REGISTER:
-                cout << "REGISTER";
-                break;
-            case RETURN:
-                cout << "RETURN";
-                break;
-            case SHORT:
-                cout << "SHORT";
-                break;
-            case SIGNED:
-                cout << "SIGNED";
-                break;
-            case SIZEOF:
-                cout << "SIZEOF";
-                break;
-            case STATIC:
-                cout << "STATIC";
-                break;
-            case STRUCT:
-                cout << "STRUCT";
-                break;
-            case SWITCH:
-                cout << "SWITCH";
-                break;
-            case TYPEDEF:
-                cout << "TYPEDEF";
-                break;
-            case UNION:
-                cout << "UNION";
-                break;
-            case UNSIGNED:
-                cout << "UNSIGNED";
-                break;
-            case VOID:
-                cout << "VOID";
-                break;
-            case VOLATILE:
-                cout << "VOLATILE";
-                break;
-            case WHILE:
-                cout << "WHILE";
-                break;
-            case OP_OR:
-                cout << "OP_OR";
-                break;
-            case OP_AND:
-                cout << "OP_AND";
-                break;
-            case OP_EQ:
-                cout << "OP_EQ";
-                break;
-            case OP_NE:
-                cout << "OP_NE";
-                break;
-            case OP_LE:
-                cout << "OP_LE";
-                break;
-            case OP_GE:
-                cout << "OP_GE";
-                break;
-            case OP_INC:
-                cout << "OP_INC";
-                break;
-            case OP_DEC:
-                cout << "OP_DEC";
-                break;
-            case OP_ARROW:
-                cout << "OP_ARROW";
-                break;
-            case STRING:
-                cout << "STRING";
-                break;
-            case CHARACTER:
-                cout << "CHARACTER";
-                break;
-            case ID:
-                cout << "ID";
-                break;
-            case NUM:
-                cout << "NUM";
-                break;
-            default:
-                cout << "????";
-                break;
-        }
-    }
-}
-
 /**
  * Match token and advance lookahead
  * @param token_type type of token, defined in tokens.h
@@ -216,22 +66,26 @@ void prettyPrint(int tmp) {
  * message
  * @remark when no argument are given, this simple advances the lookahead
  */
-void match(int token_type) {
-    if (lookahead == token_type) {
-        lookahead = yylex();
+void match(Token token_type)
+{
+    if (lookahead == token_type)
+    {
+        lookahead = (Token)yylex();
 #ifdef DEBUG_PRINT_MATCHING
         cout << "[DEBUG] lookahead: ";
-        prettyPrint(lookahead);
+        prettyPrintToken(lookahead);
         cout << endl;
 #endif
         // TODO: pass token content back to caller for sematics?
-    } else {
+    }
+    else
+    {
         // error
         // TODO: fix this
         cout << "[ERROR] Parsing error at line " << yylineno << ", expecting ";
-        prettyPrint(token_type);
+        prettyPrintToken(token_type);
         cout << " and found ";
-        prettyPrint(lookahead);
+        prettyPrintToken(lookahead);
         cout << endl;
         exit(0);
         // report("[ERROR] Parsing error at line %d, expecting %d and found
@@ -239,13 +93,15 @@ void match(int token_type) {
     }
 }
 
-string matchAndReturn(int token_type) {
+string matchAndReturn(Token token_type)
+{
     string s = yytext;
     match(token_type);
     return s;
 }
 
-void start() {
+void start()
+{
     PRINT_FUNC_IF_ENABLED;
     translation_unit();
     // expression();
@@ -254,9 +110,11 @@ void start() {
 // translation-unit -> ε
 //                  | global-declaration translation-unit
 //                  | function-definition translation-unit
-void translation_unit() {
+void translation_unit()
+{
     PRINT_FUNC_IF_ENABLED;
-    while (lookahead != Done) {
+    while (lookahead != Done)
+    {
         assert(currentScope == globalScope);
         // global declaration or function definition
         // take up 'specifier pointer id'
@@ -266,26 +124,34 @@ void translation_unit() {
         // Indirection for declaration/func definition
         size_t idr = pointers();
         string firstID = matchAndReturn(ID);
-        if (lookahead == '(') {
+        if (lookahead == '(')
+        {
             match();
-            if (lookahead == ')') {
+            if (lookahead == ')')
+            {
                 match();
                 //! A function with return type sp-idr is declared, save it
                 currentScope->addSymbol(
                     SCCSymbol(firstID, SCCType(sp, SCCType::FUNCTION, idr)));
                 // This is a global-declaration
                 rest_of_global_declarator_list(sp);
-            } else {
+            }
+            else
+            {
                 // This is a function-definition
                 rest_of_function_definition(sp, idr, firstID);
             }
-        } else {
+        }
+        else
+        {
             // This is a global-declaration
-            if (lookahead == '[') {
+            if (lookahead == '[')
+            {
                 match();
                 signed long num = stol(matchAndReturn(NUM));
                 match(OP_R_BRACKET);
-                if (num <= 0) {
+                if (num <= 0)
+                {
                     //! Cannot declare array with size <= 0
                     cout << "[WARN] Attempting to Define an array with length "
                          << num << " <=0 on Line " << yylineno << endl;
@@ -294,7 +160,9 @@ void translation_unit() {
                 //! 1st item is an array
                 currentScope->addSymbol(
                     SCCSymbol(firstID, SCCType(sp, SCCType::ARRAY, idr, num)));
-            } else {
+            }
+            else
+            {
                 //! 1st item is a scalar
                 currentScope->addSymbol(
                     SCCSymbol(firstID, SCCType(sp, SCCType::SCALAR, idr)));
@@ -309,9 +177,11 @@ void translation_unit() {
 //!                       | global-declarator **, global-declarator-list**
 
 void rest_of_global_declarator_list(
-    SCCType::SCCType_Specifier currentSpecifier) {
+    SCCType::SCCType_Specifier currentSpecifier)
+{
     PRINT_FUNC_IF_ENABLED;
-    while (lookahead == ',') {
+    while (lookahead == ',')
+    {
         match();
         global_declarator(currentSpecifier);
     }
@@ -321,22 +191,27 @@ void rest_of_global_declarator_list(
 // global-declarator -> pointers id
 //                    | pointers id ( )
 //                    | pointers id [ num ]
-void global_declarator(SCCType::SCCType_Specifier currentSpecifier) {
+void global_declarator(SCCType::SCCType_Specifier currentSpecifier)
+{
     PRINT_FUNC_IF_ENABLED;
     size_t idr = pointers();
     string id = matchAndReturn(ID);
-    if (lookahead == '(') {
+    if (lookahead == '(')
+    {
         //! is FUNC declaration
         match();
         match(OP_R_PARENT);
         currentScope->addSymbol(
             SCCSymbol(id, SCCType(currentSpecifier, SCCType::FUNCTION, idr)));
-    } else if (lookahead == '[') {
+    }
+    else if (lookahead == '[')
+    {
         //! is ARRAY declaration
         match();
         signed long num = stol(matchAndReturn(NUM));
         match(OP_R_BRACKET);
-        if (num <= 0) {
+        if (num <= 0)
+        {
             //! Cannot declare array with size <= 0
             cout << "[WARN] Attempting to Define an array with length " << num
                  << " <=0 on Line " << yylineno << endl;
@@ -344,7 +219,9 @@ void global_declarator(SCCType::SCCType_Specifier currentSpecifier) {
         }
         currentScope->addSymbol(
             SCCSymbol(id, SCCType(currentSpecifier, SCCType::ARRAY, idr, num)));
-    } else {
+    }
+    else
+    {
         //! is SCALAR declaration
         currentScope->addSymbol(
             SCCSymbol(id, SCCType(currentSpecifier, SCCType::SCALAR, idr)));
@@ -353,10 +230,12 @@ void global_declarator(SCCType::SCCType_Specifier currentSpecifier) {
 
 // pointers -> ε
 // | * pointers
-size_t pointers() {
+size_t pointers()
+{
     PRINT_FUNC_IF_ENABLED;
     size_t count = 0;
-    while (lookahead == '*') {
+    while (lookahead == '*')
+    {
         match();
         count++;
     }
@@ -367,33 +246,37 @@ size_t pointers() {
 // | char
 // | long
 // | void
-SCCType::SCCType_Specifier specifier() {
+SCCType::SCCType_Specifier specifier()
+{
     PRINT_FUNC_IF_ENABLED;
-    if (lh_is_specifier()) {
+    if (lh_is_specifier())
+    {
         int tmp = lookahead;
         match();
-        switch (tmp) {
-            case INT:
-                return SCCType::INT;
-            case CHAR:
-                return SCCType::CHAR;
-            case LONG:
-                return SCCType::LONG;
-            default:
-                return SCCType::VOID;
+        switch (tmp)
+        {
+        case INT:
+            return SCCType::INT;
+        case CHAR:
+            return SCCType::CHAR;
+        case LONG:
+            return SCCType::LONG;
+        default:
+            return SCCType::VOID;
         }
     }
     match(VOID);
     //! would certainly fail, use void cause if user said nothing they probably
     //! meant void
-    return SCCType::VOID;  // More or less just to suppress no return warning.
+    return SCCType::VOID; // More or less just to suppress no return warning.
 }
 
 /**
  * ! This is NOT part of the syntax tree
  * check to see if lookahead matches one of the specifiers
  */
-inline bool lh_is_specifier() {
+inline bool lh_is_specifier()
+{
     PRINT_FUNC_IF_ENABLED;
     return (lookahead == INT) || (lookahead == CHAR) || (lookahead == LONG) ||
            (lookahead == VOID);
@@ -402,13 +285,14 @@ inline bool lh_is_specifier() {
 // function-definition -> specifier pointers id (
 //! parameters ) { declarations statements }
 void rest_of_function_definition(SCCType::SCCType_Specifier currentSpecifier,
-                                 size_t indirection, const string& id) {
+                                 size_t indirection, const string &id)
+{
     PRINT_FUNC_IF_ENABLED;
     //! Enter function scope
-    SCCScope* lastScope = currentScope;  // Save current scope so that I can
-                                         // store the func definition
+    SCCScope *lastScope = currentScope; // Save current scope so that I can
+                                        // store the func definition
     currentScope = currentScope->createScope();
-    std::vector<SCCType>* params = parameters();
+    std::vector<SCCType> *params = parameters();
     lastScope->addSymbol(SCCSymbol(
         id,
         SCCType(currentSpecifier, SCCType::FUNCTION, indirection, 0, params)));
@@ -425,17 +309,22 @@ void rest_of_function_definition(SCCType::SCCType_Specifier currentSpecifier,
 //      | parameter-list
 // parameter-list -> parameter
 //      | parameter , parameter-list
-std::vector<SCCType>* parameters() {
+std::vector<SCCType> *parameters()
+{
     PRINT_FUNC_IF_ENABLED;
-    std::vector<SCCType>* params = new std::vector<SCCType>();
+    std::vector<SCCType> *params = new std::vector<SCCType>();
     // Special case when it start with void
     // since void can be its own thing or as part of a param
-    if (lookahead == VOID) {
+    if (lookahead == VOID)
+    {
         match();
-        if (lookahead == OP_R_PARENT) {
+        if (lookahead == OP_R_PARENT)
+        {
             // NO param
             return params;
-        } else {
+        }
+        else
+        {
             // a param start with void
             // Parameter 0
             size_t idr = pointers();
@@ -444,10 +333,13 @@ std::vector<SCCType>* parameters() {
             params->push_back(SCCType(type));
             currentScope->addSymbol(SCCSymbol(id, type));
         }
-    } else {
-        params->push_back(parameter());  // Parameter 0
     }
-    while (lookahead == ',') {
+    else
+    {
+        params->push_back(parameter()); // Parameter 0
+    }
+    while (lookahead == ',')
+    {
         match();
         params->push_back(parameter());
     }
@@ -455,7 +347,8 @@ std::vector<SCCType>* parameters() {
 }
 
 // parameter -> specifier pointers id
-SCCType parameter() {
+SCCType parameter()
+{
     PRINT_FUNC_IF_ENABLED;
     SCCType::SCCType_Specifier sp = specifier();
     size_t idr = pointers();
@@ -468,11 +361,13 @@ SCCType parameter() {
 // declarations -> ε
 //      | declaration declarations
 // declaration -> specifier declarator-list ;
-void declarations() {
+void declarations()
+{
     PRINT_FUNC_IF_ENABLED;
     //! declarations and statements are competing for tokens, but only
     //! declarations start with specifiers
-    while (lh_is_specifier()) {
+    while (lh_is_specifier())
+    {
         SCCType::SCCType_Specifier sp = specifier();
         declarator_list(sp);
         match(OP_SC);
@@ -481,10 +376,12 @@ void declarations() {
 
 // declarator-list -> declarator
 //      | declarator , declarator-list
-void declarator_list(SCCType::SCCType_Specifier sp) {
+void declarator_list(SCCType::SCCType_Specifier sp)
+{
     PRINT_FUNC_IF_ENABLED;
     declarator(sp);
-    while (lookahead == ',') {
+    while (lookahead == ',')
+    {
         match();
         declarator(sp);
     }
@@ -492,16 +389,19 @@ void declarator_list(SCCType::SCCType_Specifier sp) {
 
 // declarator -> pointers id
 //      | pointers id [ num ]
-void declarator(SCCType::SCCType_Specifier sp) {
+void declarator(SCCType::SCCType_Specifier sp)
+{
     PRINT_FUNC_IF_ENABLED;
     size_t idr = pointers();
     string id = matchAndReturn(ID);
-    if (lookahead == '[') {
+    if (lookahead == '[')
+    {
         //! array
         match();
         signed long num = stol(matchAndReturn(NUM));
         match(OP_R_BRACKET);
-        if (num <= 0) {
+        if (num <= 0)
+        {
             //! Cannot declare array with size <= 0
             cout << "[WARN] Attempting to Define an array with length " << num
                  << " <=0 on Line " << yylineno << endl;
@@ -509,7 +409,9 @@ void declarator(SCCType::SCCType_Specifier sp) {
         }
         currentScope->addSymbol(
             SCCSymbol(id, SCCType(sp, SCCType::ARRAY, idr, num)));
-    } else {
+    }
+    else
+    {
         //! scalar
         currentScope->addSymbol(
             SCCSymbol(id, SCCType(sp, SCCType::SCALAR, idr)));
@@ -518,9 +420,11 @@ void declarator(SCCType::SCCType_Specifier sp) {
 
 // statements -> ε
 // | statement statements
-void statements() {
+void statements()
+{
     PRINT_FUNC_IF_ENABLED;
-    while (lookahead != '}') {
+    while (lookahead != '}')
+    {
         //! Statement cannot start with '}' and must be followed by '}'. So this
         //! determines if there is more statement
         statement();
@@ -534,27 +438,35 @@ void statements() {
 // | if ( expression ) statement
 // | if ( expression ) statement else statement
 // | assignment ;
-void statement() {
+void statement()
+{
     PRINT_FUNC_IF_ENABLED;
-    if (lookahead == '{') {
+    if (lookahead == '{')
+    {
         currentScope = currentScope->createScope();
         match();
         declarations();
         statements();
         currentScope = currentScope->exitScope();
         match(OP_R_BRACE);
-    } else if (lookahead == RETURN) {
+    }
+    else if (lookahead == RETURN)
+    {
         match();
         expression();
         match(OP_SC);
-    } else if (lookahead == WHILE) {
+    }
+    else if (lookahead == WHILE)
+    {
         // | while ( expression ) statement
         match();
         match(OP_L_PARENT);
         expression();
         match(OP_R_PARENT);
         statement();
-    } else if (lookahead == FOR) {
+    }
+    else if (lookahead == FOR)
+    {
         // | for ( assignment ; expression ; assignment ) statement
         match(FOR);
         match(OP_L_PARENT);
@@ -565,7 +477,9 @@ void statement() {
         assignment();
         match(OP_R_PARENT);
         statement();
-    } else if (lookahead == IF) {
+    }
+    else if (lookahead == IF)
+    {
         // | if ( expression ) statement
         // | if ( expression ) statement else statement
         match(IF);
@@ -573,11 +487,14 @@ void statement() {
         expression();
         match(OP_R_PARENT);
         statement();
-        if (lookahead == ELSE) {
+        if (lookahead == ELSE)
+        {
             match();
             statement();
         }
-    } else {
+    }
+    else
+    {
         // | assignment ;
         assignment();
         match(OP_SC);
@@ -586,10 +503,12 @@ void statement() {
 
 // assignment -> expression = expression
 //            | expression
-void assignment() {
+void assignment()
+{
     PRINT_FUNC_IF_ENABLED;
     expression();
-    if (lookahead == '=') {
+    if (lookahead == '=')
+    {
         match();
         expression();
     }
@@ -597,10 +516,12 @@ void assignment() {
 
 // expression-list -> expression
 //                 | expression , expression-list
-void expression_list() {
+void expression_list()
+{
     PRINT_FUNC_IF_ENABLED;
     expression();
-    while (lookahead == ',') {
+    while (lookahead == ',')
+    {
         match();
         expression();
     }

@@ -10,7 +10,7 @@
 # ifndef TOKENS_H
 # define TOKENS_H
 
-enum {
+enum Token {
     // single character operators
     OP_ASSIGN = '=',
     OP_MINUS = '-',
@@ -53,5 +53,7 @@ enum {
     
     Done = 0
 };
+
+void prettyPrintToken(Token tmp);
 
 # endif /* TOKENS_H */
