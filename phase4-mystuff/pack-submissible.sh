@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [[ -z $1 ]]; then
+if [ -z $1 ]; then
     # printf "\x1b[33;41m[ERROR]\x1b[0m Usage: $0 <path-to-coen175-workspace>\n"
     # exit 1
     cd ..
@@ -11,7 +11,7 @@ fi
 
 basedir=$(pwd)
 
-if [[ -e $basedir/phase3-mystuff ]]; then
+if [ -e $basedir/phase3-mystuff ]; then
     cd $basedir
     printf "\x1b[102;30m[INFO]\x1b[0m working in $(pwd)\n"
 else
