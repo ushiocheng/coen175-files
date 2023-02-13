@@ -11,7 +11,7 @@
 class SCCType {
    public:
     typedef std::vector<class SCCType> SCCType_Parameters;
-    enum SCCType_Specifier { VOID = VOID, INT = INT, LONG = LONG, CHAR = CHAR };
+    enum SCCType_Specifier { VOID, INT, LONG ,CHAR };
     enum SCCType_DeclaratorType { SCALAR, ARRAY, FUNCTION, ERROR };
 
    private:
