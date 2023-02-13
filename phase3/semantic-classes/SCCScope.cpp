@@ -69,39 +69,47 @@ void SCCScope::addSymbol(const SCCSymbol &symbol) {
     for (size_t i = 0; i < this->_symbols.size(); i++) {
         const SCCSymbol &symbolInArr = this->_symbols.at(i);
         if (symbolInArr.id() == symbol.id()) {
-            //! E1 cannot happen if E2, thus check E2 first
+            //! Not Checking E5 in this scope since any redeclaration/definition means E5 already checked.
+            //! ----- For Variables -----
+            if (!symbol.type().isFunc()) {
+                if (symbolInArr.type() != symbol.type()) {
+                //! Check E2 for variable
+                printAndReport("Conflict type declaration",
+                               SCCSemanticError::CONFLICT_TYPE, symbol.id());
+                return;}
+                //! Check E3
+                if (!this->isGlobal()) {
+                    printAndReport("Redeclaration in non-global scope",
+                                   SCCSemanticError::REDECLARATION, symbol.id());
+                    return;
+                }
+                // Good old redeclearation of variable in global scope
+                // Nothing need to be done
+                return;
+            }
+            //! ----- For Function -----
+            //! Check E1
+            if ((!symbolInArr.type().noParam()) && (!symbol.type().noParam())) {
+                // If both are definition
+                printAndReport("Redefinition of function",
+                               SCCSemanticError::REDEFINITION, symbol.id());
+                return; //! IGNORE inbound definition
+            }
+            //! Check E2 for func
             if (symbolInArr.type() != symbol.type()) {
                 printAndReport("Conflict type declaration",
                                SCCSemanticError::CONFLICT_TYPE, symbol.id());
                 return;
             }
-            //! Check E1
-            if (symbol.type().isFunc()) {
-                if (symbolInArr.type().noParam()) {
-                    // function have not been defined
-                    if (symbol.type().parameters()->size() > 0) {
-                        // if incoming symbol is func definition
-                        this->_symbols.at(i) = symbol;
-                        //! Check E5 here just before return
-                        symbol.validateType();
-                    }
-                    return;
-                }
-                // Function is already defined
-                if (!symbol.type().noParam()) {
-                    printAndReport("Redefinition of function",
-                                   SCCSemanticError::REDEFINITION, symbol.id());
-                }
+            //! This func sym have no error, update it if necessary
+            if (symbol.type().noParam()) {
+                // If inbound is declearation
+                // Nothing needs to be done
                 return;
             }
-            //! Check E3
-            if (!this->isGlobal()) {
-                printAndReport("Redeclaration in non-global scope",
-                               SCCSemanticError::REDECLARATION, symbol.id());
-                return;
-            }
-            //* Not Checking E5 since redeclaration means already checked.
-            return;  // If this is a good old redeclaration to global variable
+            // function decleared but not defined, incoming definition
+            this->_symbols.at(i) = symbol;
+            return;
         }
     }
     //! Check E5
