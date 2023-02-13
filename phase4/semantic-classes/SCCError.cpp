@@ -9,27 +9,54 @@
 #define DEBUG_ADDITIONAL_WARNING
 #endif
 
-void reportSemanticError(const SCCSemanticError errorType,
-                         const std::string &symbolName) {
+/**
+ * Report a semantic error use `report()` from lexer.h
+ * @param arg1 use in Phase3 errs and phase4 E4-5, id for Phase3 and operator for Phase4
+*/
+static void reportSemanticError(const SCCSemanticError errorType,
+                         const std::string &arg1);
+
+static void reportSemanticError(const SCCSemanticError errorType,
+                         const std::string &arg1) {
     switch (errorType) {
         case SCCSemanticError::REDEFINITION:
-            report("redefinition of '%s'", symbolName);
+            report("redefinition of '%s'", arg1);
             break;
         case SCCSemanticError::REDECLARATION:
-            report("redeclaration of '%s'", symbolName);
+            report("redeclaration of '%s'", arg1);
             break;
         case SCCSemanticError::CONFLICT_TYPE:
-            report("conflicting types for '%s'", symbolName);
+            report("conflicting types for '%s'", arg1);
             break;
         case SCCSemanticError::UNDECLARED:
-            report("'%s' undeclared", symbolName);
+            report("'%s' undeclared", arg1);
             break;
         case SCCSemanticError::VOID_VARIABLE:
-            report("'%s' has type void", symbolName);
+            report("'%s' has type void", arg1);
+            break;
+        case SCCSemanticError::EXP_INV_RETURN:
+            report("Invalid return type");
+            break;
+        case SCCSemanticError::EXP_INV_TEST:
+            report("invalid type for test expression");
+            break;
+        case SCCSemanticError::EXP_INV_EXPECT_LVALUE:
+            report("lvalue required in expression");
+            break;
+        case SCCSemanticError::EXP_INV_OP_BIN:
+            report("invalid operand to binary %s", arg1);
+            break;
+        case SCCSemanticError::EXP_INV_OP_UNI:
+            report("invalid operand to unary %s", arg1);
+            break;
+        case SCCSemanticError::EXP_NOT_FUNC:
+            report("called object is not a function");
+            break;
+        case SCCSemanticError::EXP_INV_ARG:
+            report("invalid arguments to called function");
             break;
         case SCCSemanticError::EXTRA_ERROR:
-            //! Extra errors that should not be report to stderr
-            break;
+            break;  //! Extra errors that should not be report to stderr
         default:
             report("SCCSemanticError: unknown error type!!", NULL);
             std::cout << "[ERROR] SCCSemanticError: unknown error type!!"
@@ -39,9 +66,9 @@ void reportSemanticError(const SCCSemanticError errorType,
 }
 
 void printAndReport(const std::string &str, SCCSemanticError errType,
-                    const std::string &id) {
+                    const std::string &arg1) {
 #ifdef DEBUG_ADDITIONAL_WARNING
     std::cout << "[WARN] " << str << std::endl;
 #endif
-    reportSemanticError(errType, id);
+    reportSemanticError(errType, arg1);
 }
