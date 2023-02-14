@@ -8,31 +8,48 @@
 #include "../GlobalConfig.hpp"
 #include "../tokens.h"
 
-class SCCType {
-   public:
+class SCCType
+{
+public:
     typedef std::vector<class SCCType> SCCType_Parameters;
-    enum SCCType_Specifier { VOID, INT, LONG, CHAR };
-    enum SCCType_DeclaratorType { SCALAR, ARRAY, FUNCTION, ERROR };
+    enum SCCType_Specifier
+    {
+        VOID,
+        INT,
+        LONG,
+        CHAR
+    };
+    enum SCCType_DeclaratorType
+    {
+        SCALAR,
+        ARRAY,
+        FUNCTION,
+        ERROR
+    };
 
-   private:
+private:
     SCCType_Specifier _specifier;
     size_t _indirection;
     SCCType_DeclaratorType _declaratorType;
     // Optionals
-    size_t _arrLength;  // Valid & required for _declaratorType == ARRAY
-    SCCType_Parameters
-        *_parameters;  // Valid & optional for _declaratorType == FUNCTION
+    size_t _arrLength;               // Valid & required for _declaratorType == ARRAY
+    SCCType_Parameters *_parameters; // Valid & optional for _declaratorType == FUNCTION
+    bool _isLValue;
+    /**
+     * Recursive helper for equalAfterPromotion()
+     */
+    bool _equalAfterPromotionHelper(const SCCType &that);
 
-   public:
+public:
     /**
      * Default constructor
      * Return type of ERROR
      */
     SCCType();
     SCCType(const SCCType_Specifier specifier,
-            const SCCType_DeclaratorType declaratorType,
+            const SCCType_DeclaratorType declaratorType = SCCType::SCALAR,
             const unsigned int indirection = 0, size_t arrLength = 0,
-            SCCType_Parameters *parameters = nullptr);
+            SCCType_Parameters *parameters = nullptr, bool isLValue = true);
     SCCType(const SCCType &that);
     SCCType &operator=(const SCCType &rhs);
     /**
@@ -41,9 +58,25 @@ class SCCType {
     bool typeIsNotValid() const;
     bool isArray() const;
     bool isFunc() const;
+    bool isPredicate() const;
+    bool isNumeric() const;
+    bool isPointer() const;
+    /**
+     * Check equal with promotion applied
+     */
+    bool equalAfterPromotion(const SCCType &that) const;
+    /**
+     * whether param is defined
+     * @return true if param==nullptr
+     */
     bool noParam() const;
-    const SCCType_Parameters *parameters() const;
     SCCType_Specifier specifier() const;
+    size_t indirection() const { return _indirection; };
+    SCCType_DeclaratorType declaratorType() const { return _declaratorType; };
+    size_t arrLength() const { return _arrLength; };
+    bool isLValue() const { return _isLValue; };
+
+    const SCCType_Parameters *parameters() const;
     bool operator==(const SCCType &that) const;
     bool operator!=(const SCCType &that) const;
     void printTo(std::ostream &out, const std::string &base = "") const;
