@@ -7,8 +7,8 @@ line 22: conflicting types for 'f2'
 line 24: 'a' has type void
 line 24: redefinition of 'f2'
 line 25: redefinition of 'f2'
-line 29: conflicting types for 'a'
+line 29: redeclaration of 'a'
 line 30: redeclaration of 'a'
-line 32: conflicting types for 'e'
+line 32: redeclaration of 'e'
 line 33: redeclaration of 'e'
 line 41: 'g' undeclared

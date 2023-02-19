@@ -1,0 +1,3 @@
+line 5: 'z' undeclared
+line 10: conflicting types for 'foo'
+line 12: redefinition of 'foo'
