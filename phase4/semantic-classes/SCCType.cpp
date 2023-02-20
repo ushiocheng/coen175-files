@@ -7,6 +7,18 @@
 
 #ifdef DEBUG
 #define DEBUG_ADDITIONAL_WARNING
+#define DEBUG_PRINT_FUNC_TRACE_FLG
+#define PRINT_IF_DEBUG(sth) cout << sth << endl;
+#else
+#define PRINT_IF_DEBUG(sth) /* debug print: sth */
+#endif
+
+#ifdef DEBUG_PRINT_FUNC_TRACE_FLG
+#define PRINT_FUNC_IF_ENABLED                                              \
+    std::cout << "[DEBUG] Running " << __func__ << " on line " << __LINE__ \
+              << std::endl
+#else
+#define PRINT_FUNC_IF_ENABLED ;
 #endif
 
 SCCType::SCCType() {
@@ -59,6 +71,7 @@ SCCType &SCCType::operator=(const SCCType &rhs) {
 }
 
 bool SCCType::typeIsNotValid() const {
+    PRINT_FUNC_IF_ENABLED;
     //* arr(void) is invalid
     //* ptr(void) is valid
     //* void is invalid
@@ -70,14 +83,17 @@ bool SCCType::isArray() const { return this->_declaratorType == ARRAY; }
 bool SCCType::isFunc() const { return this->_declaratorType == FUNCTION; }
 bool SCCType::noParam() const { return !(this->_parameters); }
 bool SCCType::isPredicate() const {
+    PRINT_FUNC_IF_ENABLED;
     return this->isPointer() || this->isNumeric();
 }
 bool SCCType::isNumeric() const {
+    PRINT_FUNC_IF_ENABLED;
     if (this->_declaratorType != SCALAR) return false;
     if (this->_indirection > 0) return false;
     return (this->_specifier != VOID);
 }
 bool SCCType::isPointer() const {
+    PRINT_FUNC_IF_ENABLED;
     if (this->_declaratorType == ARRAY) return true;
     if (this->_declaratorType != SCALAR) return false;
     // type is scalar
@@ -85,13 +101,41 @@ bool SCCType::isPointer() const {
 }
 
 bool SCCType::isDereferencablePtr() const {
+    PRINT_FUNC_IF_ENABLED;
     if (!this->isPointer()) return false;
     return (this->_specifier != VOID) || (this->_indirection > 1);
+}
+
+bool SCCType::isCompatible(const SCCType &that) const {
+    PRINT_FUNC_IF_ENABLED;
+#ifdef DEBUG
+    std::cout << "[DEBUG] Comparing: " << *this << " to " << that << std::endl;
+#endif
+    if (this->isNumeric() && that.isNumeric()) return true;
+    SCCType promotionOfThis = *this;
+    SCCType promotionOfThat = that;
+    promotionOfThis.promoteArray();
+    promotionOfThat.promoteArray();
+    if (promotionOfThis._specifier == CHAR && promotionOfThis._indirection == 0)
+        promotionOfThis._specifier = INT;
+    if (promotionOfThat._specifier == CHAR && promotionOfThat._indirection == 0)
+        promotionOfThat._specifier = INT;
+    if (!(promotionOfThis.isPointer() && promotionOfThat.isPointer()))
+        return false;
+    if ((promotionOfThis.specifier() == VOID) &&
+        (promotionOfThis.indirection() == 1))
+        return true;
+    if ((promotionOfThat.specifier() == VOID) &&
+        (promotionOfThat.indirection() == 1))
+        return true;
+    return (promotionOfThis.specifier() == promotionOfThat.specifier()) &&
+           (promotionOfThis.indirection() == promotionOfThat.indirection());
 }
 
 // TODO: [Q10] Should I allow promote in opposite direction?
 // TODO-cont: ex. can long be assigned to int
 bool SCCType::equalAfterPromotion(const SCCType &that) const {
+    PRINT_FUNC_IF_ENABLED;
     if (*this == that) return true;
     // declType cannot be error
     SCCType promotionOfThis = *this;
@@ -118,6 +162,7 @@ bool SCCType::equalAfterPromotion(const SCCType &that) const {
 }
 
 bool SCCType::_equalAfterPromotionHelper(const SCCType &that) {
+    PRINT_FUNC_IF_ENABLED;
     if (*this == that) return true;
     // declType must be SCALAR
     if (this->_specifier == CHAR) {
@@ -132,6 +177,7 @@ bool SCCType::_equalAfterPromotionHelper(const SCCType &that) {
 }
 
 void SCCType::promoteArray() {
+    PRINT_FUNC_IF_ENABLED;
     if (this->isArray()) {
         this->_indirection++;
         this->_declaratorType = SCALAR;
@@ -142,6 +188,7 @@ void SCCType::promoteArray() {
     }
 }
 void SCCType::promoteFunc() {
+    PRINT_FUNC_IF_ENABLED;
     if (this->isFunc()) {
         this->_declaratorType = SCALAR;
         this->_parameters = nullptr;
@@ -226,6 +273,7 @@ void SCCType::printTo(std::ostream &out, const std::string &base) const {
         case SCALAR:
             out << base << "    Declarator Type: SCALAR\n"
                 << base << "    Specifier:" << this->specifier() << "\n"
+                << base << "    Indirection: " << this->_indirection << "\n"
                 << base << "    "
                 << (this->isLValue() ? "Is lvalue" : "Is rvalue") << "\n";
             break;
@@ -234,13 +282,11 @@ void SCCType::printTo(std::ostream &out, const std::string &base) const {
                 << base << "    Specifier:" << this->specifier() << "\n"
                 << base << "    "
                 << (this->isLValue() ? "Is lvalue" : "Is rvalue") << "\n"
-                << base << "    Indirection: " << this->_indirection << "\n"
                 << base << "    Array Length: " << this->_arrLength << "\n";
             break;
         case FUNCTION:
             out << base << "    Declarator Type: FUNCTION\n"
                 << base << "    Specifier:" << this->specifier() << "\n"
-                << base << "    Indirection: " << this->_indirection << "\n"
                 << base << "    Parameters: [";
             if (!this->_parameters) {
                 out << "undefined ]\n";

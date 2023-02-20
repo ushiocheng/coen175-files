@@ -17,7 +17,7 @@ static SCCScope *globalScope = new SCCScope();
 static SCCScope *currentScope = globalScope;
 
 #ifdef DEBUG
-// #define DEBUG_PRINT_FUNC_TRACE_FLG
+#define DEBUG_PRINT_FUNC_TRACE_FLG
 // #define DEBUG_PRINT_MATCHING
 #define PRINT_IF_DEBUG(sth) cout << sth << endl;
 #else
@@ -26,7 +26,7 @@ static SCCScope *currentScope = globalScope;
 
 #ifdef DEBUG_PRINT_FUNC_TRACE_FLG
 #define PRINT_FUNC_IF_ENABLED \
-    cout << "[DEBUG] Running " << __func__ << " on line " << __LINE__ << endl
+    cout << "[DEBUG] Running " << __func__ << " on line " << __LINE__ << " on source line " << yylineno << endl
 #else
 #define PRINT_FUNC_IF_ENABLED ;
 #endif

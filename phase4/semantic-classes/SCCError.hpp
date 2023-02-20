@@ -24,7 +24,7 @@ enum SCCSemanticError {
     EXP_INV_TEST,
     // Phase 4 E3. lvalue required in expression
     EXP_INV_EXPECT_LVALUE,
-    // Phase 4 E4. invalid operand to binary {{operator}}
+    // Phase 4 E4. invalid operands to binary {{operator}}
     EXP_INV_OP_BIN,
     // Phase 4 E5. invalid operand to unary {{operator}}
     EXP_INV_OP_UNI,

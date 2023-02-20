@@ -45,7 +45,7 @@ static void reportSemanticError(const SCCSemanticError errorType,
             report("lvalue required in expression");
             break;
         case SCCSemanticError::EXP_INV_OP_BIN:
-            report("invalid operand to binary %s", arg1);
+            report("invalid operands to binary %s", arg1);
             break;
         case SCCSemanticError::EXP_INV_OP_UNI:
             report("invalid operand to unary %s", arg1);

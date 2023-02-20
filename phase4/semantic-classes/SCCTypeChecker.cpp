@@ -66,7 +66,7 @@ SCCType typeOfExpression(SCCTypeChecker::SCCUnaryOperation op,
 
 //! => At this point, op1 must be scalar
 #ifdef DEBUG
-    if (!operand1.declaratorType() == SCCType::SCALAR) {
+    if (!(operand1.declaratorType() == SCCType::SCALAR)) {
         std::cout << "Assertion Failed, op1: " << operand1 << std::endl;
         assert(false);
     }
@@ -155,11 +155,11 @@ SCCType typeOfExpression(SCCTypeChecker::SCCBinaryOperation op,
 
 //! op1 & op2 must be SCALAR
 #ifdef DEBUG
-    if (!operand1.declaratorType() == SCCType::SCALAR) {
+    if (!(operand1.declaratorType() == SCCType::SCALAR)) {
         std::cout << "Assertion Failed, op1: " << operand1 << std::endl;
         assert(false);
     }
-    if (!operand2.declaratorType() == SCCType::SCALAR) {
+    if (!(operand2.declaratorType() == SCCType::SCALAR)) {
         std::cout << "Assertion Failed, op2: " << operand2 << std::endl;
         assert(false);
     }
@@ -168,6 +168,7 @@ SCCType typeOfExpression(SCCTypeChecker::SCCBinaryOperation op,
     switch (op) {
         case SCCTypeChecker::SCCBinaryOperation::OP_OR:
         case SCCTypeChecker::SCCBinaryOperation::OP_AND:
+            PRINT_IF_DEBUG("Handeling OR/AND");
             if (!(operand1.isPredicate() && operand2.isPredicate())) {
                 printAndReport("Phase4: OP_OR/OP_AND arg not predicate",
                                SCCSemanticError::EXP_INV_OP_BIN,
@@ -177,13 +178,23 @@ SCCType typeOfExpression(SCCTypeChecker::SCCBinaryOperation op,
             return SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, nullptr, false);
         case SCCTypeChecker::SCCBinaryOperation::OP_EQ:
         case SCCTypeChecker::SCCBinaryOperation::OP_NEQ:
+            PRINT_IF_DEBUG("Handeling EQ/NEQ");
+            if (!operand1.isCompatible(operand2)) {
+                printAndReport("Phase4: ops not comparable.",
+                               SCCSemanticError::EXP_INV_OP_BIN,
+                               binaryOperatorStr[op]);
+                break;
+            }
+            return SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, nullptr, false);
         case SCCTypeChecker::SCCBinaryOperation::OP_LT:
         case SCCTypeChecker::SCCBinaryOperation::OP_GT:
         case SCCTypeChecker::SCCBinaryOperation::OP_LE:
         case SCCTypeChecker::SCCBinaryOperation::OP_GE:
+            PRINT_IF_DEBUG("Handeling comparators");
             //! [spec] op1 and op2 MUST both be numeric or identital predicate
-            //! types, after promotion i.e. Type is compatible
-            if (!operand1.equalAfterPromotion(operand2)) {
+            //! types, after promotion
+            if (!((operand1.isNumeric() && operand2.isNumeric()) ||
+                  (operand1.isPredicate() && (operand1 == operand2)))) {
                 printAndReport("Phase4: ops not comparable.",
                                SCCSemanticError::EXP_INV_OP_BIN,
                                binaryOperatorStr[op]);
@@ -191,18 +202,20 @@ SCCType typeOfExpression(SCCTypeChecker::SCCBinaryOperation op,
             }
             return SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, nullptr, false);
         case SCCTypeChecker::SCCBinaryOperation::OP_MINUS:
+            PRINT_IF_DEBUG("Handeling MINUS");
             //! [spec] `ptr(T)-ptr(T)` OR `ptr(T)-num`
             //! where T is not VOID (T can be ptr(VOID))
             //! [spec] `num-num`
 
             //! Special case for pointer arithmatic `ptr(T)-ptr(T) -> long`
-            if (operand1.isDereferencablePtr() && operand2.isPointer() &&
-                operand1.equalAfterPromotion(operand2)) {
+            if (operand1.isDereferencablePtr() && operand2.isDereferencablePtr() &&
+                (operand1 == operand2)) {
                 return SCCType(SCCType::LONG, SCCType::SCALAR, 0, 0, nullptr,
                                false);
             }
             //* Intentional fall though for arithmatic op & type checking
         case SCCTypeChecker::SCCBinaryOperation::OP_ADD:
+            PRINT_IF_DEBUG("Handeling MINUS/ADD");
             //! [spec] `num+ptr(T)` OR `ptr(T)+num`
             //! where T is not VOID (T can be ptr(VOID))
             //! [spec] `num+num`
@@ -221,6 +234,7 @@ SCCType typeOfExpression(SCCTypeChecker::SCCBinaryOperation op,
         case SCCTypeChecker::SCCBinaryOperation::OP_MUL:
         case SCCTypeChecker::SCCBinaryOperation::OP_DIV:
         case SCCTypeChecker::SCCBinaryOperation::OP_MOD:
+            PRINT_IF_DEBUG("Handeling OR/AND/MUL/DIV/MOD");
             //! [spec] op1 & op2 both num
             //! + - * / % shared code region for numeric arithmatic operation
             if (!(operand1.isNumeric() && operand2.isNumeric())) {
@@ -237,6 +251,7 @@ SCCType typeOfExpression(SCCTypeChecker::SCCBinaryOperation op,
                 SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, nullptr, false);
             }
         case SCCTypeChecker::SCCBinaryOperation::OP_SUBSCRIPT:
+            PRINT_IF_DEBUG("Handeling SUBSCRIPT");
             //! [spec] op1 must be ptr(T) where T is not void, op2 must be num
             if (!(operand1.isDereferencablePtr() && operand2.isNumeric())) {
                 printAndReport("Phase4: ops not compatible with []",
@@ -296,7 +311,8 @@ SCCType typeOfExpression(SCCType func, std::vector<SCCType>* parameters) {
     if (expectedArgCount > 0) {
         const std::vector<SCCType>* expectedParams = func.parameters();
         for (size_t i = 0; i < expectedParams->size(); i++) {
-            if (parameters->at(i).equalAfterPromotion(expectedParams->at(i)))
+            if (parameters->at(i).isCompatible(expectedParams->at(i)) &&
+                parameters->at(i).isPredicate())
                 continue;
             // Mis match params
             printAndReport("Phase4: Calling function with mismatched params.",
@@ -322,7 +338,7 @@ void checkAssign(SCCType lhs, SCCType rhs) {
                        SCCSemanticError::EXP_INV_EXPECT_LVALUE);
     }
     //! Check compatible
-    if (!rhs.equalAfterPromotion(lhs)) {
+    if (!rhs.isCompatible(lhs)) {
         printAndReport("Phase4: Assign to imcompatible type",
                        SCCSemanticError::EXP_INV_OP_BIN, "=");
     }
@@ -345,7 +361,7 @@ void checkReturnType(SCCScope* context, SCCType returnType) {
     const SCCSymbol* enclosingFunc = context->getEnclosingFunc();
     assert(enclosingFunc);
     //! Check compatible
-    if (!returnType.equalAfterPromotion(enclosingFunc->type())) {
+    if (!returnType.isCompatible(enclosingFunc->type())) {
         printAndReport("Phase4: return type incompatible",
                        SCCSemanticError::EXP_INV_RETURN);
     }

@@ -67,6 +67,14 @@ class SCCType {
      */
     bool equalAfterPromotion(const SCCType &that) const;
     /**
+     * [spec] is Compatible
+     * if after promotion char->int, arr(T)->ptr(T), they are 
+     * both numeric
+     * or both ptr(T)
+     * or ptr(T) and ptr(void)
+    */
+    bool isCompatible(const SCCType& that) const;
+    /**
      * Promote Array -> Ptr
      * @remark changes how sizeof() behaves!
      */

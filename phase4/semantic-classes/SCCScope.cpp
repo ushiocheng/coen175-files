@@ -8,7 +8,7 @@
 #include "SCCType.hpp"
 
 #ifdef DEBUG
-#define DEBUG_PRINT_FUNC_TRACE_FLG
+// #define DEBUG_PRINT_FUNC_TRACE_FLG
 // #define DEBUG_PRINT_MATCHING
 #define PRINT_IF_DEBUG(sth) std::cout << sth << std::endl;
 #else
