@@ -19,4 +19,12 @@
 // Size of error type, doesn't matter but should be 0 or -1
 #define SIZEOF_ERROR 0
 
+// Define INT_MAX and INT_MIN
+#ifndef INT_MAX
+#define INT_MAX 2147483647
+#endif
+#ifndef INT_MIN
+#define INT_MIN -2147483648
+#endif
+
 #endif  // GLOBAL_CONFIG_HPP
