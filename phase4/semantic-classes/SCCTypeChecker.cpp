@@ -51,13 +51,26 @@ SCCType typeOfExpression(SCCTypeChecker::SCCUnaryOperation op,
     if (operand1.typeIsNotValid()) {
         printAndReport("Phase4: passing invalid type to unary op.",
                        SCCSemanticError::EXP_INV_OP_UNI, unaryOperatorStr[op]);
+        return SCCType();
     }
     //! Promote to Scalar if is array
     operand1.promoteArray();
     // Not promoting Function since function call are also handled as an
-    // operator
-    //! => At this point, op1 must be scalar
-    assert(operand1.declaratorType() == SCCType::SCALAR);
+    // operator, instead, if a function is treated as a scalar, an error will be
+    // thrown
+    if (operand1.isFunc()) {
+        printAndReport("Phase4: passing function as value.",
+                       SCCSemanticError::EXP_INV_OP_UNI, unaryOperatorStr[op]);
+        return SCCType();
+    }
+
+//! => At this point, op1 must be scalar
+#ifdef DEBUG
+    if (!operand1.declaratorType() == SCCType::SCALAR) {
+        std::cout << "Assertion Failed, op1: " << operand1 << std::endl;
+        assert(false);
+    }
+#endif
     //! Handle each operator
     switch (op) {
         case SCCTypeChecker::SCCUnaryOperation::OP_NOT:
@@ -112,7 +125,8 @@ SCCType typeOfExpression(SCCTypeChecker::SCCUnaryOperation op,
     }
 //! Error Handeling
 #ifdef VERBOSE_ERROR_MSG
-    PRINT_IF_DEBUG("Operator: " << op << "; Arg1: " << operand1);
+    PRINT_IF_DEBUG("Operator: " << unaryOperatorStr[op]
+                                << "; Arg1: " << operand1);
 #endif
     return SCCType();
 }
@@ -131,10 +145,25 @@ SCCType typeOfExpression(SCCTypeChecker::SCCBinaryOperation op,
     operand1.promoteArray();
     operand2.promoteArray();
     // Not promoting Function since function call are also handled as an
-    // operator
-    //! op1 & op2 must be SCALAR
-    assert(operand1.declaratorType() == SCCType::SCALAR);
-    assert(operand2.declaratorType() == SCCType::SCALAR);
+    // operator, instead, if a function is treated as a scalar, an error will be
+    // thrown
+    if (operand1.isFunc() || operand2.isFunc()) {
+        printAndReport("Phase4: passing function as value.",
+                       SCCSemanticError::EXP_INV_OP_BIN, binaryOperatorStr[op]);
+        return SCCType();
+    }
+
+//! op1 & op2 must be SCALAR
+#ifdef DEBUG
+    if (!operand1.declaratorType() == SCCType::SCALAR) {
+        std::cout << "Assertion Failed, op1: " << operand1 << std::endl;
+        assert(false);
+    }
+    if (!operand2.declaratorType() == SCCType::SCALAR) {
+        std::cout << "Assertion Failed, op2: " << operand2 << std::endl;
+        assert(false);
+    }
+#endif
     //! handle each operator
     switch (op) {
         case SCCTypeChecker::SCCBinaryOperation::OP_OR:
@@ -222,8 +251,8 @@ SCCType typeOfExpression(SCCTypeChecker::SCCBinaryOperation op,
     }
 //! Error Handeling
 #ifdef VERBOSE_ERROR_MSG
-    PRINT_IF_DEBUG("Operator: " << op << "; Arg1: " << operand1
-                                << "; Arg2: " << operand2);
+    PRINT_IF_DEBUG("Operator: " << binaryOperatorStr[op] << "; Arg1: "
+                                << operand1 << "; Arg2: " << operand2);
 #endif
     return SCCType();
 }
