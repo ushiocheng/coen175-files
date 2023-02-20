@@ -21,9 +21,9 @@ SCCType::SCCType(const SCCType_Specifier specifier,
     : _specifier(specifier),
       _indirection(indirection),
       _declaratorType(declaratorType),
+      _isLValue(isLValue),
       _arrLength(arrLength),
-      _parameters(parameters),
-      _isLValue(isLValue) {
+      _parameters(parameters) {
     // //! Enforce array cannot be of size 0
     // if (this->_declaratorType == ARRAY) {
     //     if (this->_arrLength == 0) {
@@ -43,18 +43,18 @@ SCCType::SCCType(const SCCType &that)
     : _specifier(that._specifier),
       _indirection(that._indirection),
       _declaratorType(that._declaratorType),
+      _isLValue(that._isLValue),
       _arrLength(that._arrLength),
-      _parameters(that._parameters),
-      _isLValue(that._isLValue) {}
+      _parameters(that._parameters) {}
 
 SCCType &SCCType::operator=(const SCCType &rhs) {
     if (this->_parameters) delete this->_parameters;
     this->_declaratorType = rhs._declaratorType;
     this->_specifier = rhs._specifier;
+    this->_isLValue = rhs._isLValue;
     this->_indirection = rhs._indirection;
     this->_arrLength = rhs._arrLength;
     this->_parameters = rhs._parameters;
-    this->_isLValue = rhs._isLValue;
     return *this;
 }
 
