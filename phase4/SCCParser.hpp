@@ -28,16 +28,19 @@ void declarator(SCCType::SCCType_Specifier sp);
 void statements();
 void statement();
 void assignment();
-void expression_list();
-void expression();
-void expression_level_1();
-void expression_level_2();
-void expression_level_3();
-void expression_level_4();
-void expression_level_5();
-void expression_level_6();
-void expression_level_7();
-void expression_level_8();
-void expression_term();
+/**
+ * @return dynamically allocated list of expr type
+*/
+std::vector<SCCType>* expression_list();
+SCCType expression();
+SCCType expression_level_1();
+SCCType expression_level_2();
+SCCType expression_level_3();
+SCCType expression_level_4();
+SCCType expression_level_5();
+SCCType expression_level_6();
+SCCType expression_level_7();
+SCCType expression_level_8();
+SCCType expression_term();
 
 #endif  // SCC_PARSER_HPP

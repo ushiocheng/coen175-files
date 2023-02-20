@@ -18,15 +18,19 @@ class SCCSymbol {
      */
     SCCSymbol(const std::string &id);
     SCCSymbol(const std::string &id, const SCCType &type);
+    SCCSymbol(const SCCSymbol &that);
     const std::string &id() const;
     const SCCType &type() const;
-    void validateType() const;
     /**
-     * Deleting Params which is allocated dynamically.
-     * @remark this is dangerous and should ONLY be used for deallocating
-     * objects.
+     * Check for Phase 3 E5
      */
-    void _deleteParams();
+    void validatePhase3E5() const;
+    /**
+     * Clearing param ptr
+     * ! @remark NOT Deleting Params which is allocated dynamically.
+     * @remark this is dangerous and should ONLY be used when deallocating scope
+     */
+    void _clearParams();
 };
 
 std::ostream &operator<<(std::ostream &out, const SCCSymbol &rhs);

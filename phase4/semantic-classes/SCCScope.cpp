@@ -27,8 +27,11 @@
  * Constructor
  * @remark should only be used to make global scope
  */
-SCCScope::SCCScope(SCCScope *outerScope)
-    : _symbols(), _outerScope(outerScope), _innerScopes() {
+SCCScope::SCCScope(SCCScope *outerScope, SCCSymbol *enclosingFunc)
+    : _symbols(),
+      _enclosingFunc(enclosingFunc),
+      _outerScope(outerScope),
+      _innerScopes() {
     if (outerScope) {
         outerScope->_innerScopes.push_back(this);
     }
@@ -40,6 +43,21 @@ SCCScope::SCCScope(SCCScope *outerScope)
 SCCScope *SCCScope::createScope() {
     PRINT_FUNC_IF_ENABLED;
     return new SCCScope(this);
+}
+
+void SCCScope::setEnclosingFunc(SCCSymbol *func) {
+    this->_enclosingFunc = func;
+}
+
+const SCCSymbol* SCCScope::getEnclosingFunc() const{
+    const SCCScope* tp = this;
+    while (tp!=nullptr) {
+        if (tp->_enclosingFunc != nullptr) {
+            return tp->_enclosingFunc;
+        }
+        tp = tp->_outerScope;
+    }
+    return nullptr;
 }
 
 /**
@@ -98,7 +116,7 @@ void SCCScope::addSymbol(const SCCSymbol &symbol) {
                                SCCSemanticError::REDEFINITION, symbol.id());
                 //! ACCEPT inbound definition per specification
                 this->_symbols.at(i) = symbol;
-                symbol.validateType();
+                symbol.validatePhase3E5();
                 return;
             }
             //! Check E2 for func
@@ -119,7 +137,7 @@ void SCCScope::addSymbol(const SCCSymbol &symbol) {
         }
     }
     //! Check E5
-    symbol.validateType();
+    symbol.validatePhase3E5();
     this->_symbols.push_back(symbol);
 }
 
@@ -150,7 +168,14 @@ const SCCSymbol *SCCScope::_findSymbol(const std::string &id) const {
 }
 
 SCCScope::~SCCScope() {
-    for (SCCSymbol symbol : _symbols) symbol._deleteParams();
+    for (SCCSymbol symbol : _symbols) {
+        if (symbol.type().parameters()) delete symbol.type().parameters();
+        symbol._clearParams();
+    }
+    if (_enclosingFunc) {
+        _enclosingFunc->_clearParams();
+        delete _enclosingFunc;
+    }
     for (SCCScope *scope : _innerScopes) {
         if (scope) delete scope;
     }

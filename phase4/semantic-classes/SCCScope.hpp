@@ -11,6 +11,7 @@
 class SCCScope {
    private:
     std::vector<SCCSymbol> _symbols;
+    SCCSymbol* _enclosingFunc;
     SCCScope* _outerScope;
     std::vector<SCCScope*> _innerScopes;
 
@@ -21,11 +22,13 @@ class SCCScope {
      * Constructor
      * @remark should only be used to make global scope
      */
-    SCCScope(SCCScope* outerScope = nullptr);
+    SCCScope(SCCScope* outerScope = nullptr, SCCSymbol* enclosingFunc = nullptr);
     /**
      * Create a inner
      */
     SCCScope* createScope();
+    void setEnclosingFunc(SCCSymbol* func);
+    const SCCSymbol* getEnclosingFunc() const;
     /**
      * Exit to outer scope
      * @remark returns this & print warning if already at root/global scope
