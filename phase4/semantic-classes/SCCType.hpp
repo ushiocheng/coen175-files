@@ -18,11 +18,13 @@ class SCCType {
     SCCType_Specifier _specifier;
     size_t _indirection;
     SCCType_DeclaratorType _declaratorType;
-    // Optionals
-    size_t _arrLength;  // Valid & required for _declaratorType == ARRAY
-    SCCType_Parameters
-        *_parameters;  // Valid & optional for _declaratorType == FUNCTION
     bool _isLValue;
+    //! Optionals
+    // Valid & required for _declaratorType == ARRAY
+    size_t _arrLength;
+    // Valid & optional for _declaratorType == FUNCTION
+    SCCType_Parameters *_parameters;
+
     /**
      * Recursive helper for equalAfterPromotion()
      */

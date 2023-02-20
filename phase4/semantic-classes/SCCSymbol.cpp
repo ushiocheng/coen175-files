@@ -13,8 +13,8 @@ SCCSymbol::SCCSymbol(const std::string &id)
 SCCSymbol::SCCSymbol(const std::string &id, const SCCType &type)
     : _id(id), _type(type) {}
 
-SCCSymbol::SCCSymbol(const SCCSymbol& that)
-: _id(that._id), _type(that._type) {}
+SCCSymbol::SCCSymbol(const SCCSymbol &that)
+    : _id(that._id), _type(that._type) {}
 
 const std::string &SCCSymbol::id() const { return this->_id; }
 const SCCType &SCCSymbol::type() const { return this->_type; }

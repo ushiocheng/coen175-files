@@ -27,9 +27,9 @@
  * Constructor
  * @remark should only be used to make global scope
  */
-SCCScope::SCCScope(SCCScope *outerScope, SCCSymbol *enclosingFunc)
+SCCScope::SCCScope(SCCScope *outerScope)
     : _symbols(),
-      _enclosingFunc(enclosingFunc),
+      _enclosingFunc(nullptr),
       _outerScope(outerScope),
       _innerScopes() {
     if (outerScope) {
@@ -49,9 +49,9 @@ void SCCScope::setEnclosingFunc(SCCSymbol *func) {
     this->_enclosingFunc = func;
 }
 
-const SCCSymbol* SCCScope::getEnclosingFunc() const{
-    const SCCScope* tp = this;
-    while (tp!=nullptr) {
+const SCCSymbol *SCCScope::getEnclosingFunc() const {
+    const SCCScope *tp = this;
+    while (tp != nullptr) {
         if (tp->_enclosingFunc != nullptr) {
             return tp->_enclosingFunc;
         }

@@ -30,7 +30,7 @@ void statement();
 void assignment();
 /**
  * @return dynamically allocated list of expr type
-*/
+ */
 std::vector<SCCType>* expression_list();
 SCCType expression();
 SCCType expression_level_1();

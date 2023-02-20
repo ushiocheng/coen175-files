@@ -11,13 +11,14 @@
 
 /**
  * Report a semantic error use `report()` from lexer.h
- * @param arg1 use in Phase3 errs and phase4 E4-5, id for Phase3 and operator for Phase4
-*/
+ * @param arg1 use in Phase3 errs and phase4 E4-5, id for Phase3 and operator
+ * for Phase4
+ */
 static void reportSemanticError(const SCCSemanticError errorType,
-                         const std::string &arg1);
+                                const std::string &arg1);
 
 static void reportSemanticError(const SCCSemanticError errorType,
-                         const std::string &arg1) {
+                                const std::string &arg1) {
     switch (errorType) {
         case SCCSemanticError::REDEFINITION:
             report("redefinition of '%s'", arg1);

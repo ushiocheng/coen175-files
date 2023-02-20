@@ -105,7 +105,8 @@ bool SCCType::equalAfterPromotion(const SCCType &that) const {
     //! Check for reverse promotion
     // If both are number =OR= same idr ptr to number/void
     if ((promotionOfThis.indirection() == promotionOfThat.indirection()) &&
-        ((promotionOfThis.specifier() != VOID && promotionOfThat.specifier() != VOID) ||
+        ((promotionOfThis.specifier() != VOID &&
+          promotionOfThat.specifier() != VOID) ||
          (promotionOfThis.specifier() == promotionOfThat.specifier()))) {
 #ifdef VERBOSE_ERROR_MSG
         std::cout
