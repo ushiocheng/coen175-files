@@ -18,7 +18,7 @@ enum SCCSemanticError {
     VOID_VARIABLE,
     //! Phase 4 Stuff
 
-    // Phase 4 E1. Invalid return type
+    // Phase 4 E1. invalid return type
     EXP_INV_RETURN,
     // Phase 4 E2. invalid type for test expression
     EXP_INV_TEST,

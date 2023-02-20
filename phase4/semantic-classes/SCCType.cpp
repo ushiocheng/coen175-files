@@ -60,7 +60,6 @@ SCCType::SCCType(const SCCType &that)
       _parameters(that._parameters) {}
 
 SCCType &SCCType::operator=(const SCCType &rhs) {
-    if (this->_parameters) delete this->_parameters;
     this->_declaratorType = rhs._declaratorType;
     this->_specifier = rhs._specifier;
     this->_isLValue = rhs._isLValue;
@@ -236,6 +235,7 @@ SCCType::SCCType_Specifier SCCType::specifier() const {
 }
 
 bool SCCType::operator==(const SCCType &that) const {
+    PRINT_FUNC_IF_ENABLED;
     //! Ignore type check if declaratorType is ERROR
     if (this->_declaratorType == ERROR) return true;
     if (that._declaratorType == ERROR) return true;
@@ -261,6 +261,7 @@ bool SCCType::operator==(const SCCType &that) const {
 }
 
 bool SCCType::operator!=(const SCCType &that) const {
+    PRINT_FUNC_IF_ENABLED;
     return !((*this) == that);
 }
 
@@ -271,36 +272,31 @@ void SCCType::printTo(std::ostream &out, const std::string &base) const {
             out << base << "    Declarator Type: ERROR\n";
             break;
         case SCALAR:
-            out << base << "    Declarator Type: SCALAR\n"
-                << base << "    Specifier:" << this->specifier() << "\n"
-                << base << "    Indirection: " << this->_indirection << "\n"
-                << base << "    "
-                << (this->isLValue() ? "Is lvalue" : "Is rvalue") << "\n";
+            out << base << "    Declarator Type: SCALAR\n";
             break;
         case ARRAY:
-            out << base << "    Declarator Type: ARRAY\n"
-                << base << "    Specifier:" << this->specifier() << "\n"
-                << base << "    "
-                << (this->isLValue() ? "Is lvalue" : "Is rvalue") << "\n"
-                << base << "    Array Length: " << this->_arrLength << "\n";
+            out << base << "    Declarator Type: ARRAY\n";
             break;
         case FUNCTION:
-            out << base << "    Declarator Type: FUNCTION\n"
-                << base << "    Specifier:" << this->specifier() << "\n"
-                << base << "    Parameters: [";
-            if (!this->_parameters) {
-                out << "undefined ]\n";
-                break;
-            }
-            out << "\n";
-            for (size_t i = 0; i < (this->_parameters->size()); i++) {
-                this->_parameters->at(i).printTo(out, base + "    ");
-            }
-            out << base << "    ]\n";
+            out << base << "    Declarator Type: FUNCTION\n";
             break;
         default:
             out << base << "    Declarator Type: UNKNOWN\n";
             break;
+    }
+    out << base << "    Specifier:" << this->specifier() << "\n";
+    out << base << "    Indirection: " << this->_indirection << "\n";
+    out << base << "    Array Length: " << this->_arrLength << "\n";
+    out << base << (this->isLValue() ? "Is lvalue" : "Is rvalue") << "\n";
+    out << base << "    Parameters: [";
+    if (!this->_parameters) {
+        out << "undefined ]\n";
+    } else {
+        out << "\n";
+        for (size_t i = 0; i < (this->_parameters->size()); i++) {
+            this->_parameters->at(i).printTo(out, base + "    ");
+        }
+        out << base << "    ]\n";
     }
     out << base << "}" << std::endl;
 }
@@ -308,6 +304,8 @@ void SCCType::printTo(std::ostream &out, const std::string &base) const {
 void SCCType::_clearParams() { this->_parameters = nullptr; }
 
 SCCType::~SCCType() {
+    PRINT_FUNC_IF_ENABLED;
+    _parameters = nullptr;
     //! Intentionally choose not to delete _parameters
     //! Since SCCType are passed by value.
     //! Deletion is handled by `SCCScope` when main scope exits

@@ -36,7 +36,7 @@ static void reportSemanticError(const SCCSemanticError errorType,
             report("'%s' has type void", arg1);
             break;
         case SCCSemanticError::EXP_INV_RETURN:
-            report("Invalid return type");
+            report("invalid return type");
             break;
         case SCCSemanticError::EXP_INV_TEST:
             report("invalid type for test expression");

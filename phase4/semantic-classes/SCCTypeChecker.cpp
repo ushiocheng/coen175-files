@@ -208,8 +208,8 @@ SCCType typeOfExpression(SCCTypeChecker::SCCBinaryOperation op,
             //! [spec] `num-num`
 
             //! Special case for pointer arithmatic `ptr(T)-ptr(T) -> long`
-            if (operand1.isDereferencablePtr() && operand2.isDereferencablePtr() &&
-                (operand1 == operand2)) {
+            if (operand1.isDereferencablePtr() &&
+                operand2.isDereferencablePtr() && (operand1 == operand2)) {
                 return SCCType(SCCType::LONG, SCCType::SCALAR, 0, 0, nullptr,
                                false);
             }
@@ -234,7 +234,7 @@ SCCType typeOfExpression(SCCTypeChecker::SCCBinaryOperation op,
         case SCCTypeChecker::SCCBinaryOperation::OP_MUL:
         case SCCTypeChecker::SCCBinaryOperation::OP_DIV:
         case SCCTypeChecker::SCCBinaryOperation::OP_MOD:
-            PRINT_IF_DEBUG("Handeling OR/AND/MUL/DIV/MOD");
+            PRINT_IF_DEBUG("Handeling MINUS/ADD/MUL/DIV/MOD");
             //! [spec] op1 & op2 both num
             //! + - * / % shared code region for numeric arithmatic operation
             if (!(operand1.isNumeric() && operand2.isNumeric())) {
@@ -246,9 +246,11 @@ SCCType typeOfExpression(SCCTypeChecker::SCCBinaryOperation op,
             //! op1 and op2 both numeric
             if (operand1.specifier() == SCCType::LONG ||
                 operand2.specifier() == SCCType::LONG) {
-                SCCType(SCCType::LONG, SCCType::SCALAR, 0, 0, nullptr, false);
+                return SCCType(SCCType::LONG, SCCType::SCALAR, 0, 0, nullptr,
+                               false);
             } else {
-                SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, nullptr, false);
+                return SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, nullptr,
+                               false);
             }
         case SCCTypeChecker::SCCBinaryOperation::OP_SUBSCRIPT:
             PRINT_IF_DEBUG("Handeling SUBSCRIPT");
@@ -361,7 +363,9 @@ void checkReturnType(SCCScope* context, SCCType returnType) {
     const SCCSymbol* enclosingFunc = context->getEnclosingFunc();
     assert(enclosingFunc);
     //! Check compatible
-    if (!returnType.isCompatible(enclosingFunc->type())) {
+    SCCType expectedReturnType(enclosingFunc->type());
+    expectedReturnType.promoteFunc();
+    if (!returnType.isCompatible(expectedReturnType)) {
         printAndReport("Phase4: return type incompatible",
                        SCCSemanticError::EXP_INV_RETURN);
     }
