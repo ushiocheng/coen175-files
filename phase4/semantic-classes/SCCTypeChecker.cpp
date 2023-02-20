@@ -3,6 +3,7 @@
 #include <cassert>
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include "../GlobalConfig.hpp"
 #include "SCCError.hpp"
@@ -263,14 +264,19 @@ SCCType typeOfExpression(SCCType func, std::vector<SCCType>* parameters) {
         return SCCType();
     }
     //! Check param matches
-    if (expectedArgCount > 0 && (*(func.parameters()) != *parameters)) {
-        // Mis match params
-        printAndReport("Phase4: Calling function with mismatched params.",
-                       SCCSemanticError::EXP_INV_ARG);
+    if (expectedArgCount > 0) {
+        const std::vector<SCCType>* expectedParams = func.parameters();
+        for (size_t i = 0; i < expectedParams->size(); i++) {
+            if (parameters->at(i).equalAfterPromotion(expectedParams->at(i)))
+                continue;
+            // Mis match params
+            printAndReport("Phase4: Calling function with mismatched params.",
+                           SCCSemanticError::EXP_INV_ARG);
 #ifdef VERBOSE_ERROR_MSG
-        PRINT_IF_DEBUG("Func: " << func << "Parameter: " << parameters);
+            PRINT_IF_DEBUG("Func: " << func << "Parameter: " << parameters);
 #endif
-        return SCCType();
+            return SCCType();
+        }
     }
     //! Promote Function to its return value
     func.promoteFunc();
