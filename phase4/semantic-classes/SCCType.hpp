@@ -64,16 +64,17 @@ class SCCType {
      * cast into a smaller one.
      * TODO: [Q10] Should I allow promote in opposite direction?
      * TODO-cont: ex. can long be assigned to int
+     * ! => Use isCompatible instead
      */
     bool equalAfterPromotion(const SCCType &that) const;
     /**
      * [spec] is Compatible
-     * if after promotion char->int, arr(T)->ptr(T), they are 
+     * if after promotion char->int, arr(T)->ptr(T), they are
      * both numeric
      * or both ptr(T)
      * or ptr(T) and ptr(void)
-    */
-    bool isCompatible(const SCCType& that) const;
+     */
+    bool isCompatible(const SCCType &that) const;
     /**
      * Promote Array -> Ptr
      * @remark changes how sizeof() behaves!

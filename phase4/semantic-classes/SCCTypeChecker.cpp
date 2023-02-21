@@ -38,7 +38,6 @@ static std::string binaryOperatorStr[14] = {
     "/",   // OP_DIV
     "%",   // OP_MOD
     "[]"   // OP_SUBSCRIPT
-    // TODO: [Q7] What should I output for subscript operator? `[]` or `[ ]`?
 };
 
 SCCType typeOfExpression(SCCTypeChecker::SCCUnaryOperation op,
@@ -94,8 +93,6 @@ SCCType typeOfExpression(SCCTypeChecker::SCCUnaryOperation op,
 
         case SCCTypeChecker::SCCUnaryOperation::OP_ADDR_OF:
             if (!operand1.isLValue()) {
-                // TODO: [Q1] check spec to make sure LVALUE error should be
-                // returned instead of INV_OP_UNI
                 printAndReport("Phase4: Cannot get addr of RValue.",
                                SCCSemanticError::EXP_INV_EXPECT_LVALUE);
                 break;
@@ -111,12 +108,12 @@ SCCType typeOfExpression(SCCTypeChecker::SCCUnaryOperation op,
                 break;
             }
             //! Return LValue, this fact is be checked on addrof or runtime
-            // TODO: [Q4] Is this the case?
             return SCCType(operand1.specifier(), operand1.declaratorType(),
                            operand1.indirection() - 1, 0, nullptr, true);
 
         case SCCTypeChecker::SCCUnaryOperation::OP_SIZEOF:
-            // TODO: [Q5] Is sizeof function valid? what should it return?
+            //* Sizeof (predicate)
+            // Everything is a predicate at this point
             return SCCType(SCCType::LONG, SCCType::SCALAR, 0, 0, nullptr,
                            false);
 
@@ -285,8 +282,7 @@ SCCType typeOfExpression(SCCType func, std::vector<SCCType>* parameters) {
     }
     //! check if func is defined/declared
     if (func.parameters() == nullptr) {
-        //! Function is undefined in this scope.
-        // TODO: [Q6] should I return error or skip param type checking?
+        //! Function is undefined in this scope, skip param checking
         // // return SCCType();
         func.promoteFunc();
         return func;

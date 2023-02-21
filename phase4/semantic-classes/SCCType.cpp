@@ -133,6 +133,7 @@ bool SCCType::isCompatible(const SCCType &that) const {
 
 // TODO: [Q10] Should I allow promote in opposite direction?
 // TODO-cont: ex. can long be assigned to int
+// ! => Use isCompatible instead
 bool SCCType::equalAfterPromotion(const SCCType &that) const {
     PRINT_FUNC_IF_ENABLED;
     if (*this == that) return true;
@@ -181,8 +182,6 @@ void SCCType::promoteArray() {
         this->_indirection++;
         this->_declaratorType = SCALAR;
         this->_arrLength = 0;
-        // TODO: [Q3] should array be promoted to an RValue since array is not
-        // assignable?
         this->_isLValue = false;
     }
 }
