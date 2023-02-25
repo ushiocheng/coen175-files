@@ -40,7 +40,7 @@ static std::string binaryOperatorStr[14] = {
     "[]"   // OP_SUBSCRIPT
 };
 
-SCCType typeOfExpression(SCCTypeChecker::SCCUnaryOperation op,
+SCCType typeOfExpression(SCC::SCCUnaryOperation op,
                          SCCType operand1) {
     //! If operand is error type, ignore all check and return error
     if (operand1.declaratorType() == SCCType::ERROR) {
@@ -72,7 +72,7 @@ SCCType typeOfExpression(SCCTypeChecker::SCCUnaryOperation op,
 #endif
     //! Handle each operator
     switch (op) {
-        case SCCTypeChecker::SCCUnaryOperation::OP_NOT:
+        case SCC::SCCUnaryOperation::OP_NOT:
             if (!operand1.isPredicate()) {
                 printAndReport("Phase4: OP_NOT arg1 is not predicate.",
                                SCCSemanticError::EXP_INV_OP_UNI,
@@ -81,7 +81,7 @@ SCCType typeOfExpression(SCCTypeChecker::SCCUnaryOperation op,
             }
             return SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, nullptr, false);
 
-        case SCCTypeChecker::SCCUnaryOperation::OP_NEGATION:
+        case SCC::SCCUnaryOperation::OP_NEGATION:
             if (!operand1.isNumeric()) {
                 printAndReport("Phase4: OP_NEGATION arg1 is not numeric.",
                                SCCSemanticError::EXP_INV_OP_UNI,
@@ -91,7 +91,7 @@ SCCType typeOfExpression(SCCTypeChecker::SCCUnaryOperation op,
             return SCCType(operand1.specifier(), operand1.declaratorType(),
                            operand1.indirection(), 0, nullptr, false);
 
-        case SCCTypeChecker::SCCUnaryOperation::OP_ADDR_OF:
+        case SCC::SCCUnaryOperation::OP_ADDR_OF:
             if (!operand1.isLValue()) {
                 printAndReport("Phase4: Cannot get addr of RValue.",
                                SCCSemanticError::EXP_INV_EXPECT_LVALUE);
@@ -100,7 +100,7 @@ SCCType typeOfExpression(SCCTypeChecker::SCCUnaryOperation op,
             return SCCType(operand1.specifier(), operand1.declaratorType(),
                            operand1.indirection() + 1, 0, nullptr, false);
 
-        case SCCTypeChecker::SCCUnaryOperation::OP_DEREF:
+        case SCC::SCCUnaryOperation::OP_DEREF:
             if (!(operand1.isDereferencablePtr())) {
                 printAndReport("Phase4: cannot deref whatever this is.",
                                SCCSemanticError::EXP_INV_OP_UNI,
@@ -111,7 +111,7 @@ SCCType typeOfExpression(SCCTypeChecker::SCCUnaryOperation op,
             return SCCType(operand1.specifier(), operand1.declaratorType(),
                            operand1.indirection() - 1, 0, nullptr, true);
 
-        case SCCTypeChecker::SCCUnaryOperation::OP_SIZEOF:
+        case SCC::SCCUnaryOperation::OP_SIZEOF:
             //* Sizeof (predicate)
             // Everything is a predicate at this point
             return SCCType(SCCType::LONG, SCCType::SCALAR, 0, 0, nullptr,
@@ -128,7 +128,7 @@ SCCType typeOfExpression(SCCTypeChecker::SCCUnaryOperation op,
     return SCCType();
 }
 
-SCCType typeOfExpression(SCCTypeChecker::SCCBinaryOperation op,
+SCCType typeOfExpression(SCC::SCCBinaryOperation op,
                          SCCType operand1, SCCType operand2) {
     //! if any op is ERROR type, skip all check and return ERROR
     if (operand1.declaratorType() == SCCType::ERROR) return SCCType();
@@ -163,8 +163,8 @@ SCCType typeOfExpression(SCCTypeChecker::SCCBinaryOperation op,
 #endif
     //! handle each operator
     switch (op) {
-        case SCCTypeChecker::SCCBinaryOperation::OP_OR:
-        case SCCTypeChecker::SCCBinaryOperation::OP_AND:
+        case SCC::SCCBinaryOperation::OP_OR:
+        case SCC::SCCBinaryOperation::OP_AND:
             PRINT_IF_DEBUG("Handeling OR/AND");
             if (!(operand1.isPredicate() && operand2.isPredicate())) {
                 printAndReport("Phase4: OP_OR/OP_AND arg not predicate",
@@ -173,8 +173,8 @@ SCCType typeOfExpression(SCCTypeChecker::SCCBinaryOperation op,
                 break;
             }
             return SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, nullptr, false);
-        case SCCTypeChecker::SCCBinaryOperation::OP_EQ:
-        case SCCTypeChecker::SCCBinaryOperation::OP_NEQ:
+        case SCC::SCCBinaryOperation::OP_EQ:
+        case SCC::SCCBinaryOperation::OP_NEQ:
             PRINT_IF_DEBUG("Handeling EQ/NEQ");
             if (!operand1.isCompatible(operand2)) {
                 printAndReport("Phase4: ops not comparable.",
@@ -183,10 +183,10 @@ SCCType typeOfExpression(SCCTypeChecker::SCCBinaryOperation op,
                 break;
             }
             return SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, nullptr, false);
-        case SCCTypeChecker::SCCBinaryOperation::OP_LT:
-        case SCCTypeChecker::SCCBinaryOperation::OP_GT:
-        case SCCTypeChecker::SCCBinaryOperation::OP_LE:
-        case SCCTypeChecker::SCCBinaryOperation::OP_GE:
+        case SCC::SCCBinaryOperation::OP_LT:
+        case SCC::SCCBinaryOperation::OP_GT:
+        case SCC::SCCBinaryOperation::OP_LE:
+        case SCC::SCCBinaryOperation::OP_GE:
             PRINT_IF_DEBUG("Handeling comparators");
             //! [spec] op1 and op2 MUST both be numeric or identital predicate
             //! types, after promotion
@@ -198,7 +198,7 @@ SCCType typeOfExpression(SCCTypeChecker::SCCBinaryOperation op,
                 break;
             }
             return SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, nullptr, false);
-        case SCCTypeChecker::SCCBinaryOperation::OP_MINUS:
+        case SCC::SCCBinaryOperation::OP_MINUS:
             PRINT_IF_DEBUG("Handeling MINUS");
             //! [spec] `ptr(T)-ptr(T)` OR `ptr(T)-num`
             //! where T is not VOID (T can be ptr(VOID))
@@ -211,7 +211,7 @@ SCCType typeOfExpression(SCCTypeChecker::SCCBinaryOperation op,
                                false);
             }
             //* Intentional fall though for arithmatic op & type checking
-        case SCCTypeChecker::SCCBinaryOperation::OP_ADD:
+        case SCC::SCCBinaryOperation::OP_ADD:
             PRINT_IF_DEBUG("Handeling MINUS/ADD");
             //! [spec] `num+ptr(T)` OR `ptr(T)+num`
             //! where T is not VOID (T can be ptr(VOID))
@@ -222,15 +222,15 @@ SCCType typeOfExpression(SCCTypeChecker::SCCBinaryOperation op,
                 return SCCType(operand1.specifier(), SCCType::SCALAR,
                                operand1.indirection(), 0, nullptr, false);
             } else if (  //! Special case for `num+ptr(T) -> ptr(T)`
-                op == SCCTypeChecker::SCCBinaryOperation::OP_ADD &&
+                op == SCC::SCCBinaryOperation::OP_ADD &&
                 operand1.isNumeric() && operand2.isDereferencablePtr()) {
                 return SCCType(operand2.specifier(), SCCType::SCALAR,
                                operand2.indirection(), 0, nullptr, false);
             }
             //* Intentional fall though for arithmatic op & type checking
-        case SCCTypeChecker::SCCBinaryOperation::OP_MUL:
-        case SCCTypeChecker::SCCBinaryOperation::OP_DIV:
-        case SCCTypeChecker::SCCBinaryOperation::OP_MOD:
+        case SCC::SCCBinaryOperation::OP_MUL:
+        case SCC::SCCBinaryOperation::OP_DIV:
+        case SCC::SCCBinaryOperation::OP_MOD:
             PRINT_IF_DEBUG("Handeling MINUS/ADD/MUL/DIV/MOD");
             //! [spec] op1 & op2 both num
             //! + - * / % shared code region for numeric arithmatic operation
@@ -249,7 +249,7 @@ SCCType typeOfExpression(SCCTypeChecker::SCCBinaryOperation op,
                 return SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, nullptr,
                                false);
             }
-        case SCCTypeChecker::SCCBinaryOperation::OP_SUBSCRIPT:
+        case SCC::SCCBinaryOperation::OP_SUBSCRIPT:
             PRINT_IF_DEBUG("Handeling SUBSCRIPT");
             //! [spec] op1 must be ptr(T) where T is not void, op2 must be num
             if (!(operand1.isDereferencablePtr() && operand2.isNumeric())) {
@@ -352,7 +352,7 @@ void checkTestExpr(SCCType testExpr) {
     }
 }
 
-void checkReturnType(SCCScope* context, SCCType returnType) {
+void checkReturnType(const SCCScope* context, const SCCType& returnType) {
     //! if expr have error type, skip check
     if (returnType.declaratorType() == SCCType::ERROR) return;
     //! get expected return type
