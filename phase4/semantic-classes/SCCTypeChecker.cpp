@@ -58,8 +58,14 @@ SCCType typeOfExpression(SCCTypeChecker::SCCUnaryOperation op,
     // operator, instead, if a function is treated as a scalar, an error will be
     // thrown
     if (operand1.isFunc()) {
-        printAndReport("Phase4: passing function as value.",
-                       SCCSemanticError::EXP_INV_OP_UNI, unaryOperatorStr[op]);
+        if (op == SCCTypeChecker::OP_ADDR_OF) {
+            printAndReport("Phase4: passing function as value.",
+                           SCCSemanticError::EXP_INV_EXPECT_LVALUE);
+        } else {
+            printAndReport("Phase4: passing function as value.",
+                           SCCSemanticError::EXP_INV_OP_UNI,
+                           unaryOperatorStr[op]);
+        }
         return SCCType();
     }
 
@@ -88,8 +94,11 @@ SCCType typeOfExpression(SCCTypeChecker::SCCUnaryOperation op,
                                unaryOperatorStr[op]);
                 break;
             }
-            return SCCType(operand1.specifier(), operand1.declaratorType(),
-                           operand1.indirection(), 0, nullptr, false);
+            return SCCType(((operand1.specifier() == SCCType::CHAR)
+                                ? (SCCType::INT)
+                                : (operand1.specifier())),
+                           operand1.declaratorType(), operand1.indirection(), 0,
+                           nullptr, false);
 
         case SCCTypeChecker::SCCUnaryOperation::OP_ADDR_OF:
             if (!operand1.isLValue()) {
@@ -360,6 +369,8 @@ void checkReturnType(SCCScope* context, SCCType returnType) {
     assert(enclosingFunc);
     //! Check compatible
     SCCType expectedReturnType(enclosingFunc->type());
+    //! If expected return type are error, skip check
+    if (expectedReturnType.declaratorType() == SCCType::ERROR) return;
     expectedReturnType.promoteFunc();
     if (!returnType.isCompatible(expectedReturnType)) {
         printAndReport("Phase4: return type incompatible",

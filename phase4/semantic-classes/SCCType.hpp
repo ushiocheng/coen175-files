@@ -25,11 +25,6 @@ class SCCType {
     // Valid & optional for _declaratorType == FUNCTION
     SCCType_Parameters *_parameters;
 
-    /**
-     * Recursive helper for equalAfterPromotion()
-     */
-    bool _equalAfterPromotionHelper(const SCCType &that);
-
    public:
     /**
      * Default constructor
@@ -58,21 +53,12 @@ class SCCType {
      */
     bool isDereferencablePtr() const;
     /**
-     * Check equal with promotion applied
-     * @remark *this will be promoted to match that, thus, a warning will be
-     * printed in verbose mode to signify when a larger object is implicitly
-     * cast into a smaller one.
-     * TODO: [Q10] Should I allow promote in opposite direction?
-     * TODO-cont: ex. can long be assigned to int
-     * ! => Use isCompatible instead
-     */
-    bool equalAfterPromotion(const SCCType &that) const;
-    /**
      * [spec] is Compatible
      * if after promotion char->int, arr(T)->ptr(T), they are
      * both numeric
      * or both ptr(T)
      * or ptr(T) and ptr(void)
+     * @remark this is not responsible for checking if this is error type
      */
     bool isCompatible(const SCCType &that) const;
     /**

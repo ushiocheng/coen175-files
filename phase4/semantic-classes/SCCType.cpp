@@ -45,8 +45,7 @@ SCCType::SCCType(const SCCType_Specifier specifier,
     // }
     //! Make sure to catch error (that should not exist)
     if (declaratorType == ARRAY || declaratorType == FUNCTION) {
-        _isLValue = false;
-        // assert(false);
+        assert(!_isLValue);
         // TODO: fix this properly
     }
 }
@@ -101,8 +100,12 @@ bool SCCType::isPointer() const {
 
 bool SCCType::isDereferencablePtr() const {
     PRINT_FUNC_IF_ENABLED;
+    //* Ptr(Arr(void,n)) is valid
+    //* Ptr(Ptr(void)) is valid
     if (!this->isPointer()) return false;
-    return (this->_specifier != VOID) || (this->_indirection > 1);
+    if (this->_specifier != VOID) return true;
+    if (this->_indirection > 1) return true;
+    return (this->_declaratorType == ARRAY) && (this->_indirection > 0);
 }
 
 bool SCCType::isCompatible(const SCCType &that) const {
@@ -110,17 +113,17 @@ bool SCCType::isCompatible(const SCCType &that) const {
 #ifdef DEBUG
     std::cout << "[DEBUG] Comparing: " << *this << " to " << that << std::endl;
 #endif
+    // Is Compatible are not responsible for checking error
+    // if (this->declaratorType() == ERROR) return true;
+    // if (that.declaratorType() == ERROR) return true;
     if (this->isNumeric() && that.isNumeric()) return true;
     SCCType promotionOfThis = *this;
     SCCType promotionOfThat = that;
     promotionOfThis.promoteArray();
     promotionOfThat.promoteArray();
-    if (promotionOfThis._specifier == CHAR && promotionOfThis._indirection == 0)
-        promotionOfThis._specifier = INT;
-    if (promotionOfThat._specifier == CHAR && promotionOfThat._indirection == 0)
-        promotionOfThat._specifier = INT;
-    if (!(promotionOfThis.isPointer() && promotionOfThat.isPointer()))
-        return false;
+    //! only valid case at this point is ptr(T)=ptr(T) or ptr(T)=ptr(void)
+    if (!(promotionOfThis.isPointer())) return false;
+    if (!(promotionOfThat.isPointer())) return false;
     if ((promotionOfThis.specifier() == VOID) &&
         (promotionOfThis.indirection() == 1))
         return true;
@@ -129,51 +132,6 @@ bool SCCType::isCompatible(const SCCType &that) const {
         return true;
     return (promotionOfThis.specifier() == promotionOfThat.specifier()) &&
            (promotionOfThis.indirection() == promotionOfThat.indirection());
-}
-
-// TODO: [Q10] Should I allow promote in opposite direction?
-// TODO-cont: ex. can long be assigned to int
-// ! => Use isCompatible instead
-bool SCCType::equalAfterPromotion(const SCCType &that) const {
-    PRINT_FUNC_IF_ENABLED;
-    if (*this == that) return true;
-    // declType cannot be error
-    SCCType promotionOfThis = *this;
-    SCCType promotionOfThat = that;
-    //! perform promotions that don't change sizeof type
-    promotionOfThis.promoteFunc();
-    promotionOfThis.promoteArray();
-    promotionOfThat.promoteFunc();
-    promotionOfThat.promoteArray();
-    if (promotionOfThis._equalAfterPromotionHelper(that)) return true;
-    //! Check for reverse promotion
-    // If both are number =OR= same idr ptr to number/void
-    if ((promotionOfThis.indirection() == promotionOfThat.indirection()) &&
-        ((promotionOfThis.specifier() != VOID &&
-          promotionOfThat.specifier() != VOID) ||
-         (promotionOfThis.specifier() == promotionOfThat.specifier()))) {
-#ifdef VERBOSE_ERROR_MSG
-        std::cout
-            << "[DEBUG] [WARN] Promoting a larger object to a smaller object.";
-#endif
-        return true;
-    }
-    return false;
-}
-
-bool SCCType::_equalAfterPromotionHelper(const SCCType &that) {
-    PRINT_FUNC_IF_ENABLED;
-    if (*this == that) return true;
-    // declType must be SCALAR
-    if (this->_specifier == CHAR) {
-        this->_specifier = INT;
-        return this->_equalAfterPromotionHelper(that);
-    }
-    if (this->_specifier == INT) {
-        this->_specifier = LONG;
-        return this->_equalAfterPromotionHelper(that);
-    }
-    return false;
 }
 
 void SCCType::promoteArray() {
@@ -288,14 +246,16 @@ void SCCType::printTo(std::ostream &out, const std::string &base) const {
     out << base << "    Array Length: " << this->_arrLength << "\n";
     out << base << (this->isLValue() ? "Is lvalue" : "Is rvalue") << "\n";
     out << base << "    Parameters: [";
-    if (!this->_parameters) {
-        out << "undefined ]\n";
-    } else {
-        out << "\n";
-        for (size_t i = 0; i < (this->_parameters->size()); i++) {
-            this->_parameters->at(i).printTo(out, base + "    ");
+    if (this->_declaratorType != ERROR) {
+        if (!this->_parameters) {
+            out << "undefined ]\n";
+        } else {
+            out << "\n";
+            for (size_t i = 0; i < (this->_parameters->size()); i++) {
+                this->_parameters->at(i).printTo(out, base + "    ");
+            }
+            out << base << "    ]\n";
         }
-        out << base << "    ]\n";
     }
     out << base << "}" << std::endl;
 }

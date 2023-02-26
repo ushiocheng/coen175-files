@@ -25,8 +25,9 @@ static SCCScope *currentScope = globalScope;
 #endif
 
 #ifdef DEBUG_PRINT_FUNC_TRACE_FLG
-#define PRINT_FUNC_IF_ENABLED \
-    cout << "[DEBUG] Running " << __func__ << " on line " << __LINE__ << " on source line " << yylineno << endl
+#define PRINT_FUNC_IF_ENABLED                                         \
+    cout << "[DEBUG] Running " << __func__ << " on line " << __LINE__ \
+         << " on source line " << yylineno << endl
 #else
 #define PRINT_FUNC_IF_ENABLED ;
 #endif
@@ -103,8 +104,9 @@ void translation_unit() {
             if (lookahead == ')') {
                 match();
                 //! A function with return type sp-idr is declared, save it
-                currentScope->addSymbol(
-                    SCCSymbol(firstID, SCCType(sp, SCCType::FUNCTION, idr)));
+                currentScope->addSymbol(SCCSymbol(
+                    firstID,
+                    SCCType(sp, SCCType::FUNCTION, idr, 0, nullptr, false)));
                 // This is a global-declaration
                 rest_of_global_declarator_list(sp);
             } else {
@@ -124,8 +126,9 @@ void translation_unit() {
                     num = 0;
                 }
                 //! 1st item is an array
-                currentScope->addSymbol(
-                    SCCSymbol(firstID, SCCType(sp, SCCType::ARRAY, idr, num)));
+                currentScope->addSymbol(SCCSymbol(
+                    firstID,
+                    SCCType(sp, SCCType::ARRAY, idr, num, nullptr, false)));
             } else {
                 //! 1st item is a scalar
                 currentScope->addSymbol(
@@ -162,7 +165,8 @@ void global_declarator(SCCType::SCCType_Specifier currentSpecifier) {
         match();
         match(OP_R_PARENT);
         currentScope->addSymbol(
-            SCCSymbol(id, SCCType(currentSpecifier, SCCType::FUNCTION, idr)));
+            SCCSymbol(id, SCCType(currentSpecifier, SCCType::FUNCTION, idr, 0,
+                                  nullptr, false)));
     } else if (lookahead == '[') {
         //! is ARRAY declaration
         match();
@@ -175,7 +179,8 @@ void global_declarator(SCCType::SCCType_Specifier currentSpecifier) {
             num = 0;
         }
         currentScope->addSymbol(
-            SCCSymbol(id, SCCType(currentSpecifier, SCCType::ARRAY, idr, num)));
+            SCCSymbol(id, SCCType(currentSpecifier, SCCType::ARRAY, idr, num,
+                                  nullptr, false)));
     } else {
         //! is SCALAR declaration
         currentScope->addSymbol(
@@ -241,9 +246,9 @@ void rest_of_function_definition(SCCType::SCCType_Specifier currentSpecifier,
                                          // store the func definition
     currentScope = currentScope->createScope();
     std::vector<SCCType> *params = parameters();
-    SCCSymbol *func = new SCCSymbol(
-        id,
-        SCCType(currentSpecifier, SCCType::FUNCTION, indirection, 0, params));
+    SCCSymbol *func =
+        new SCCSymbol(id, SCCType(currentSpecifier, SCCType::FUNCTION,
+                                  indirection, 0, params, false));
     lastScope->addSymbol(*func);
     currentScope->setEnclosingFunc(func);
     match(OP_R_PARENT);
@@ -274,7 +279,8 @@ std::vector<SCCType> *parameters() {
             // Parameter 0
             size_t idr = pointers();
             string id = matchAndReturn(ID);
-            SCCType type = SCCType(SCCType::VOID, SCCType::SCALAR, idr);
+            SCCType type =
+                SCCType(SCCType::VOID, SCCType::SCALAR, idr, 0, nullptr, true);
             params->push_back(SCCType(type));
             currentScope->addSymbol(SCCSymbol(id, type));
         }
@@ -294,7 +300,7 @@ SCCType parameter() {
     SCCType::SCCType_Specifier sp = specifier();
     size_t idr = pointers();
     string id = matchAndReturn(ID);
-    SCCType type = SCCType(sp, SCCType::SCALAR, idr);
+    SCCType type = SCCType(sp, SCCType::SCALAR, idr, 0, nullptr, true);
     currentScope->addSymbol(SCCSymbol(id, type));
     return type;
 }
@@ -343,12 +349,12 @@ void declarator(SCCType::SCCType_Specifier sp) {
 #endif
             num = 0;
         }
-        currentScope->addSymbol(
-            SCCSymbol(id, SCCType(sp, SCCType::ARRAY, idr, num)));
+        currentScope->addSymbol(SCCSymbol(
+            id, SCCType(sp, SCCType::ARRAY, idr, num, nullptr, false)));
     } else {
         //! scalar
         currentScope->addSymbol(
-            SCCSymbol(id, SCCType(sp, SCCType::SCALAR, idr)));
+            SCCSymbol(id, SCCType(sp, SCCType::SCALAR, idr, 0, nullptr, true)));
     }
 }
 
@@ -373,6 +379,7 @@ void statements() {
 void statement() {
     PRINT_FUNC_IF_ENABLED;
     if (lookahead == '{') {
+        //* { decls stmts }
         currentScope = currentScope->createScope();
         match();
         declarations();
@@ -380,18 +387,19 @@ void statement() {
         currentScope = currentScope->exitScope();
         match(OP_R_BRACE);
     } else if (lookahead == RETURN) {
+        //* return expr
         match();
         checkReturnType(currentScope, expression());
         match(OP_SC);
     } else if (lookahead == WHILE) {
-        // | while ( expression ) statement
+        //* while ( expression ) statement
         match();
         match(OP_L_PARENT);
         checkTestExpr(expression());
         match(OP_R_PARENT);
         statement();
     } else if (lookahead == FOR) {
-        // | for ( assignment ; expression ; assignment ) statement
+        //* for ( assignment ; expression ; assignment ) statement
         match(FOR);
         match(OP_L_PARENT);
         assignment();
@@ -402,8 +410,8 @@ void statement() {
         match(OP_R_PARENT);
         statement();
     } else if (lookahead == IF) {
-        // | if ( expression ) statement
-        // | if ( expression ) statement else statement
+        //* if ( expression ) statement
+        //* if ( expression ) statement else statement
         match(IF);
         match(OP_L_PARENT);
         checkTestExpr(expression());
@@ -638,8 +646,19 @@ SCCType expression_term() {
                 return typeOfExpression(SCCType(idSymbol->type()));
             }
             std::vector<SCCType> *parameters = expression_list();
+            bool hasError = false;
+            for (SCCType param : *parameters) {
+                if (param.declaratorType() == SCCType::ERROR) {
+                    hasError = true;
+                    break;
+                }
+            }
             // id(expr-list)
             match(OP_R_PARENT);
+            if (hasError) {
+                delete parameters;
+                return SCCType();
+            }
             SCCType returnType =
                 typeOfExpression(SCCType(idSymbol->type()), parameters);
             delete parameters;
@@ -674,7 +693,7 @@ SCCType expression_term() {
         // } else {
         //     charVal = charStr.at(2);
         // }
-        return SCCType(SCCType::CHAR, SCCType::SCALAR, 0, 0, nullptr, false);
+        return SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, nullptr, false);
     } else {  //! MUST be '('
         match(OP_L_PARENT);
         SCCType subExprType = expression();
