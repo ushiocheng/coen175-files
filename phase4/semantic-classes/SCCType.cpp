@@ -4,6 +4,7 @@
 #include <string>
 
 #include "../GlobalConfig.hpp"
+#include <cassert>
 
 #ifdef DEBUG
 #define DEBUG_ADDITIONAL_WARNING
