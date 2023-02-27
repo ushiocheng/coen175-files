@@ -1,7 +1,7 @@
 #if !defined(GLOBAL_CONFIG_HPP)
 #define GLOBAL_CONFIG_HPP
 
-// #define DEBUG
+#define DEBUG
 #ifdef DEBUG
 #define VERBOSE_ERROR_MSG
 #else
