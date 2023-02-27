@@ -41,6 +41,7 @@ for f in *.c; do
             printf "failed\n"
             printf "\x1b[33;41m[ERROR]\x1b[0m Test case $f failed!\n"
             cp $(basename $f .c).err ../test-output/$f.err.expected
+            diff ../test-output/$f.err ../test-output/$f.err.expected > ../test-output/$f.err.diff
         )
 done
 

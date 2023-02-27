@@ -37,6 +37,8 @@ static void ignoreComment();
 %option nounput noyywrap yylineno
 %%
 
+(\/\*([^*]|\*+[^/\*])*\*+\/|\/\/[^\n]*)     { /* ignored - comment */   }
+
 "/*"					{ignoreComment();}
 
 "auto"					{return AUTO;}

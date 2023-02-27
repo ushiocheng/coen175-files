@@ -167,17 +167,29 @@ const SCCSymbol *SCCScope::_findSymbol(const std::string &id) const {
     }
 }
 
-SCCScope::~SCCScope() {
+void SCCScope::_dump() const {
+    std::cout << "==================== BEGIN SCOPE " << this
+              << " ====================" << std::endl;
+    std::cout << "EnclosingFunc: " << _enclosingFunc << std::endl;
+    std::cout << "OuterScope: " << _outerScope << std::endl;
     for (SCCSymbol symbol : _symbols) {
-        if (symbol.type().parameters()) delete symbol.type().parameters();
-        symbol._clearParams();
-    }
-    if (_enclosingFunc) {
-        _enclosingFunc->_clearParams();
-        delete _enclosingFunc;
+        std::cout << symbol << std::endl;
     }
     for (SCCScope *scope : _innerScopes) {
-        if (scope) delete scope;
+        scope -> _dump();
     }
-    _innerScopes.clear();
+    std::cout << "==================== END SCOPE " << this
+              << " ====================" << std::endl;
+}
+
+SCCScope::~SCCScope() {
+    _enclosingFunc = nullptr;
+    _outerScope = nullptr;
+    for (SCCSymbol symbol : _symbols) {
+        if (symbol.type().declaratorType() == SCCType::ERROR) continue;
+        if (symbol.type().parameters()) delete symbol.type().parameters();
+    }
+    for (SCCScope *scope : _innerScopes) {
+        delete scope;
+    }
 }
