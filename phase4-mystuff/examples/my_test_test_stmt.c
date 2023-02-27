@@ -4,11 +4,11 @@ void _error_0;      // Phase 3 Error
 void * _ptr_void, ** _ptr_ptr_void;
 void _error_1[1];   // Phase 3 ERROR
 char _char, * _ptr_char, ** _ptr_ptr_char;
-char _arr_char_10[10], *_ptr_arr_char_10[10];
+char _arr_char_10[10], *_arr_ptr_char_10[10];
 int _int, *_ptr_int, **_ptr_ptr_int;
-int _arr_int_10[10], *_ptr_arr_int_10[10];
+int _arr_int_10[10], *_arr_ptr_int_10[10];
 long _long, *_ptr_long, **_ptr_ptr_long;
-long _arr_long_10[10], *_ptr_arr_long_10[10];
+long _arr_long_10[10], *_arr_ptr_long_10[10];
 
 void _fexpect_void          (void)      {}
 void _fexpect_ptr_void      (void* a)   {}
@@ -59,17 +59,17 @@ int main(void) {
     if (_ptr_char           ) {} // E2
     if (_ptr_ptr_char       ) {} // E2
     if (_arr_char_10        ) {} // E2
-    if (_ptr_arr_char_10    ) {} // E2
+    if (_arr_ptr_char_10    ) {} // E2
     if (_int                ) {} // E2
     if (_ptr_int            ) {} // E2
     if (_ptr_ptr_int        ) {} // E2
     if (_arr_int_10         ) {} // E2
-    if (_ptr_arr_int_10     ) {} // E2
+    if (_arr_ptr_int_10     ) {} // E2
     if (_long               ) {} // E2
     if (_ptr_long           ) {} // E2
     if (_ptr_ptr_long       ) {} // E2
     if (_arr_long_10        ) {} // E2
-    if (_ptr_arr_long_10    ) {} // E2
+    if (_arr_ptr_long_10    ) {} // E2
 
     while (_fexpect_ret_void() ){} //* E2
     while (_error_0            ){} // E2
@@ -79,17 +79,17 @@ int main(void) {
     while (_ptr_char           ){} // E2
     while (_ptr_ptr_char       ){} // E2
     while (_arr_char_10        ){} // E2
-    while (_ptr_arr_char_10    ){} // E2
+    while (_arr_ptr_char_10    ){} // E2
     while (_int                ){} // E2
     while (_ptr_int            ){} // E2
     while (_ptr_ptr_int        ){} // E2
     while (_arr_int_10         ){} // E2
-    while (_ptr_arr_int_10     ){} // E2
+    while (_arr_ptr_int_10     ){} // E2
     while (_long               ){} // E2
     while (_ptr_long           ){} // E2
     while (_ptr_ptr_long       ){} // E2
     while (_arr_long_10        ){} // E2
-    while (_ptr_arr_long_10    ){} // E2
+    while (_arr_ptr_long_10    ){} // E2
 
     for (_int = 0 ; _fexpect_ret_void() ;_int=_int ) {} //* E2
     for (_int = 0 ; _error_0            ;_int=_int ) {} // E2
@@ -99,15 +99,15 @@ int main(void) {
     for (_int = 0 ; _ptr_char           ;_int=_int ) {} // E2
     for (_int = 0 ; _ptr_ptr_char       ;_int=_int ) {} // E2
     for (_int = 0 ; _arr_char_10        ;_int=_int ) {} // E2
-    for (_int = 0 ; _ptr_arr_char_10    ;_int=_int ) {} // E2
+    for (_int = 0 ; _arr_ptr_char_10    ;_int=_int ) {} // E2
     for (_int = 0 ; _int                ;_int=_int ) {} // E2
     for (_int = 0 ; _ptr_int            ;_int=_int ) {} // E2
     for (_int = 0 ; _ptr_ptr_int        ;_int=_int ) {} // E2
     for (_int = 0 ; _arr_int_10         ;_int=_int ) {} // E2
-    for (_int = 0 ; _ptr_arr_int_10     ;_int=_int ) {} // E2
+    for (_int = 0 ; _arr_ptr_int_10     ;_int=_int ) {} // E2
     for (_int = 0 ; _long               ;_int=_int ) {} // E2
     for (_int = 0 ; _ptr_long           ;_int=_int ) {} // E2
     for (_int = 0 ; _ptr_ptr_long       ;_int=_int ) {} // E2
     for (_int = 0 ; _arr_long_10        ;_int=_int ) {} // E2
-    for (_int = 0 ; _ptr_arr_long_10    ;_int=_int ) {} // E2
+    for (_int = 0 ; _arr_ptr_long_10    ;_int=_int ) {} // E2
 }
