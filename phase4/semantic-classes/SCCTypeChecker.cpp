@@ -18,8 +18,9 @@
 #endif
 
 #ifdef DEBUG_PRINT_FUNC_TRACE_FLG
-#define PRINT_FUNC_IF_ENABLED \
-    std::cout << "[DEBUG] Running " << __func__ << " on line " << __LINE__ << std::endl
+#define PRINT_FUNC_IF_ENABLED                                              \
+    std::cout << "[DEBUG] Running " << __func__ << " on line " << __LINE__ \
+              << std::endl
 #else
 #define PRINT_FUNC_IF_ENABLED ;
 #endif
@@ -156,6 +157,7 @@ SCCType typeOfExpression(SCCTypeChecker::SCCBinaryOperation op,
     if (operand1.typeIsNotValid() || operand2.typeIsNotValid()) {
         printAndReport("Phase4: passing invalid type to bin op.",
                        SCCSemanticError::EXP_INV_OP_BIN, binaryOperatorStr[op]);
+        return SCCType();
     }
     //! promote array to ptr
     operand1.promoteArray();
