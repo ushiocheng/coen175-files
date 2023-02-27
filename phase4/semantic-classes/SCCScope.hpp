@@ -50,6 +50,8 @@ class SCCScope {
      * @return symbol with type error if symbol not found
      */
     const SCCSymbol* lookupSymbol(const std::string& id) const;
+    // Dump content for debug purpose
+    void _dump() const;
     ~SCCScope();
 };
 

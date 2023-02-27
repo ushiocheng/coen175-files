@@ -19,6 +19,7 @@ static SCCScope *currentScope = globalScope;
 #ifdef DEBUG
 #define DEBUG_PRINT_FUNC_TRACE_FLG
 // #define DEBUG_PRINT_MATCHING
+// #define DUMP_SYMBOL_TABLE
 #define PRINT_IF_DEBUG(sth) cout << sth << endl;
 #else
 #define PRINT_IF_DEBUG(sth) /* debug print: sth */
@@ -43,6 +44,10 @@ int main() {
 #endif
     start();
     //! Cleanup
+    //! DEBUG - Dump global scope
+#ifdef DUMP_SYMBOL_TABLE
+    globalScope->_dump();
+#endif
     delete globalScope;
 }
 
