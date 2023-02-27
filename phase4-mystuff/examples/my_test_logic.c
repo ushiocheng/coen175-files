@@ -36,5 +36,107 @@ long*   _fexpect_ret_ptr_long(void){}
 long**  _fexpect_ret_ptr_ptr_long(void){}
 
 int main(void) {
-    // Testing
+    // Testing AND
+    _int && _fexpect_ret_void   ; //* E4
+    _int && _fexpect_ret_void() ; //* E4
+    _int && _error_0            ; // E4
+    _int && _ptr_void           ; // E4
+    _int && _ptr_ptr_void       ; // E4
+    _int && _char               ; // E4
+    _int && _ptr_char           ; // E4
+    _int && _ptr_ptr_char       ; // E4
+    _int && _arr_char_10        ; // E4
+    _int && _arr_ptr_char_10    ; // E4
+    _int && _int                ; // E4
+    _int && _ptr_int            ; // E4
+    _int && _ptr_ptr_int        ; // E4
+    _int && _arr_int_10         ; // E4
+    _int && _arr_ptr_int_10     ; // E4
+    _int && _long               ; // E4
+    _int && _ptr_long           ; // E4
+    _int && _ptr_ptr_long       ; // E4
+    _int && _arr_long_10        ; // E4
+    _int && _arr_ptr_long_10    ; // E4
+    _fexpect_ret_void   && _int ; //* E4
+    _fexpect_ret_void() && _int ; //* E4
+    _error_0            && _int ; // E4
+    _ptr_void           && _int ; // E4
+    _ptr_ptr_void       && _int ; // E4
+    _char               && _int ; // E4
+    _ptr_char           && _int ; // E4
+    _ptr_ptr_char       && _int ; // E4
+    _arr_char_10        && _int ; // E4
+    _arr_ptr_char_10    && _int ; // E4
+    _int                && _int ; // E4
+    _ptr_int            && _int ; // E4
+    _ptr_ptr_int        && _int ; // E4
+    _arr_int_10         && _int ; // E4
+    _arr_ptr_int_10     && _int ; // E4
+    _long               && _int ; // E4
+    _ptr_long           && _int ; // E4
+    _ptr_ptr_long       && _int ; // E4
+    _arr_long_10        && _int ; // E4
+    _arr_ptr_long_10    && _int ; // E4
+    // Testing OR
+    _int || _fexpect_ret_void   ; //* E4
+    _int || _fexpect_ret_void() ; //* E4
+    _int || _error_0            ; // E4
+    _int || _ptr_void           ; // E4
+    _int || _ptr_ptr_void       ; // E4
+    _int || _char               ; // E4
+    _int || _ptr_char           ; // E4
+    _int || _ptr_ptr_char       ; // E4
+    _int || _arr_char_10        ; // E4
+    _int || _arr_ptr_char_10    ; // E4
+    _int || _int                ; // E4
+    _int || _ptr_int            ; // E4
+    _int || _ptr_ptr_int        ; // E4
+    _int || _arr_int_10         ; // E4
+    _int || _arr_ptr_int_10     ; // E4
+    _int || _long               ; // E4
+    _int || _ptr_long           ; // E4
+    _int || _ptr_ptr_long       ; // E4
+    _int || _arr_long_10        ; // E4
+    _int || _arr_ptr_long_10    ; // E4
+    _fexpect_ret_void   || _int ; //* E4
+    _fexpect_ret_void() || _int ; //* E4
+    _error_0            || _int ; // E4
+    _ptr_void           || _int ; // E4
+    _ptr_ptr_void       || _int ; // E4
+    _char               || _int ; // E4
+    _ptr_char           || _int ; // E4
+    _ptr_ptr_char       || _int ; // E4
+    _arr_char_10        || _int ; // E4
+    _arr_ptr_char_10    || _int ; // E4
+    _int                || _int ; // E4
+    _ptr_int            || _int ; // E4
+    _ptr_ptr_int        || _int ; // E4
+    _arr_int_10         || _int ; // E4
+    _arr_ptr_int_10     || _int ; // E4
+    _long               || _int ; // E4
+    _ptr_long           || _int ; // E4
+    _ptr_ptr_long       || _int ; // E4
+    _arr_long_10        || _int ; // E4
+    _arr_ptr_long_10    || _int ; // E4
+    // Testing NOT
+    !_fexpect_ret_void   ; //* E4
+    !_fexpect_ret_void() ; //* E4
+    !_error_0            ; // E4
+    !_ptr_void           ; // E4
+    !_ptr_ptr_void       ; // E4
+    !_char               ; // E4
+    !_ptr_char           ; // E4
+    !_ptr_ptr_char       ; // E4
+    !_arr_char_10        ; // E4
+    !_arr_ptr_char_10    ; // E4
+    !_int                ; // E4
+    !_ptr_int            ; // E4
+    !_ptr_ptr_int        ; // E4
+    !_arr_int_10         ; // E4
+    !_arr_ptr_int_10     ; // E4
+    !_long               ; // E4
+    !_ptr_long           ; // E4
+    !_ptr_ptr_long       ; // E4
+    !_arr_long_10        ; // E4
+    !_arr_ptr_long_10    ; // E4
 }
