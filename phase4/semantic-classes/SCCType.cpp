@@ -8,7 +8,7 @@
 #ifdef DEBUG
 #define DEBUG_ADDITIONAL_WARNING
 #define DEBUG_PRINT_FUNC_TRACE_FLG
-#define PRINT_IF_DEBUG(sth) cout << sth << endl;
+#define PRINT_IF_DEBUG(sth) std::cout << sth << std::endl;
 #else
 #define PRINT_IF_DEBUG(sth) /* debug print: sth */
 #endif

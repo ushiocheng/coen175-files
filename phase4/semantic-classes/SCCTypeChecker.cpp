@@ -367,6 +367,7 @@ void checkAssign(SCCType lhs, SCCType rhs) {
 
 void checkTestExpr(SCCType testExpr) {
     PRINT_FUNC_IF_ENABLED;
+    PRINT_IF_DEBUG(testExpr);
     //! if expr have error type, skip check
     if (testExpr.declaratorType() == SCCType::ERROR) return;
     //! check is Predicate
