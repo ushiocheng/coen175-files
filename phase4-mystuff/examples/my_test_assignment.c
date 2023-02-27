@@ -59,4 +59,6 @@ int main(void) {
     _arr_long_10        =_int; //   * E3
     _arr_ptr_long_10    =_int; //   * E3
     _fexpect_ret_int() =_int; //* E3
+    _int =_fexpect_ret_int() ; 
+    _int =_fexpect_ret_int; //* E4
 }
