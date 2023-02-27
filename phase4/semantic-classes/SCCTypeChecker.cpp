@@ -11,9 +11,17 @@
 #include "SCCType.hpp"
 
 #ifdef DEBUG
+#define DEBUG_PRINT_FUNC_TRACE_FLG
 #define PRINT_IF_DEBUG(sth) std::cout << "[DEBUG] " << sth << std::endl;
 #else
 #define PRINT_IF_DEBUG(sth) /* debug print: sth */
+#endif
+
+#ifdef DEBUG_PRINT_FUNC_TRACE_FLG
+#define PRINT_FUNC_IF_ENABLED \
+    std::cout << "[DEBUG] Running " << __func__ << " on line " << __LINE__ << std::endl
+#else
+#define PRINT_FUNC_IF_ENABLED ;
 #endif
 
 static std::string unaryOperatorStr[5] = {
@@ -42,6 +50,7 @@ static std::string binaryOperatorStr[14] = {
 
 SCCType typeOfExpression(SCCTypeChecker::SCCUnaryOperation op,
                          SCCType operand1) {
+    PRINT_FUNC_IF_ENABLED;
     //! If operand is error type, ignore all check and return error
     if (operand1.declaratorType() == SCCType::ERROR) {
         return SCCType();
@@ -139,6 +148,7 @@ SCCType typeOfExpression(SCCTypeChecker::SCCUnaryOperation op,
 
 SCCType typeOfExpression(SCCTypeChecker::SCCBinaryOperation op,
                          SCCType operand1, SCCType operand2) {
+    PRINT_FUNC_IF_ENABLED;
     //! if any op is ERROR type, skip all check and return ERROR
     if (operand1.declaratorType() == SCCType::ERROR) return SCCType();
     if (operand2.declaratorType() == SCCType::ERROR) return SCCType();
@@ -281,6 +291,7 @@ SCCType typeOfExpression(SCCTypeChecker::SCCBinaryOperation op,
 }
 
 SCCType typeOfExpression(SCCType func, std::vector<SCCType>* parameters) {
+    PRINT_FUNC_IF_ENABLED;
     //! Check func is FUNCTION
     if (!func.isFunc()) {
         printAndReport("Phase4: Callee not function.",
@@ -336,6 +347,7 @@ SCCType typeOfExpression(SCCType func, std::vector<SCCType>* parameters) {
 }
 
 void checkAssign(SCCType lhs, SCCType rhs) {
+    PRINT_FUNC_IF_ENABLED;
     //! if any have error type, skip check
     if (lhs.declaratorType() == SCCType::ERROR) return;
     if (rhs.declaratorType() == SCCType::ERROR) return;
@@ -343,25 +355,30 @@ void checkAssign(SCCType lhs, SCCType rhs) {
     if (!lhs.isLValue()) {
         printAndReport("Phase4: Assigning to RValue",
                        SCCSemanticError::EXP_INV_EXPECT_LVALUE);
+        return;
     }
     //! Check compatible
     if (!rhs.isCompatible(lhs)) {
         printAndReport("Phase4: Assign to imcompatible type",
                        SCCSemanticError::EXP_INV_OP_BIN, "=");
+        return;
     }
 }
 
 void checkTestExpr(SCCType testExpr) {
+    PRINT_FUNC_IF_ENABLED;
     //! if expr have error type, skip check
     if (testExpr.declaratorType() == SCCType::ERROR) return;
     //! check is Predicate
     if (!testExpr.isPredicate()) {
         printAndReport("Phase4: test expr is not Predicate",
                        SCCSemanticError::EXP_INV_TEST);
+        return;
     }
 }
 
 void checkReturnType(SCCScope* context, SCCType returnType) {
+    PRINT_FUNC_IF_ENABLED;
     //! if expr have error type, skip check
     if (returnType.declaratorType() == SCCType::ERROR) return;
     //! get expected return type
@@ -375,5 +392,6 @@ void checkReturnType(SCCScope* context, SCCType returnType) {
     if (!returnType.isCompatible(expectedReturnType)) {
         printAndReport("Phase4: return type incompatible",
                        SCCSemanticError::EXP_INV_RETURN);
+        return;
     }
 }
