@@ -26,6 +26,7 @@ void SCCSymbol::validatePhase3E5() const {
         printAndReport("Type is not valid.", SCCSemanticError::VOID_VARIABLE,
                        this->id());
         std::cout << *this;
+        const_cast<SCCSymbol*>(this)->_type = SCCType(); //! Set this to error type
     }
     //! Function parameter is deliberately not checked since this object have no
     //! idea what they are called (id). Func Param will be validated when they
