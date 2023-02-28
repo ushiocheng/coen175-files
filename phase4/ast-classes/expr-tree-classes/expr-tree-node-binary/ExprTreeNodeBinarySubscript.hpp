@@ -7,7 +7,10 @@ namespace SCCASTClasses::ExprTreeClasses {
 class ExprTreeNodeBinarySubscript : public ExprTreeBinaryNode {
    private:
    public:
-    NodeType identify() { return NodeType::OP_SUBSCRIPT; }
+    NodeType identify() const { return NodeType::OP_SUBSCRIPT; }
+    bool performTypeChecking(SCCASTClasses::Expression* expr) const {
+        // TODO
+    }
 };
 }  // namespace SCCASTClasses::ExprTreeClasses
 

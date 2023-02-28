@@ -7,7 +7,10 @@ namespace SCCASTClasses::ExprTreeClasses {
 class ExprTreeNodeTermVariable : ExprTreeTermNode {
    private:
    public:
-    NodeType identify() { return NodeType::T_VAR; }
+    NodeType identify() const { return NodeType::T_VAR; }
+    bool performTypeChecking(SCCASTClasses::Expression* expr) const {
+        // TODO
+    }
 };
 }  // namespace SCCASTClasses::ExprTreeClasses
 

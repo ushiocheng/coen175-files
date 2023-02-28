@@ -7,7 +7,10 @@ namespace SCCASTClasses::ExprTreeClasses {
 class ExprTreeNodeUnaryNegation : public ExprTreeUnaryNode {
    private:
    public:
-    NodeType identify() { return NodeType::OP_NEGATION; }
+    NodeType identify() const { return NodeType::OP_NEGATION; }
+    bool performTypeChecking(SCCASTClasses::Expression* expr) const {
+        // TODO
+    }
 };
 }  // namespace SCCASTClasses::ExprTreeClasses
 

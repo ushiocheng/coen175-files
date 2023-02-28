@@ -7,7 +7,10 @@ namespace SCCASTClasses::ExprTreeClasses {
 class ExprTreeNodeTermLiteralNumber : ExprTreeTermNode {
    private:
    public:
-    NodeType identify() { return NodeType::T_LITERAL_NUM; }
+    NodeType identify() const { return NodeType::T_LITERAL_NUM; }
+    bool performTypeChecking(SCCASTClasses::Expression* expr) const {
+        // TODO
+    }
 };
 }  // namespace SCCASTClasses::ExprTreeClasses
 

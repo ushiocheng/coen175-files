@@ -8,22 +8,22 @@ namespace SCCASTClasses {
  * Virtual class, enclosing CFS and Expr
  */
 class Statement {
-   private:
-    SCCScope* _enclosingScope;
-
    public:
-    Statement(SCCScope* enclosingScope) : _enclosingScope(enclosingScope){};
+    SCCScope* enclosingScope;
+    Statement(SCCScope* enclosingScope) : enclosingScope(enclosingScope){};
     ~Statement();
-    const SCCScope* enclosingScope() const { return _enclosingScope; }
+
+    enum StmtType { ASSIGN, EXPR, RETURN, WHILE, FOR, IF };
+    /**
+     * idenitfy API for RTTI
+     */
+    virtual StmtType identify() const = 0;
 
     /**
-     * Perform Type check on Stmt
-     * @return true if no error
+     * Phase 4 - Perform Static Type Checking
+     * @return true if no error is generated on type checking
      */
-    virtual bool performTypeCheck() const = 0;
-
-    // Stuff for phase 5?
-    // virtual void generateAsm(const ostream& output) = 0;
+    virtual bool performTypeChecking() const = 0;
 };
 
 }  // namespace SCCASTClasses

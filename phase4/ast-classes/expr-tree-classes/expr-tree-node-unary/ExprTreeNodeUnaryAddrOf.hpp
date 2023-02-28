@@ -7,7 +7,10 @@ namespace SCCASTClasses::ExprTreeClasses {
 class ExprTreeNodeUnaryAddrOf : public ExprTreeUnaryNode {
    private:
    public:
-    NodeType identify() { return NodeType::OP_ADDR_OF; }
+    NodeType identify() const { return NodeType::OP_ADDR_OF; }
+    bool performTypeChecking(SCCASTClasses::Expression* expr) const {
+        // TODO
+    }
 };
 }  // namespace SCCASTClasses::ExprTreeClasses
 

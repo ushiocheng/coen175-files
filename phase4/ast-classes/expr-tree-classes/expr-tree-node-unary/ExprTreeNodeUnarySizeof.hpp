@@ -7,7 +7,10 @@ namespace SCCASTClasses::ExprTreeClasses {
 class ExprTreeNodeUnarySizeof : public ExprTreeUnaryNode {
    private:
    public:
-    NodeType identify() { return NodeType::OP_SIZEOF; }
+    NodeType identify() const { return NodeType::OP_SIZEOF; }
+    bool performTypeChecking(SCCASTClasses::Expression* expr) const {
+        // TODO
+    }
 };
 }  // namespace SCCASTClasses::ExprTreeClasses
 

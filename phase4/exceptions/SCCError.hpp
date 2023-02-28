@@ -1,6 +1,7 @@
 #if !defined(SCC_SEMANTIC_ERROR_HPP)
 #define SCC_SEMANTIC_ERROR_HPP
 
+#include <exception>
 #include <string>
 
 enum SCCSemanticError {
@@ -48,5 +49,18 @@ enum SCCSemanticError {
 void printAndReport(const std::string &str,
                     SCCSemanticError errType = EXTRA_ERROR,
                     const std::string &arg1 = "");
+
+class SCCError : public std::exception {
+   private:
+    const std::string &_str1;
+    SCCSemanticError _errType;
+    const std::string &_arg1;
+
+   public:
+    SCCError(const std::string &str1, SCCSemanticError errType = EXTRA_ERROR,
+             const std::string &arg1 = "")
+        : _str1(str1), _errType(errType), _arg1(arg1) {}
+    void report() const throw() { printAndReport(_str1, _errType, _arg1); }
+};
 
 #endif  // SCC_SEMANTIC_ERROR_HPP
