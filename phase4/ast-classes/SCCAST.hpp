@@ -1,16 +1,17 @@
 #if !defined(SCC_AST_HPP)
 #define SCC_AST_HPP
 
-#include "SCCASTFunctionDefinitionList.hpp"
-#include "SCCASTGlobalDeclarationList.hpp"
+#include "../semantic-classes/SCCScope.hpp"
+#include "SCCASTFunction.hpp"
+#include <vector>
 
 class SCCAST {
    public:
     // Global Declaration List
-    SCCASTClasses::GDL gdl;
+    SCCScope* globalScope;
     // Function Definition List
-    SCCASTClasses::FDL fdl;
-    SCCAST(){};
+    std::vector<SCCASTClasses::Function>* functionDefinitions;
+    SCCAST();
     ~SCCAST();
 };
 
