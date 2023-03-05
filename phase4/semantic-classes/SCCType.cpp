@@ -47,7 +47,6 @@ SCCType::SCCType(const SCCType_Specifier specifier,
     //! Make sure to catch error (that should not exist)
     if (declaratorType == ARRAY || declaratorType == FUNCTION) {
         assert(!_isLValue);
-        // TODO: fix this properly
     }
 }
 

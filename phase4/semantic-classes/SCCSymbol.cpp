@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "SCCError.hpp"
+#include "../exceptions/SCCError.hpp"
 
 SCCSymbol::SCCSymbol(const std::string &id)
     : _id(id),
@@ -23,7 +23,7 @@ void SCCSymbol::validatePhase3E5() const {
     if (_type.typeIsNotValid()) {
         //! do not output E5 if type is error
         if (_type.declaratorType() == SCCType::ERROR) return;
-        printAndReport("Type is not valid.", SCCSemanticError::VOID_VARIABLE,
+        printAndReport("Type is not valid.", VOID_VARIABLE,
                        this->id());
         std::cout << *this;
         const_cast<SCCSymbol*>(this)->_type = SCCType(); //! Set this to error type

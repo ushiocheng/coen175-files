@@ -47,6 +47,7 @@ class SCCType {
     bool isPredicate() const;
     bool isNumeric() const;
     bool isPointer() const;
+    bool isError() const { return this->_declaratorType == ERROR; }
     /**
      * Check if this can be dereferenced
      * @return false if this is not ptr

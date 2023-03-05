@@ -3,6 +3,10 @@
 
 #include <string>
 
+#include "ast-classes/SCCASTExpression.hpp"
+#include "ast-classes/SCCASTFunction.hpp"
+#include "ast-classes/SCCASTStatement.hpp"
+#include "ast-classes/expr-tree-classes/ExprTreeBinaryNode.hpp"
 #include "semantic-classes/SCCSymbol.hpp"
 #include "semantic-classes/SCCType.hpp"
 #include "tokens.h"
@@ -22,25 +26,23 @@ void rest_of_function_definition(SCCType::SCCType_Specifier currentSpecifier,
                                  size_t indirection, const std::string& id);
 std::vector<SCCType>* parameters();
 SCCType parameter();
+
 void declarations();
 void declarator_list(SCCType::SCCType_Specifier sp);
 void declarator(SCCType::SCCType_Specifier sp);
 void statements();
-void statement();
-void assignment();
-/**
- * @return dynamically allocated list of expr type
- */
-std::vector<SCCType>* expression_list();
-SCCType expression();
-SCCType expression_level_1();
-SCCType expression_level_2();
-SCCType expression_level_3();
-SCCType expression_level_4();
-SCCType expression_level_5();
-SCCType expression_level_6();
-SCCType expression_level_7();
-SCCType expression_level_8();
-SCCType expression_term();
+SCCASTClasses::Statement* statement();
+SCCASTClasses::Statement* assignment();
+
+SCCASTClasses::ExprTreeClasses::ExprTreeNode* expression();
+SCCASTClasses::ExprTreeClasses::ExprTreeNode* expression_level_1();
+SCCASTClasses::ExprTreeClasses::ExprTreeNode* expression_level_2();
+SCCASTClasses::ExprTreeClasses::ExprTreeNode* expression_level_3();
+SCCASTClasses::ExprTreeClasses::ExprTreeNode* expression_level_4();
+SCCASTClasses::ExprTreeClasses::ExprTreeNode* expression_level_5();
+SCCASTClasses::ExprTreeClasses::ExprTreeNode* expression_level_6();
+SCCASTClasses::ExprTreeClasses::ExprTreeNode* expression_level_7();
+SCCASTClasses::ExprTreeClasses::ExprTreeNode* expression_level_8();
+SCCASTClasses::ExprTreeClasses::ExprTreeNode* expression_term();
 
 #endif  // SCC_PARSER_HPP

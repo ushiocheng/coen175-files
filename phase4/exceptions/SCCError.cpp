@@ -20,43 +20,43 @@ static void reportSemanticError(const SCCSemanticError errorType,
 static void reportSemanticError(const SCCSemanticError errorType,
                                 const std::string &arg1) {
     switch (errorType) {
-        case SCCSemanticError::REDEFINITION:
+        case REDEFINITION:
             report("redefinition of '%s'", arg1);
             break;
-        case SCCSemanticError::REDECLARATION:
+        case REDECLARATION:
             report("redeclaration of '%s'", arg1);
             break;
-        case SCCSemanticError::CONFLICT_TYPE:
+        case CONFLICT_TYPE:
             report("conflicting types for '%s'", arg1);
             break;
-        case SCCSemanticError::UNDECLARED:
+        case UNDECLARED:
             report("'%s' undeclared", arg1);
             break;
-        case SCCSemanticError::VOID_VARIABLE:
+        case VOID_VARIABLE:
             report("'%s' has type void", arg1);
             break;
-        case SCCSemanticError::EXP_INV_RETURN:
+        case EXP_INV_RETURN:
             report("invalid return type");
             break;
-        case SCCSemanticError::EXP_INV_TEST:
+        case EXP_INV_TEST:
             report("invalid type for test expression");
             break;
-        case SCCSemanticError::EXP_INV_EXPECT_LVALUE:
+        case EXP_INV_EXPECT_LVALUE:
             report("lvalue required in expression");
             break;
-        case SCCSemanticError::EXP_INV_OP_BIN:
+        case EXP_INV_OP_BIN:
             report("invalid operands to binary %s", arg1);
             break;
-        case SCCSemanticError::EXP_INV_OP_UNI:
+        case EXP_INV_OP_UNI:
             report("invalid operand to unary %s", arg1);
             break;
-        case SCCSemanticError::EXP_NOT_FUNC:
+        case EXP_NOT_FUNC:
             report("called object is not a function");
             break;
-        case SCCSemanticError::EXP_INV_ARG:
+        case EXP_INV_ARG:
             report("invalid arguments to called function");
             break;
-        case SCCSemanticError::EXTRA_ERROR:
+        case EXTRA_ERROR:
             break;  //! Extra errors that should not be report to stderr
         default:
             report("SCCSemanticError: unknown error type!!", NULL);
