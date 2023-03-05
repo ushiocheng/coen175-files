@@ -6,6 +6,9 @@
 #include "semantic-classes/SCCSymbol.hpp"
 #include "semantic-classes/SCCType.hpp"
 #include "tokens.h"
+#include "ast-classes/SCCASTFunction.hpp"
+#include "ast-classes/SCCASTStatement.hpp"
+#include "ast-classes/expr-tree-classes/ExprTreeBinaryNode.hpp"
 
 Token lookahead;
 void match(Token token_type = lookahead);

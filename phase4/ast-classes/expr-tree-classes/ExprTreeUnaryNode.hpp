@@ -4,7 +4,8 @@
 #include "ExprTreeNode.hpp"
 #include "NodeType.hpp"
 
-namespace SCCASTClasses::ExprTreeClasses {
+namespace SCCASTClasses {
+namespace ExprTreeClasses {
 
 class ExprTreeUnaryNode : public ExprTreeNode {
    protected:
@@ -14,12 +15,38 @@ class ExprTreeUnaryNode : public ExprTreeNode {
     ExprTreeUnaryNode(ExprTreeNode* arg1) : arg1(arg1) {}
 };
 
-}  // namespace SCCASTClasses::ExprTreeClasses
+class ExprTreeNodeUnaryAddrOf : public ExprTreeUnaryNode {
+   public:
+    NodeType identify() const { return NodeType::OP_ADDR_OF; }
+   private:
+    void _checkAndSetTypeOfNode() const { }
+};
+class ExprTreeNodeUnaryDeref : public ExprTreeUnaryNode {
+   public:
+    NodeType identify() const { return NodeType::OP_DEREF; }
+   private:
+    void _checkAndSetTypeOfNode() const { }
+};
+class ExprTreeNodeUnaryNegation : public ExprTreeUnaryNode {
+   public:
+    NodeType identify() const { return NodeType::OP_NEGATION; }
+   private:
+    void _checkAndSetTypeOfNode() const { }
+};
+class ExprTreeNodeUnaryNot : public ExprTreeUnaryNode {
+   public:
+    NodeType identify() const { return NodeType::OP_NOT; }
+   private:
+    void _checkAndSetTypeOfNode() const { }
+};
+class ExprTreeNodeUnarySizeof : public ExprTreeUnaryNode {
+   public:
+    NodeType identify() const { return NodeType::OP_SIZEOF; }
+   private:
+    void _checkAndSetTypeOfNode() const { }
+};
 
-#include "_expr-tree-node-unary/ExprTreeNodeUnaryAddrOf.hpp"
-#include "_expr-tree-node-unary/ExprTreeNodeUnaryDeref.hpp"
-#include "_expr-tree-node-unary/ExprTreeNodeUnaryNegation.hpp"
-#include "_expr-tree-node-unary/ExprTreeNodeUnaryNot.hpp"
-#include "_expr-tree-node-unary/ExprTreeNodeUnarySizeof.hpp"
+}  // namespace ExprTreeClasses
+}  // namespace SCCASTClasses
 
 #endif  // EXPR_TREE_UNARY_NODE_HPP

@@ -4,7 +4,8 @@
 #include "ExprTreeNode.hpp"
 #include "NodeType.hpp"
 
-namespace SCCASTClasses::ExprTreeClasses {
+namespace SCCASTClasses {
+namespace ExprTreeClasses {
 
 class ExprTreeBinaryNode : public ExprTreeNode {
    protected:
@@ -16,21 +17,106 @@ class ExprTreeBinaryNode : public ExprTreeNode {
         : arg1(arg1), arg2(arg2) {}
 };
 
-}  // namespace SCCASTClasses::ExprTreeClasses
 
-#include "_expr-tree-node-binary/ExprTreeNodeBinaryAdd.hpp"
-#include "_expr-tree-node-binary/ExprTreeNodeBinaryAnd.hpp"
-#include "_expr-tree-node-binary/ExprTreeNodeBinaryDiv.hpp"
-#include "_expr-tree-node-binary/ExprTreeNodeBinaryEQ.hpp"
-#include "_expr-tree-node-binary/ExprTreeNodeBinaryGE.hpp"
-#include "_expr-tree-node-binary/ExprTreeNodeBinaryGT.hpp"
-#include "_expr-tree-node-binary/ExprTreeNodeBinaryLE.hpp"
-#include "_expr-tree-node-binary/ExprTreeNodeBinaryLT.hpp"
-#include "_expr-tree-node-binary/ExprTreeNodeBinaryMinus.hpp"
-#include "_expr-tree-node-binary/ExprTreeNodeBinaryMod.hpp"
-#include "_expr-tree-node-binary/ExprTreeNodeBinaryMul.hpp"
-#include "_expr-tree-node-binary/ExprTreeNodeBinaryNEQ.hpp"
-#include "_expr-tree-node-binary/ExprTreeNodeBinaryOr.hpp"
-#include "_expr-tree-node-binary/ExprTreeNodeBinarySubscript.hpp"
+class ExprTreeNodeBinaryAdd : public ExprTreeBinaryNode {
+   public:
+    NodeType identify() const { return NodeType::OP_ADD; }
+   private:
+    void _checkAndSetTypeOfNode() const { }
+};
+class ExprTreeNodeBinaryAnd : public ExprTreeBinaryNode {
+   private:
+   public:
+    NodeType identify() const { return NodeType::OP_AND; }
+   private:
+    void _checkAndSetTypeOfNode() const { }
+};
+class ExprTreeNodeBinaryDiv : public ExprTreeBinaryNode {
+   private:
+   public:
+    NodeType identify() const { return NodeType::OP_DIV; }
+   private:
+    void _checkAndSetTypeOfNode() const { }
+};
+class ExprTreeNodeBinaryEQ : public ExprTreeBinaryNode {
+   private:
+   public:
+    NodeType identify() const { return NodeType::OP_EQ; }
+   private:
+    void _checkAndSetTypeOfNode() const { }
+};
+class ExprTreeNodeBinaryGE : public ExprTreeBinaryNode {
+   private:
+   public:
+    NodeType identify() const { return NodeType::OP_GE; }
+   private:
+    void _checkAndSetTypeOfNode() const { }
+};
+class ExprTreeNodeBinaryGT : public ExprTreeBinaryNode {
+   private:
+   public:
+    NodeType identify() const { return NodeType::OP_GT; }
+   private:
+    void _checkAndSetTypeOfNode() const { }
+};
+class ExprTreeNodeBinaryLE : public ExprTreeBinaryNode {
+   private:
+   public:
+    NodeType identify() const { return NodeType::OP_LE; }
+   private:
+    void _checkAndSetTypeOfNode() const { }
+};
+class ExprTreeNodeBinaryLT : public ExprTreeBinaryNode {
+   private:
+   public:
+    NodeType identify() const { return NodeType::OP_LT; }
+   private:
+    void _checkAndSetTypeOfNode() const { }
+};
+class ExprTreeNodeBinaryMinus : public ExprTreeBinaryNode {
+   private:
+   public:
+    NodeType identify() const { return NodeType::OP_MINUS; }
+   private:
+    void _checkAndSetTypeOfNode() const { }
+};
+class ExprTreeNodeBinaryMod : public ExprTreeBinaryNode {
+   private:
+   public:
+    NodeType identify() const { return NodeType::OP_MOD; }
+   private:
+    void _checkAndSetTypeOfNode() const { }
+};
+class ExprTreeNodeBinaryMUL : public ExprTreeBinaryNode {
+   private:
+   public:
+    NodeType identify() const { return NodeType::OP_MUL; }
+   private:
+    void _checkAndSetTypeOfNode() const { }
+};
+class ExprTreeNodeBinaryNEQ : public ExprTreeBinaryNode {
+   private:
+   public:
+    NodeType identify() const { return NodeType::OP_NEQ; }
+   private:
+    void _checkAndSetTypeOfNode() const { }
+};
+class ExprTreeNodeBinaryOR : public ExprTreeBinaryNode {
+   private:
+   public:
+    NodeType identify() const { return NodeType::OP_OR; }
+   private:
+    void _checkAndSetTypeOfNode() const { }
+};
+class ExprTreeNodeBinarySubscript : public ExprTreeBinaryNode {
+   private:
+   public:
+    NodeType identify() const { return NodeType::OP_SUBSCRIPT; }
+   private:
+    void _checkAndSetTypeOfNode() const { }
+};
+
+}  // namespace ExprTreeClasses
+}  // namespace SCCASTClasses
 
 #endif  // EXPR_TREE_BINARY_NODE_HPP

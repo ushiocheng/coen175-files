@@ -17,13 +17,13 @@ class StmtBlock : public Statement {
         this->innerStatements = new std::vector<Statement*>();
     }
     ~StmtBlock() {
-        for (Statement* stmt : innerStatements) delete stmt;
+        for (Statement* stmt : *innerStatements) delete stmt;
         delete innerStatements;
     }
     StmtType identify() const { return BLOCK; }
-    void performTypeChecking() {
+    bool performTypeChecking() const {
         bool noError = true;
-        for (Statement* stmt : innerStatements) {
+        for (Statement* stmt : *innerStatements) {
             if (!stmt->performTypeChecking()) noError = false;
         }
         return noError;
