@@ -29,8 +29,7 @@ enum NodeType {
     T_VAR,
     T_LITERAL_NUM,
     T_LITERAL_STR,
-    T_LITERAL_CHAR,
-    T_Expr
+    T_LITERAL_CHAR
 };
 }  // namespace SCCASTClasses::ExprTreeClasses
 

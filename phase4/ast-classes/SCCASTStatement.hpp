@@ -9,11 +9,10 @@ namespace SCCASTClasses {
  */
 class Statement {
    public:
-    SCCScope* enclosingScope;
-    Statement(SCCScope* enclosingScope) : enclosingScope(enclosingScope){};
-    ~Statement();
+    Statement(){}
+    ~Statement(){}
 
-    enum StmtType { ASSIGN, EXPR, RETURN, WHILE, FOR, IF };
+    enum StmtType { ASSIGN, EXPR, RETURN, WHILE, FOR, IF, BLOCK };
     /**
      * idenitfy API for RTTI
      */

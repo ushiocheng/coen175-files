@@ -1,9 +1,8 @@
 #include "SCCASTAssign.hpp"
 
-SCCASTClasses::Assignment::Assignment(SCCScope* enclosingScope,
-                                      ExprTreeClasses::ExprTreeNode* lhs,
+SCCASTClasses::Assignment::Assignment(ExprTreeClasses::ExprTreeNode* lhs,
                                       ExprTreeClasses::ExprTreeNode* rhs)
-    : Statement(enclosingScope), lhs(lhs), rhs(rhs) {}
+    : lhs(lhs), rhs(rhs) {}
 
 SCCASTClasses::Assignment::~Assignment() {
     delete lhs;

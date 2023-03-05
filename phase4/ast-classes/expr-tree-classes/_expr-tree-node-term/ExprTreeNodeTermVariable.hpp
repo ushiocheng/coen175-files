@@ -6,10 +6,14 @@
 namespace SCCASTClasses::ExprTreeClasses {
 class ExprTreeNodeTermVariable : ExprTreeTermNode {
    private:
+    SCCSymbol* _symbol;
    public:
+    ExprTreeNodeTermVariable(SCCSymbol* symbol) : _symbol(symbol) {}
     NodeType identify() const { return NodeType::T_VAR; }
-    bool performTypeChecking(SCCASTClasses::Expression* expr) const {
-        // TODO
+private:
+void _checkAndSetTypeOfNode() const {
+        const_cast<ExprTreeNodeTermVariable*>(this)->_typeOfNode = this->_symbol->type();
+        const_cast<ExprTreeNodeTermVariable*>(this)->_typeOfNodeSet = true;
     }
 };
 }  // namespace SCCASTClasses::ExprTreeClasses

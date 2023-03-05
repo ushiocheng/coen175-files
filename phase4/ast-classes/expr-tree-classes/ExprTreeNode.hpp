@@ -11,7 +11,7 @@ namespace SCCASTClasses::ExprTreeClasses {
 class ExprTreeNode {
    protected:
     SCCType _typeOfNode;
-    bool _typeOfNodeSet;
+    bool _typeOfNodeSet = false;
 
    public:
     /**
@@ -25,13 +25,18 @@ class ExprTreeNode {
      * @remark should only be ran once from top down
      * @return true if no error is generated on type checking
      */
-    virtual bool performTypeChecking(SCCASTClasses::Expression* expr) const = 0;
+    bool performTypeChecking() const {
+        return !(this->getType().isError());
+    }
 
-    SCCType typeOf(SCCASTClasses::Expression* expr) const {
+    SCCType getType() const {
         if (_typeOfNodeSet) return _typeOfNode;
-        this->performTypeChecking(expr);
+        this->_checkAndSetTypeOfNode();
         return _typeOfNode;
     }
+
+   private:
+    virtual void _checkAndSetTypeOfNode() const = 0;
 };
 
 }  // namespace SCCASTClasses::ExprTreeClasses

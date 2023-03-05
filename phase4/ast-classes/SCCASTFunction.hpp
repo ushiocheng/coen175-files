@@ -5,15 +5,14 @@
 
 #include "../semantic-classes/SCCScope.hpp"
 #include "SCCASTStatement.hpp"
+#include "SCCASTStmtBlock.hpp"
 namespace SCCASTClasses {
 
 class Function {
    public:
-    SCCAST* astRoot;
-    SCCScope* functionScope;
-    std::vector<Statement*> statements;
+    StmtBlock* innerBlock;
 
-    Function(SCCAST* astRoot, SCCScope* functionScope);
+    Function(SCCScope* functionScope);
     ~Function();
 
     /**

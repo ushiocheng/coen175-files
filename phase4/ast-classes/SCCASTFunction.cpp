@@ -3,24 +3,14 @@
 #include "../semantic-classes/SCCScope.hpp"
 #include "SCCAST.hpp"
 #include "SCCASTStatement.hpp"
+#include "SCCASTStmtBlock.hpp"
 
-SCCASTClasses::Function::Function(SCCAST* astRoot, SCCScope* functionScope)
-    : astRoot(astRoot), functionScope(functionScope) {
-    this->statements = std::vector<Statement*>();
+SCCASTClasses::Function::Function(SCCScope* functionScope) {
+    this->innerBlock = new StmtBlock(functionScope);
 }
 
-SCCASTClasses::Function::~Function() {
-    //! Scope memory managed in SCCScope
-    // delete functionScope;
-    for (Statement* stmt : statements) {
-        delete stmt;
-    }
-}
+SCCASTClasses::Function::~Function() { delete innerBlock; }
 
 bool SCCASTClasses::Function::performTypeChecking() {
-    bool noError = true;
-    for (Statement* stmt : statements) {
-        if (!stmt->performTypeChecking()) noError = false;
-    }
-    return noError;
+    return innerBlock->performTypeChecking();
 }

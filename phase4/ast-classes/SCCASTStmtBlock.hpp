@@ -9,10 +9,25 @@
 namespace SCCASTClasses {
 class StmtBlock : public Statement {
    private:
-    SCCScope* _blockScope;
-    std::vector<Statement*> _innerStatements;
+    SCCScope* _scope;
 
    public:
+    std::vector<Statement*>* innerStatements;
+    StmtBlock(SCCScope* scope) : _scope(scope) {
+        this->innerStatements = new std::vector<Statement*>();
+    }
+    ~StmtBlock() {
+        for (Statement* stmt : innerStatements) delete stmt;
+        delete innerStatements;
+    }
+    StmtType identify() const { return BLOCK; }
+    void performTypeChecking() {
+        bool noError = true;
+        for (Statement* stmt : innerStatements) {
+            if (!stmt->performTypeChecking()) noError = false;
+        }
+        return noError;
+    }
 };
 }  // namespace SCCASTClasses
 

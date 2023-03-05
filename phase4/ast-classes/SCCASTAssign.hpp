@@ -13,7 +13,7 @@ class Assignment : public Statement {
     ExprTreeClasses::ExprTreeNode* lhs;
     ExprTreeClasses::ExprTreeNode* rhs;
 
-    Assignment(SCCScope* enclosingScope, ExprTreeClasses::ExprTreeNode* lhs, ExprTreeClasses::ExprTreeNode* rhs);
+    Assignment(ExprTreeClasses::ExprTreeNode* lhs, ExprTreeClasses::ExprTreeNode* rhs);
     ~Assignment();
 
     StmtType identify() const { return StmtType::ASSIGN; }
