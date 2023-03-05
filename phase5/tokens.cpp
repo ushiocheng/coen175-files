@@ -3,152 +3,152 @@
 
 using namespace std;
 
-void prettyPrintToken(Token tmp) {
+void prettyPrintToken(Token tmp, ostream& out) {
     if (tmp == 0) {
-        cout << "Done";
+        out << "Done";
         return;
     }
     if (tmp < 256) {
-        cout << (char)tmp;
+        out << (char)tmp;
     } else {
         switch (tmp) {
             case AUTO:
-                cout << "AUTO";
+                out << "AUTO";
                 break;
             case BREAK:
-                cout << "BREAK";
+                out << "BREAK";
                 break;
             case CASE:
-                cout << "CASE";
+                out << "CASE";
                 break;
             case CHAR:
-                cout << "CHAR";
+                out << "CHAR";
                 break;
             case CONST:
-                cout << "CONST";
+                out << "CONST";
                 break;
             case CONTINUE:
-                cout << "CONTINUE";
+                out << "CONTINUE";
                 break;
             case DEFAULT:
-                cout << "DEFAULT";
+                out << "DEFAULT";
                 break;
             case DO:
-                cout << "DO";
+                out << "DO";
                 break;
             case DOUBLE:
-                cout << "DOUBLE";
+                out << "DOUBLE";
                 break;
             case ELSE:
-                cout << "ELSE";
+                out << "ELSE";
                 break;
             case ENUM:
-                cout << "ENUM";
+                out << "ENUM";
                 break;
             case EXTERN:
-                cout << "EXTERN";
+                out << "EXTERN";
                 break;
             case FLOAT:
-                cout << "FLOAT";
+                out << "FLOAT";
                 break;
             case FOR:
-                cout << "FOR";
+                out << "FOR";
                 break;
             case GOTO:
-                cout << "GOTO";
+                out << "GOTO";
                 break;
             case IF:
-                cout << "IF";
+                out << "IF";
                 break;
             case INT:
-                cout << "INT";
+                out << "INT";
                 break;
             case LONG:
-                cout << "LONG";
+                out << "LONG";
                 break;
             case REGISTER:
-                cout << "REGISTER";
+                out << "REGISTER";
                 break;
             case RETURN:
-                cout << "RETURN";
+                out << "RETURN";
                 break;
             case SHORT:
-                cout << "SHORT";
+                out << "SHORT";
                 break;
             case SIGNED:
-                cout << "SIGNED";
+                out << "SIGNED";
                 break;
             case SIZEOF:
-                cout << "SIZEOF";
+                out << "SIZEOF";
                 break;
             case STATIC:
-                cout << "STATIC";
+                out << "STATIC";
                 break;
             case STRUCT:
-                cout << "STRUCT";
+                out << "STRUCT";
                 break;
             case SWITCH:
-                cout << "SWITCH";
+                out << "SWITCH";
                 break;
             case TYPEDEF:
-                cout << "TYPEDEF";
+                out << "TYPEDEF";
                 break;
             case UNION:
-                cout << "UNION";
+                out << "UNION";
                 break;
             case UNSIGNED:
-                cout << "UNSIGNED";
+                out << "UNSIGNED";
                 break;
             case VOID:
-                cout << "VOID";
+                out << "VOID";
                 break;
             case VOLATILE:
-                cout << "VOLATILE";
+                out << "VOLATILE";
                 break;
             case WHILE:
-                cout << "WHILE";
+                out << "WHILE";
                 break;
             case OP_OR:
-                cout << "OP_OR";
+                out << "OP_OR";
                 break;
             case OP_AND:
-                cout << "OP_AND";
+                out << "OP_AND";
                 break;
             case OP_EQ:
-                cout << "OP_EQ";
+                out << "OP_EQ";
                 break;
             case OP_NE:
-                cout << "OP_NE";
+                out << "OP_NE";
                 break;
             case OP_LE:
-                cout << "OP_LE";
+                out << "OP_LE";
                 break;
             case OP_GE:
-                cout << "OP_GE";
+                out << "OP_GE";
                 break;
             case OP_INC:
-                cout << "OP_INC";
+                out << "OP_INC";
                 break;
             case OP_DEC:
-                cout << "OP_DEC";
+                out << "OP_DEC";
                 break;
             case OP_ARROW:
-                cout << "OP_ARROW";
+                out << "OP_ARROW";
                 break;
             case STRING:
-                cout << "STRING";
+                out << "STRING";
                 break;
             case CHARACTER:
-                cout << "CHARACTER";
+                out << "CHARACTER";
                 break;
             case ID:
-                cout << "ID";
+                out << "ID";
                 break;
             case NUM:
-                cout << "NUM";
+                out << "NUM";
                 break;
             default:
-                cout << "????";
+                out << "????";
                 break;
         }
     }

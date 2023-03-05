@@ -32,17 +32,17 @@ static SCCScope *currentScope = globalScope;
 static SCCASTClasses::StmtBlock *currentBlock = nullptr;
 
 #ifdef DEBUG
-#define DEBUG_PRINT_FUNC_TRACE_FLG
-#define DEBUG_PRINT_MATCHING
+// #define DEBUG_PRINT_FUNC_TRACE_FLG
+// #define DEBUG_PRINT_MATCHING
 // #define DUMP_SYMBOL_TABLE
-#define PRINT_IF_DEBUG(sth) cout << sth << endl;
+#define PRINT_IF_DEBUG(sth) cerr << sth << endl;
 #else
 #define PRINT_IF_DEBUG(sth) /* debug print: sth */
 #endif
 
 #ifdef DEBUG_PRINT_FUNC_TRACE_FLG
 #define PRINT_FUNC_IF_ENABLED                                         \
-    cout << "[DEBUG] Running " << __func__ << " on line " << __LINE__ \
+    cerr << "[DEBUG] Running " << __func__ << " on line " << __LINE__ \
          << " on source line " << yylineno << endl
 #else
 #define PRINT_FUNC_IF_ENABLED ;
@@ -54,9 +54,9 @@ int main() {
     astRoot->globalScope = globalScope;
     lookahead = (Token)yylex();
 #ifdef DEBUG_PRINT_MATCHING
-    cout << "[DEBUG] lookahead: ";
+    cerr << "[DEBUG] lookahead: ";
     prettyPrintToken(lookahead);
-    cout << endl;
+    cerr << endl;
 #endif
     start();
     bool typeCheckingPass = astRoot->performTypeChecking();
@@ -79,17 +79,17 @@ void match(Token token_type) {
     if (lookahead == token_type) {
         lookahead = (Token)yylex();
 #ifdef DEBUG_PRINT_MATCHING
-        cout << "[DEBUG] lookahead: ";
+        cerr << "[DEBUG] lookahead: ";
         prettyPrintToken(lookahead);
-        cout << endl;
+        cerr << endl;
 #endif
     } else {
         // error
-        cout << "[ERROR] Parsing error at line " << yylineno << ", expecting ";
+        cerr << "[ERROR] Parsing error at line " << yylineno << ", expecting ";
         prettyPrintToken(token_type);
-        cout << " and found ";
+        cerr << " and found ";
         prettyPrintToken(lookahead);
-        cout << endl;
+        cerr << endl;
         exit(0);
     }
 }
@@ -143,7 +143,7 @@ void translation_unit() {
                 match(OP_R_BRACKET);
                 if (num <= 0) {
                     //! Cannot declare array with size <= 0
-                    cout << "[WARN] Attempting to Define an array with length "
+                    cerr << "[WARN] Attempting to Define an array with length "
                          << num << " <=0 on Line " << yylineno << endl;
                     num = 0;
                 }
@@ -196,7 +196,7 @@ void global_declarator(SCCType::SCCType_Specifier currentSpecifier) {
         match(OP_R_BRACKET);
         if (num <= 0) {
             //! Cannot declare array with size <= 0
-            cout << "[WARN] Attempting to Define an array with length " << num
+            cerr << "[WARN] Attempting to Define an array with length " << num
                  << " <=0 on Line " << yylineno << endl;
             num = 0;
         }
@@ -371,7 +371,7 @@ void declarator(SCCType::SCCType_Specifier sp) {
         if (num <= 0) {
 //! Cannot declare array with size <= 0
 #ifdef VERBOSE_ERROR_MSG
-            cout << "[WARN] Attempting to Define an array with length " << num
+            cerr << "[WARN] Attempting to Define an array with length " << num
                  << " <=0 on Line " << yylineno << endl;
 #endif
             num = 0;
@@ -460,7 +460,7 @@ SCCASTClasses::Statement *statement() {
         checkTestExpr(expr1->getType());
         match(OP_R_PARENT);
         SCCASTClasses::Statement *stmt1 = statement();
-        astStmt = new SCCASTClasses::CFSIf(expr1, nullptr, nullptr);
+        astStmt = new SCCASTClasses::CFSIf(expr1, stmt1, nullptr);
         if (lookahead == ELSE) {
             match();
             ((SCCASTClasses::CFSIf *)astStmt)->stmt2 = statement();

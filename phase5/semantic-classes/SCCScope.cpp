@@ -10,14 +10,14 @@
 #ifdef DEBUG
 // #define DEBUG_PRINT_FUNC_TRACE_FLG
 // #define DEBUG_PRINT_MATCHING
-#define PRINT_IF_DEBUG(sth) std::cout << sth << std::endl;
+#define PRINT_IF_DEBUG(sth) std::cerr << sth << std::endl;
 #else
 #define PRINT_IF_DEBUG(sth) /* debug print: sth */
 #endif
 
 #ifdef DEBUG_PRINT_FUNC_TRACE_FLG
 #define PRINT_FUNC_IF_ENABLED                                              \
-    std::cout << "[DEBUG] Running " << __func__ << " on line " << __LINE__ \
+    std::cerr << "[DEBUG] Running " << __func__ << " on line " << __LINE__ \
               << std::endl
 #else
 #define PRINT_FUNC_IF_ENABLED ;
@@ -168,17 +168,17 @@ const SCCSymbol *SCCScope::_findSymbol(const std::string &id) const {
 }
 
 void SCCScope::_dump() const {
-    std::cout << "==================== BEGIN SCOPE " << this
+    std::cerr << "==================== BEGIN SCOPE " << this
               << " ====================" << std::endl;
-    std::cout << "EnclosingFunc: " << _enclosingFunc << std::endl;
-    std::cout << "OuterScope: " << _outerScope << std::endl;
+    std::cerr << "EnclosingFunc: " << _enclosingFunc << std::endl;
+    std::cerr << "OuterScope: " << _outerScope << std::endl;
     for (SCCSymbol symbol : _symbols) {
-        std::cout << symbol << std::endl;
+        std::cerr << symbol << std::endl;
     }
     for (SCCScope *scope : _innerScopes) {
         scope -> _dump();
     }
-    std::cout << "==================== END SCOPE " << this
+    std::cerr << "==================== END SCOPE " << this
               << " ====================" << std::endl;
 }
 

@@ -54,6 +54,8 @@ enum Token {
     Done = 0
 };
 
-void prettyPrintToken(Token tmp);
+#include <iostream>
+
+void prettyPrintToken(Token tmp, std::ostream& out = std::cerr);
 
 # endif /* TOKENS_H */

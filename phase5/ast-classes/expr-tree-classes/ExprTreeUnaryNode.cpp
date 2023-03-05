@@ -11,15 +11,15 @@
 #include "../../semantic-classes/SCCType.hpp"
 
 #ifdef DEBUG
-#define DEBUG_PRINT_FUNC_TRACE_FLG
-#define PRINT_IF_DEBUG(sth) std::cout << "[DEBUG] " << sth << std::endl;
+// #define DEBUG_PRINT_FUNC_TRACE_FLG
+#define PRINT_IF_DEBUG(sth) std::cerr << "[DEBUG] " << sth << std::endl;
 #else
 #define PRINT_IF_DEBUG(sth) /* debug print: sth */
 #endif
 
 #ifdef DEBUG_PRINT_FUNC_TRACE_FLG
 #define PRINT_FUNC_IF_ENABLED                                              \
-    std::cout << "[DEBUG] Running " << __func__ << " on line " << __LINE__ \
+    std::cerr << "[DEBUG] Running " << __func__ << " on line " << __LINE__ \
               << std::endl
 #else
 #define PRINT_FUNC_IF_ENABLED ;
@@ -97,7 +97,7 @@ SCCType typeOfUnaryExpression(SCC::SCCUnaryOperation op, SCCType operand1) {
 //! => At this point, op1 must be scalar
 #ifdef DEBUG
     if (!(operand1.declaratorType() == SCCType::SCALAR)) {
-        std::cout << "Assertion Failed, op1: " << operand1 << std::endl;
+        std::cerr << "Assertion Failed, op1: " << operand1 << std::endl;
         assert(false);
     }
 #endif

@@ -60,7 +60,7 @@ static void reportSemanticError(const SCCSemanticError errorType,
             break;  //! Extra errors that should not be report to stderr
         default:
             report("SCCSemanticError: unknown error type!!", NULL);
-            std::cout << "[ERROR] SCCSemanticError: unknown error type!!"
+            std::cerr << "[ERROR] SCCSemanticError: unknown error type!!"
                       << std::endl;
             exit(1);
     }
@@ -69,7 +69,7 @@ static void reportSemanticError(const SCCSemanticError errorType,
 void printAndReport(const std::string &str, SCCSemanticError errType,
                     const std::string &arg1) {
 #ifdef DEBUG_ADDITIONAL_WARNING
-    std::cout << "[WARN] " << str << std::endl;
+    std::cerr << "[WARN] " << str << std::endl;
 #endif
     reportSemanticError(errType, arg1);
 }

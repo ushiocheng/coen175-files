@@ -7,16 +7,17 @@
 #include <cassert>
 
 #ifdef DEBUG
-#define DEBUG_ADDITIONAL_WARNING
-#define DEBUG_PRINT_FUNC_TRACE_FLG
-#define PRINT_IF_DEBUG(sth) std::cout << sth << std::endl;
+// #define DEBUG_ADDITIONAL_WARNING
+// #define DEBUG_PRINT_FUNC_TRACE_FLG
+// #define DEBUG_PRINT_COMPARISON_FLG
+#define PRINT_IF_DEBUG(sth) std::cerr << sth << std::endl;
 #else
 #define PRINT_IF_DEBUG(sth) /* debug print: sth */
 #endif
 
 #ifdef DEBUG_PRINT_FUNC_TRACE_FLG
 #define PRINT_FUNC_IF_ENABLED                                              \
-    std::cout << "[DEBUG] Running " << __func__ << " on line " << __LINE__ \
+    std::cerr << "[DEBUG] Running " << __func__ << " on line " << __LINE__ \
               << std::endl
 #else
 #define PRINT_FUNC_IF_ENABLED ;
@@ -110,8 +111,8 @@ bool SCCType::isDereferencablePtr() const {
 
 bool SCCType::isCompatible(const SCCType &that) const {
     PRINT_FUNC_IF_ENABLED;
-#ifdef DEBUG
-    std::cout << "[DEBUG] Comparing: " << *this << " to " << that << std::endl;
+#ifdef DEBUG_PRINT_COMPARISON_FLG
+    std::cerr << "[DEBUG] Comparing: " << *this << " to " << that << std::endl;
 #endif
     // Is Compatible are not responsible for checking error
     // if (this->declaratorType() == ERROR) return true;

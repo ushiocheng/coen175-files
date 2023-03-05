@@ -25,7 +25,7 @@ void SCCSymbol::validatePhase3E5() const {
         if (_type.declaratorType() == SCCType::ERROR) return;
         printAndReport("Type is not valid.", VOID_VARIABLE,
                        this->id());
-        std::cout << *this;
+        std::cerr << *this;
         const_cast<SCCSymbol*>(this)->_type = SCCType(); //! Set this to error type
     }
     //! Function parameter is deliberately not checked since this object have no

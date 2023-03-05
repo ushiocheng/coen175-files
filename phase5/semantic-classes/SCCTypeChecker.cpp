@@ -11,15 +11,15 @@
 #include "SCCType.hpp"
 
 #ifdef DEBUG
-#define DEBUG_PRINT_FUNC_TRACE_FLG
-#define PRINT_IF_DEBUG(sth) std::cout << "[DEBUG] " << sth << std::endl;
+// #define DEBUG_PRINT_FUNC_TRACE_FLG
+#define PRINT_IF_DEBUG(sth) std::cerr << "[DEBUG] " << sth << std::endl;
 #else
 #define PRINT_IF_DEBUG(sth) /* debug print: sth */
 #endif
 
 #ifdef DEBUG_PRINT_FUNC_TRACE_FLG
 #define PRINT_FUNC_IF_ENABLED                                              \
-    std::cout << "[DEBUG] Running " << __func__ << " on line " << __LINE__ \
+    std::cerr << "[DEBUG] Running " << __func__ << " on line " << __LINE__ \
               << std::endl
 #else
 #define PRINT_FUNC_IF_ENABLED ;
@@ -50,13 +50,13 @@ SCCType typeOfExpression(SCCType func, std::vector<SCCType>* parameters) {
         printAndReport("Phase4: Calling function with mismatched param count.",
                        EXP_INV_ARG);
 #ifdef VERBOSE_ERROR_MSG
-        std::cout << "[DEBUG] Calling function " << func << "with param: ";
+        std::cerr << "[DEBUG] Calling function " << func << "with param: ";
         if (parameters) {
-            std::cout << parameters;
+            std::cerr << parameters;
         } else {
-            std::cout << "[]";
+            std::cerr << "[]";
         }
-        std::cout << std::endl;
+        std::cerr << std::endl;
 #endif
         return SCCType();
     }

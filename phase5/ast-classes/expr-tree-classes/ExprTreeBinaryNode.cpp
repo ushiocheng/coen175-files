@@ -11,15 +11,15 @@
 #include "../../semantic-classes/SCCType.hpp"
 
 #ifdef DEBUG
-#define DEBUG_PRINT_FUNC_TRACE_FLG
-#define PRINT_IF_DEBUG(sth) std::cout << "[DEBUG] " << sth << std::endl;
+// #define DEBUG_PRINT_FUNC_TRACE_FLG
+#define PRINT_IF_DEBUG(sth) std::cerr << "[DEBUG] " << sth << std::endl;
 #else
 #define PRINT_IF_DEBUG(sth) /* debug print: sth */
 #endif
 
 #ifdef DEBUG_PRINT_FUNC_TRACE_FLG
 #define PRINT_FUNC_IF_ENABLED                                              \
-    std::cout << "[DEBUG] Running " << __func__ << " on line " << __LINE__ \
+    std::cerr << "[DEBUG] Running " << __func__ << " on line " << __LINE__ \
               << std::endl
 #else
 #define PRINT_FUNC_IF_ENABLED ;
@@ -169,11 +169,11 @@ SCCType typeOfBinaryExpression(SCC::SCCBinaryOperation op, SCCType operand1,
 //! op1 & op2 must be SCALAR
 #ifdef DEBUG
     if (!(operand1.declaratorType() == SCCType::SCALAR)) {
-        std::cout << "Assertion Failed, op1: " << operand1 << std::endl;
+        std::cerr << "Assertion Failed, op1: " << operand1 << std::endl;
         assert(false);
     }
     if (!(operand2.declaratorType() == SCCType::SCALAR)) {
-        std::cout << "Assertion Failed, op2: " << operand2 << std::endl;
+        std::cerr << "Assertion Failed, op2: " << operand2 << std::endl;
         assert(false);
     }
 #endif
