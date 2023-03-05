@@ -1,7 +1,8 @@
 #if !defined(NODE_TYPE_HPP)
 #define NODE_TYPE_HPP
 
-namespace SCCASTClasses::ExprTreeClasses {
+namespace SCCASTClasses {
+namespace ExprTreeClasses {
 enum NodeType {
     // OP UNARY
     OP_NOT = 0,
@@ -31,6 +32,7 @@ enum NodeType {
     T_LITERAL_STR,
     T_LITERAL_CHAR
 };
-}  // namespace SCCASTClasses::ExprTreeClasses
+}
+}  // namespace SCCASTClasses
 
 #endif  // NODE_TYPE_HPP

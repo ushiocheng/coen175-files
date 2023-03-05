@@ -4,7 +4,7 @@
 #include <iostream>
 
 #include "../GlobalConfig.hpp"
-#include "SCCError.hpp"
+#include "../exceptions/SCCError.hpp"
 #include "SCCType.hpp"
 
 #ifdef DEBUG
@@ -93,14 +93,14 @@ void SCCScope::addSymbol(const SCCSymbol &symbol) {
             if (!(this->isGlobal())) {
                 //! Check E3
                 printAndReport("Redeclaration in non-global scope",
-                               SCCSemanticError::REDECLARATION, symbol.id());
+                               REDECLARATION, symbol.id());
                 return;
             }
             if (!symbol.type().isFunc()) {
                 if (symbolInArr.type() != symbol.type()) {
                     //! Check E2 for variable
                     printAndReport("Conflict type declaration",
-                                   SCCSemanticError::CONFLICT_TYPE,
+                                   CONFLICT_TYPE,
                                    symbol.id());
                     return;
                 }
@@ -113,7 +113,7 @@ void SCCScope::addSymbol(const SCCSymbol &symbol) {
             if ((!symbolInArr.type().noParam()) && (!symbol.type().noParam())) {
                 // If both are definition
                 printAndReport("Redefinition of function",
-                               SCCSemanticError::REDEFINITION, symbol.id());
+                               REDEFINITION, symbol.id());
                 //! ACCEPT inbound definition per specification
                 this->_symbols.at(i) = symbol;
                 symbol.validatePhase3E5();
@@ -122,7 +122,7 @@ void SCCScope::addSymbol(const SCCSymbol &symbol) {
             //! Check E2 for func
             if (symbolInArr.type() != symbol.type()) {
                 printAndReport("Conflict type declaration",
-                               SCCSemanticError::CONFLICT_TYPE, symbol.id());
+                               CONFLICT_TYPE, symbol.id());
                 return;
             }
             //! This func sym have no error, update it if necessary
@@ -149,7 +149,7 @@ const SCCSymbol *SCCScope::lookupSymbol(const std::string &id) const {
     PRINT_FUNC_IF_ENABLED;
     const SCCSymbol *ptr = this->_findSymbol(id);
     if (!ptr)
-        printAndReport("Symbol not declared", SCCSemanticError::UNDECLARED, id);
+        printAndReport("Symbol not declared", UNDECLARED, id);
     return ptr;
 }
 

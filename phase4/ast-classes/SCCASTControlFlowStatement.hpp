@@ -7,8 +7,6 @@
 namespace SCCASTClasses {
 
 class CtrFlowStmt : public Statement {
-   public:
-    CtrFlowStmt(SCCScope* enclosingScope) : Statement(enclosingScope) {}
 };
 
 }  // namespace SCCASTClasses

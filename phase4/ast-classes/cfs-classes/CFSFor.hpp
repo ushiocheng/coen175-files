@@ -4,6 +4,7 @@
 #include "../SCCASTControlFlowStatement.hpp"
 #include "../SCCASTExpression.hpp"
 #include "../SCCASTStatement.hpp"
+#include "../helper-classes/checkTestExpr.hpp"
 
 namespace SCCASTClasses {
 class CFSFor : public CtrFlowStmt {
@@ -14,16 +15,16 @@ class CFSFor : public CtrFlowStmt {
     Statement* body;
 
     // For (assignment; expression; assignment) statement
-    CFSFor(SCCScope* enclosingScope, Statement* assign1, Expression* expr1,
+    CFSFor(Statement* assign1, Expression* expr1,
            Statement* assign2, Statement* body)
-        : CtrFlowStmt(enclosingScope),
-          assign1(assign1),
+        : assign1(assign1),
           expr1(expr1),
           assign2(assign2),
           body(body) {}
     StmtType identify() const { return StmtType::FOR; }
     bool performTypeChecking() const {
-        // TODO: check HERE
+        SCCType expr1Type = expr1->getType();
+        return checkTestExpr(expr1Type);
     }
 };
 }  // namespace SCCASTClasses

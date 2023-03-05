@@ -4,7 +4,10 @@
 #include <vector>
 
 #include "../semantic-classes/SCCScope.hpp"
-#include "SCCASTFunction.hpp"
+
+namespace SCCASTClasses {
+    class Function;
+}
 
 class SCCAST {
    public:

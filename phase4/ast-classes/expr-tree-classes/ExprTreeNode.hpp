@@ -1,19 +1,24 @@
 #if !defined(EXPR_TREE_NODE_HPP)
 #define EXPR_TREE_NODE_HPP
 
-#include "NodeType.hpp"
-
-namespace SCCASTClasses::ExprTreeClasses {
-
 #include "../../semantic-classes/SCCType.hpp"
-#include "../SCCASTExpression.hpp"
+#include "NodeType.hpp"
+namespace SCCASTClasses {
+namespace ExprTreeClasses {
 
 class ExprTreeNode {
    protected:
     SCCType _typeOfNode;
-    bool _typeOfNodeSet = false;
+    bool _typeOfNodeSet;
+    void _setNodeType(SCCType type) const {
+        const_cast<ExprTreeNode*>(this)->_typeOfNode = type;
+        const_cast<ExprTreeNode*>(this)->_typeOfNodeSet = true;
+    }
 
    public:
+    ExprTreeNode() { this->_typeOfNodeSet = false; }
+    virtual ~ExprTreeNode(){};
+
     /**
      * idenitfy API for RTTI
      */
@@ -25,9 +30,7 @@ class ExprTreeNode {
      * @remark should only be ran once from top down
      * @return true if no error is generated on type checking
      */
-    bool performTypeChecking() const {
-        return !(this->getType().isError());
-    }
+    bool performTypeChecking() const { return !(this->getType().isError()); }
 
     SCCType getType() const {
         if (_typeOfNodeSet) return _typeOfNode;
@@ -39,6 +42,7 @@ class ExprTreeNode {
     virtual void _checkAndSetTypeOfNode() const = 0;
 };
 
-}  // namespace SCCASTClasses::ExprTreeClasses
+};  // namespace ExprTreeClasses
+};  // namespace SCCASTClasses
 
 #endif  // EXPR_TREE_NODE_HPP

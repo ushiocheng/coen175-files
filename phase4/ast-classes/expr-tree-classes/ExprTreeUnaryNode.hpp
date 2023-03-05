@@ -7,6 +7,8 @@
 namespace SCCASTClasses {
 namespace ExprTreeClasses {
 
+    
+
 class ExprTreeUnaryNode : public ExprTreeNode {
    protected:
     ExprTreeNode* arg1;
@@ -17,33 +19,38 @@ class ExprTreeUnaryNode : public ExprTreeNode {
 
 class ExprTreeNodeUnaryAddrOf : public ExprTreeUnaryNode {
    public:
-    NodeType identify() const { return NodeType::OP_ADDR_OF; }
+    ExprTreeNodeUnaryAddrOf(ExprTreeNode* arg1) : ExprTreeUnaryNode(arg1) {}
+    NodeType identify() const { return OP_ADDR_OF; }
    private:
-    void _checkAndSetTypeOfNode() const { }
+    void _checkAndSetTypeOfNode() const;
 };
 class ExprTreeNodeUnaryDeref : public ExprTreeUnaryNode {
    public:
-    NodeType identify() const { return NodeType::OP_DEREF; }
+    ExprTreeNodeUnaryDeref(ExprTreeNode* arg1) : ExprTreeUnaryNode(arg1) {}
+    NodeType identify() const { return OP_DEREF; }
    private:
-    void _checkAndSetTypeOfNode() const { }
+    void _checkAndSetTypeOfNode() const;
 };
 class ExprTreeNodeUnaryNegation : public ExprTreeUnaryNode {
    public:
-    NodeType identify() const { return NodeType::OP_NEGATION; }
+    ExprTreeNodeUnaryNegation(ExprTreeNode* arg1) : ExprTreeUnaryNode(arg1) {}
+    NodeType identify() const { return OP_NEGATION; }
    private:
-    void _checkAndSetTypeOfNode() const { }
+    void _checkAndSetTypeOfNode() const;
 };
 class ExprTreeNodeUnaryNot : public ExprTreeUnaryNode {
    public:
-    NodeType identify() const { return NodeType::OP_NOT; }
+    ExprTreeNodeUnaryNot(ExprTreeNode* arg1) : ExprTreeUnaryNode(arg1) {}
+    NodeType identify() const { return OP_NOT; }
    private:
-    void _checkAndSetTypeOfNode() const { }
+    void _checkAndSetTypeOfNode() const;
 };
 class ExprTreeNodeUnarySizeof : public ExprTreeUnaryNode {
    public:
-    NodeType identify() const { return NodeType::OP_SIZEOF; }
+    ExprTreeNodeUnarySizeof(ExprTreeNode* arg1) : ExprTreeUnaryNode(arg1) {}
+    NodeType identify() const { return OP_SIZEOF; }
    private:
-    void _checkAndSetTypeOfNode() const { }
+    void _checkAndSetTypeOfNode() const;
 };
 
 }  // namespace ExprTreeClasses

@@ -3,6 +3,7 @@
 
 #include "ExprTreeNode.hpp"
 #include "NodeType.hpp"
+#include "../../exceptions/SCCError.hpp"
 
 namespace SCCASTClasses {
 namespace ExprTreeClasses {
@@ -12,20 +13,20 @@ class ExprTreeTermNode : public ExprTreeNode {
    public:
 };
 
-class ExprTreeNodeTermFuncCall : ExprTreeTermNode {
+class ExprTreeNodeTermFuncCall : public ExprTreeTermNode {
    public:
     const SCCSymbol* function;
     std::vector<SCCASTClasses::Expression*>* paramList;
-    ExprTreeNodeTermFuncCall(SCCSymbol* func = nullptr) : this->function(func) {
+    ExprTreeNodeTermFuncCall(SCCSymbol* func = nullptr) : function(func) {
         this->paramList = new std::vector<SCCASTClasses::Expression*>();
     }
     ~ExprTreeNodeTermFuncCall() {
-        for (Expression* nodes : paramList) {
+        for (Expression* nodes : *paramList) {
             delete nodes;
         }
         delete paramList;
     }
-    NodeType identify() const { return NodeType::T_FUNC_CALL; }
+    NodeType identify() const { return T_FUNC_CALL; }
 
    private:
     void _checkAndSetTypeOfNode() const {
@@ -56,8 +57,8 @@ class ExprTreeNodeTermFuncCall : ExprTreeTermNode {
         }
         //! Check func is FUNCTION
         if (!func.isFunc()) {
-            throw new SCCError("Phase4: Callee not function.",
-                               SCCSemanticError::EXP_NOT_FUNC);
+            printAndReport("Phase4: Callee not function.",
+                           EXP_NOT_FUNC);
             const_cast<ExprTreeNodeTermFuncCall*>(this)->_typeOfNode =
                 SCCType();
             const_cast<ExprTreeNodeTermFuncCall*>(this)->_typeOfNodeSet = true;
@@ -79,7 +80,7 @@ class ExprTreeNodeTermFuncCall : ExprTreeTermNode {
         if (expectedArgCount != actualArgCount) {
             printAndReport(
                 "Phase4: Calling function with mismatched param count.",
-                SCCSemanticError::EXP_INV_ARG);
+                EXP_INV_ARG);
             const_cast<ExprTreeNodeTermFuncCall*>(this)->_typeOfNode =
                 SCCType();
             const_cast<ExprTreeNodeTermFuncCall*>(this)->_typeOfNodeSet = true;
@@ -95,7 +96,7 @@ class ExprTreeNodeTermFuncCall : ExprTreeTermNode {
                 // Mis match params
                 printAndReport(
                     "Phase4: Calling function with mismatched params.",
-                    SCCSemanticError::EXP_INV_ARG);
+                    EXP_INV_ARG);
                 const_cast<ExprTreeNodeTermFuncCall*>(this)->_typeOfNode =
                     SCCType();
                 const_cast<ExprTreeNodeTermFuncCall*>(this)->_typeOfNodeSet =
@@ -118,7 +119,7 @@ class ExprTreeNodeTermFuncCall : ExprTreeTermNode {
  * - \t, \n, \\
  * - \x00~\xFF
  */
-class ExprTreeNodeTermLiteralChar : ExprTreeTermNode {
+class ExprTreeNodeTermLiteralChar : public ExprTreeTermNode {
    private:
     char _valueOfLiteral;
 
@@ -170,7 +171,7 @@ class ExprTreeNodeTermLiteralChar : ExprTreeTermNode {
             this->_valueOfLiteral = value.at(1);
         }
     }
-    NodeType identify() const { return NodeType::T_LITERAL_CHAR; }
+    NodeType identify() const { return T_LITERAL_CHAR; }
 
    private:
     void _checkAndSetTypeOfNode() const {
@@ -180,7 +181,7 @@ class ExprTreeNodeTermLiteralChar : ExprTreeTermNode {
     }
 };
 
-class ExprTreeNodeTermLiteralNumber : ExprTreeTermNode {
+class ExprTreeNodeTermLiteralNumber : public ExprTreeTermNode {
    private:
     long _value;
 
@@ -188,7 +189,7 @@ class ExprTreeNodeTermLiteralNumber : ExprTreeTermNode {
     ExprTreeNodeTermLiteralNumber(long value) : _value(value) {
         this->_checkAndSetTypeOfNode();
     }
-    NodeType identify() const { return NodeType::T_LITERAL_NUM; }
+    NodeType identify() const { return T_LITERAL_NUM; }
 
    private:
     void _checkAndSetTypeOfNode() const {
@@ -200,13 +201,13 @@ class ExprTreeNodeTermLiteralNumber : ExprTreeTermNode {
     }
 };
 
-class ExprTreeNodeTermLiteralString : ExprTreeTermNode {
+class ExprTreeNodeTermLiteralString : public ExprTreeTermNode {
    private:
     std::string _value;
 
    public:
     ExprTreeNodeTermLiteralString(const std::string& value) : _value(value) {}
-    NodeType identify() const { return NodeType::T_LITERAL_STR; }
+    NodeType identify() const { return T_LITERAL_STR; }
 
    private:
     void _checkAndSetTypeOfNode() const {
@@ -217,13 +218,13 @@ class ExprTreeNodeTermLiteralString : ExprTreeTermNode {
     }
 };
 
-class ExprTreeNodeTermVariable : ExprTreeTermNode {
+class ExprTreeNodeTermVariable : public ExprTreeTermNode {
    private:
     SCCSymbol* _symbol;
 
    public:
     ExprTreeNodeTermVariable(SCCSymbol* symbol) : _symbol(symbol) {}
-    NodeType identify() const { return NodeType::T_VAR; }
+    NodeType identify() const { return T_VAR; }
 
    private:
     void _checkAndSetTypeOfNode() const {

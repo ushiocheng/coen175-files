@@ -1,10 +1,6 @@
 #if !defined(SCC_AST_FUNCTION_HPP)
 #define SCC_AST_FUNCTION_HPP
 
-#include <vector>
-
-#include "../semantic-classes/SCCScope.hpp"
-#include "SCCASTStatement.hpp"
 #include "SCCASTStmtBlock.hpp"
 namespace SCCASTClasses {
 

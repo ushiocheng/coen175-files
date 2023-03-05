@@ -9,8 +9,7 @@ namespace SCCASTClasses {
  */
 class Statement {
    public:
-    Statement(){}
-    ~Statement(){}
+    virtual ~Statement();
 
     enum StmtType { ASSIGN, EXPR, RETURN, WHILE, FOR, IF, BLOCK };
     /**

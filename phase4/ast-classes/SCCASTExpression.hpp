@@ -1,8 +1,8 @@
 #if !defined(SCC_AST_EXPRESSION_HPP)
 #define SCC_AST_EXPRESSION_HPP
 
-#include "../semantic-classes/SCCType.hpp"
 #include "SCCASTStatement.hpp"
+#include "../semantic-classes/SCCType.hpp"
 #include "expr-tree-classes/ExprTreeNode.hpp"
 
 namespace SCCASTClasses {

@@ -17,103 +17,131 @@ class ExprTreeBinaryNode : public ExprTreeNode {
         : arg1(arg1), arg2(arg2) {}
 };
 
-
 class ExprTreeNodeBinaryAdd : public ExprTreeBinaryNode {
    public:
-    NodeType identify() const { return NodeType::OP_ADD; }
+    ExprTreeNodeBinaryAdd(ExprTreeNode* arg1, ExprTreeNode* arg2)
+        : ExprTreeBinaryNode(arg1, arg2) {}
+    NodeType identify() const { return OP_ADD; }
+
    private:
-    void _checkAndSetTypeOfNode() const { }
+    void _checkAndSetTypeOfNode() const;
 };
 class ExprTreeNodeBinaryAnd : public ExprTreeBinaryNode {
-   private:
    public:
-    NodeType identify() const { return NodeType::OP_AND; }
+    ExprTreeNodeBinaryAnd(ExprTreeNode* arg1, ExprTreeNode* arg2)
+        : ExprTreeBinaryNode(arg1, arg2) {}
+    NodeType identify() const { return OP_AND; }
+
    private:
-    void _checkAndSetTypeOfNode() const { }
+    void _checkAndSetTypeOfNode() const;
 };
 class ExprTreeNodeBinaryDiv : public ExprTreeBinaryNode {
-   private:
    public:
-    NodeType identify() const { return NodeType::OP_DIV; }
+    ExprTreeNodeBinaryDiv(ExprTreeNode* arg1, ExprTreeNode* arg2)
+        : ExprTreeBinaryNode(arg1, arg2) {}
+    NodeType identify() const { return OP_DIV; }
+
    private:
-    void _checkAndSetTypeOfNode() const { }
+    void _checkAndSetTypeOfNode() const;
 };
 class ExprTreeNodeBinaryEQ : public ExprTreeBinaryNode {
-   private:
    public:
-    NodeType identify() const { return NodeType::OP_EQ; }
+    ExprTreeNodeBinaryEQ(ExprTreeNode* arg1, ExprTreeNode* arg2)
+        : ExprTreeBinaryNode(arg1, arg2) {}
+    NodeType identify() const { return OP_EQ; }
+
    private:
-    void _checkAndSetTypeOfNode() const { }
+    void _checkAndSetTypeOfNode() const;
 };
 class ExprTreeNodeBinaryGE : public ExprTreeBinaryNode {
-   private:
    public:
-    NodeType identify() const { return NodeType::OP_GE; }
+    ExprTreeNodeBinaryGE(ExprTreeNode* arg1, ExprTreeNode* arg2)
+        : ExprTreeBinaryNode(arg1, arg2) {}
+    NodeType identify() const { return OP_GE; }
+
    private:
-    void _checkAndSetTypeOfNode() const { }
+    void _checkAndSetTypeOfNode() const;
 };
 class ExprTreeNodeBinaryGT : public ExprTreeBinaryNode {
-   private:
    public:
-    NodeType identify() const { return NodeType::OP_GT; }
+    ExprTreeNodeBinaryGT(ExprTreeNode* arg1, ExprTreeNode* arg2)
+        : ExprTreeBinaryNode(arg1, arg2) {}
+    NodeType identify() const { return OP_GT; }
+
    private:
-    void _checkAndSetTypeOfNode() const { }
+    void _checkAndSetTypeOfNode() const;
 };
 class ExprTreeNodeBinaryLE : public ExprTreeBinaryNode {
-   private:
    public:
-    NodeType identify() const { return NodeType::OP_LE; }
+    ExprTreeNodeBinaryLE(ExprTreeNode* arg1, ExprTreeNode* arg2)
+        : ExprTreeBinaryNode(arg1, arg2) {}
+    NodeType identify() const { return OP_LE; }
+
    private:
-    void _checkAndSetTypeOfNode() const { }
+    void _checkAndSetTypeOfNode() const;
 };
 class ExprTreeNodeBinaryLT : public ExprTreeBinaryNode {
-   private:
    public:
-    NodeType identify() const { return NodeType::OP_LT; }
+    ExprTreeNodeBinaryLT(ExprTreeNode* arg1, ExprTreeNode* arg2)
+        : ExprTreeBinaryNode(arg1, arg2) {}
+    NodeType identify() const { return OP_LT; }
+
    private:
-    void _checkAndSetTypeOfNode() const { }
+    void _checkAndSetTypeOfNode() const;
 };
 class ExprTreeNodeBinaryMinus : public ExprTreeBinaryNode {
-   private:
    public:
-    NodeType identify() const { return NodeType::OP_MINUS; }
+    ExprTreeNodeBinaryMinus(ExprTreeNode* arg1, ExprTreeNode* arg2)
+        : ExprTreeBinaryNode(arg1, arg2) {}
+    NodeType identify() const { return OP_MINUS; }
+
    private:
-    void _checkAndSetTypeOfNode() const { }
+    void _checkAndSetTypeOfNode() const;
 };
 class ExprTreeNodeBinaryMod : public ExprTreeBinaryNode {
-   private:
    public:
-    NodeType identify() const { return NodeType::OP_MOD; }
+    ExprTreeNodeBinaryMod(ExprTreeNode* arg1, ExprTreeNode* arg2)
+        : ExprTreeBinaryNode(arg1, arg2) {}
+    NodeType identify() const { return OP_MOD; }
+
    private:
-    void _checkAndSetTypeOfNode() const { }
+    void _checkAndSetTypeOfNode() const;
 };
 class ExprTreeNodeBinaryMUL : public ExprTreeBinaryNode {
-   private:
    public:
-    NodeType identify() const { return NodeType::OP_MUL; }
+    ExprTreeNodeBinaryMUL(ExprTreeNode* arg1, ExprTreeNode* arg2)
+        : ExprTreeBinaryNode(arg1, arg2) {}
+    NodeType identify() const { return OP_MUL; }
+
    private:
-    void _checkAndSetTypeOfNode() const { }
+    void _checkAndSetTypeOfNode() const;
 };
 class ExprTreeNodeBinaryNEQ : public ExprTreeBinaryNode {
-   private:
    public:
-    NodeType identify() const { return NodeType::OP_NEQ; }
+    ExprTreeNodeBinaryNEQ(ExprTreeNode* arg1, ExprTreeNode* arg2)
+        : ExprTreeBinaryNode(arg1, arg2) {}
+    NodeType identify() const { return OP_NEQ; }
+
    private:
-    void _checkAndSetTypeOfNode() const { }
+    void _checkAndSetTypeOfNode() const;
 };
 class ExprTreeNodeBinaryOR : public ExprTreeBinaryNode {
-   private:
    public:
-    NodeType identify() const { return NodeType::OP_OR; }
+    ExprTreeNodeBinaryOR(ExprTreeNode* arg1, ExprTreeNode* arg2)
+        : ExprTreeBinaryNode(arg1, arg2) {}
+    NodeType identify() const { return OP_OR; }
+
    private:
-    void _checkAndSetTypeOfNode() const { }
+    void _checkAndSetTypeOfNode() const;
 };
 class ExprTreeNodeBinarySubscript : public ExprTreeBinaryNode {
-   private:
    public:
-    NodeType identify() const { return NodeType::OP_SUBSCRIPT; }
+    ExprTreeNodeBinarySubscript(ExprTreeNode* arg1, ExprTreeNode* arg2)
+        : ExprTreeBinaryNode(arg1, arg2) {}
+    NodeType identify() const { return OP_SUBSCRIPT; }
+
    private:
-    void _checkAndSetTypeOfNode() const { }
+    void _checkAndSetTypeOfNode() const;
 };
 
 }  // namespace ExprTreeClasses

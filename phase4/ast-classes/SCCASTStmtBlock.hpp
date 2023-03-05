@@ -13,21 +13,11 @@ class StmtBlock : public Statement {
 
    public:
     std::vector<Statement*>* innerStatements;
-    StmtBlock(SCCScope* scope) : _scope(scope) {
-        this->innerStatements = new std::vector<Statement*>();
-    }
-    ~StmtBlock() {
-        for (Statement* stmt : *innerStatements) delete stmt;
-        delete innerStatements;
-    }
-    StmtType identify() const { return BLOCK; }
-    bool performTypeChecking() const {
-        bool noError = true;
-        for (Statement* stmt : *innerStatements) {
-            if (!stmt->performTypeChecking()) noError = false;
-        }
-        return noError;
-    }
+    StmtBlock(SCCScope* scope);
+    ~StmtBlock();
+    const SCCScope* scope() const;
+    StmtType identify() const;
+    bool performTypeChecking() const;
 };
 }  // namespace SCCASTClasses
 

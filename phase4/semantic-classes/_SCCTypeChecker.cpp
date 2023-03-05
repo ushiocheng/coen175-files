@@ -59,7 +59,7 @@ SCCType typeOfExpression(SCC::SCCUnaryOperation op,
     //! operands cannot be of invalid type (VOID)
     if (operand1.typeIsNotValid()) {
         printAndReport("Phase4: passing invalid type to unary op.",
-                       SCCSemanticError::EXP_INV_OP_UNI, unaryOperatorStr[op]);
+                       EXP_INV_OP_UNI, unaryOperatorStr[op]);
         return SCCType();
     }
     //! Promote to Scalar if is array
@@ -70,10 +70,10 @@ SCCType typeOfExpression(SCC::SCCUnaryOperation op,
     if (operand1.isFunc()) {
         if (op == SCCTypeChecker::OP_ADDR_OF) {
             printAndReport("Phase4: passing function as value.",
-                           SCCSemanticError::EXP_INV_EXPECT_LVALUE);
+                           EXP_INV_EXPECT_LVALUE);
         } else {
             printAndReport("Phase4: passing function as value.",
-                           SCCSemanticError::EXP_INV_OP_UNI,
+                           EXP_INV_OP_UNI,
                            unaryOperatorStr[op]);
         }
         return SCCType();
@@ -88,19 +88,19 @@ SCCType typeOfExpression(SCC::SCCUnaryOperation op,
 #endif
     //! Handle each operator
     switch (op) {
-        case SCC::SCCUnaryOperation::OP_NOT:
+        case SCC::OP_NOT:
             if (!operand1.isPredicate()) {
                 printAndReport("Phase4: OP_NOT arg1 is not predicate.",
-                               SCCSemanticError::EXP_INV_OP_UNI,
+                               EXP_INV_OP_UNI,
                                unaryOperatorStr[op]);
                 break;
             }
             return SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, nullptr, false);
 
-        case SCC::SCCUnaryOperation::OP_NEGATION:
+        case SCC::OP_NEGATION:
             if (!operand1.isNumeric()) {
                 printAndReport("Phase4: OP_NEGATION arg1 is not numeric.",
-                               SCCSemanticError::EXP_INV_OP_UNI,
+                               EXP_INV_OP_UNI,
                                unaryOperatorStr[op]);
                 break;
             }
@@ -110,19 +110,19 @@ SCCType typeOfExpression(SCC::SCCUnaryOperation op,
                            operand1.declaratorType(), operand1.indirection(), 0,
                            nullptr, false);
 
-        case SCC::SCCUnaryOperation::OP_ADDR_OF:
+        case SCC::OP_ADDR_OF:
             if (!operand1.isLValue()) {
                 printAndReport("Phase4: Cannot get addr of RValue.",
-                               SCCSemanticError::EXP_INV_EXPECT_LVALUE);
+                               EXP_INV_EXPECT_LVALUE);
                 break;
             }
             return SCCType(operand1.specifier(), operand1.declaratorType(),
                            operand1.indirection() + 1, 0, nullptr, false);
 
-        case SCC::SCCUnaryOperation::OP_DEREF:
+        case SCC::OP_DEREF:
             if (!(operand1.isDereferencablePtr())) {
                 printAndReport("Phase4: cannot deref whatever this is.",
-                               SCCSemanticError::EXP_INV_OP_UNI,
+                               EXP_INV_OP_UNI,
                                unaryOperatorStr[op]);
                 break;
             }
@@ -130,7 +130,7 @@ SCCType typeOfExpression(SCC::SCCUnaryOperation op,
             return SCCType(operand1.specifier(), operand1.declaratorType(),
                            operand1.indirection() - 1, 0, nullptr, true);
 
-        case SCC::SCCUnaryOperation::OP_SIZEOF:
+        case SCC::OP_SIZEOF:
             //* Sizeof (predicate)
             // Everything is a predicate at this point
             return SCCType(SCCType::LONG, SCCType::SCALAR, 0, 0, nullptr,
@@ -156,7 +156,7 @@ SCCType typeOfExpression(SCC::SCCBinaryOperation op,
     //! operands cannot be of invalid type (VOID)
     if (operand1.typeIsNotValid() || operand2.typeIsNotValid()) {
         printAndReport("Phase4: passing invalid type to bin op.",
-                       SCCSemanticError::EXP_INV_OP_BIN, binaryOperatorStr[op]);
+                       EXP_INV_OP_BIN, binaryOperatorStr[op]);
         return SCCType();
     }
     //! promote array to ptr
@@ -167,7 +167,7 @@ SCCType typeOfExpression(SCC::SCCBinaryOperation op,
     // thrown
     if (operand1.isFunc() || operand2.isFunc()) {
         printAndReport("Phase4: passing function as value.",
-                       SCCSemanticError::EXP_INV_OP_BIN, binaryOperatorStr[op]);
+                       EXP_INV_OP_BIN, binaryOperatorStr[op]);
         return SCCType();
     }
 
@@ -184,42 +184,42 @@ SCCType typeOfExpression(SCC::SCCBinaryOperation op,
 #endif
     //! handle each operator
     switch (op) {
-        case SCC::SCCBinaryOperation::OP_OR:
-        case SCC::SCCBinaryOperation::OP_AND:
+        case SCC::OP_OR:
+        case SCC::OP_AND:
             PRINT_IF_DEBUG("Handeling OR/AND");
             if (!(operand1.isPredicate() && operand2.isPredicate())) {
                 printAndReport("Phase4: OP_OR/OP_AND arg not predicate",
-                               SCCSemanticError::EXP_INV_OP_BIN,
+                               EXP_INV_OP_BIN,
                                binaryOperatorStr[op]);
                 break;
             }
             return SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, nullptr, false);
-        case SCC::SCCBinaryOperation::OP_EQ:
-        case SCC::SCCBinaryOperation::OP_NEQ:
+        case SCC::OP_EQ:
+        case SCC::OP_NEQ:
             PRINT_IF_DEBUG("Handeling EQ/NEQ");
             if (!operand1.isCompatible(operand2)) {
                 printAndReport("Phase4: ops not comparable.",
-                               SCCSemanticError::EXP_INV_OP_BIN,
+                               EXP_INV_OP_BIN,
                                binaryOperatorStr[op]);
                 break;
             }
             return SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, nullptr, false);
-        case SCC::SCCBinaryOperation::OP_LT:
-        case SCC::SCCBinaryOperation::OP_GT:
-        case SCC::SCCBinaryOperation::OP_LE:
-        case SCC::SCCBinaryOperation::OP_GE:
+        case SCC::OP_LT:
+        case SCC::OP_GT:
+        case SCC::OP_LE:
+        case SCC::OP_GE:
             PRINT_IF_DEBUG("Handeling comparators");
             //! [spec] op1 and op2 MUST both be numeric or identital predicate
             //! types, after promotion
             if (!((operand1.isNumeric() && operand2.isNumeric()) ||
                   (operand1.isPredicate() && (operand1 == operand2)))) {
                 printAndReport("Phase4: ops not comparable.",
-                               SCCSemanticError::EXP_INV_OP_BIN,
+                               EXP_INV_OP_BIN,
                                binaryOperatorStr[op]);
                 break;
             }
             return SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, nullptr, false);
-        case SCC::SCCBinaryOperation::OP_MINUS:
+        case SCC::OP_MINUS:
             PRINT_IF_DEBUG("Handeling MINUS");
             //! [spec] `ptr(T)-ptr(T)` OR `ptr(T)-num`
             //! where T is not VOID (T can be ptr(VOID))
@@ -232,7 +232,7 @@ SCCType typeOfExpression(SCC::SCCBinaryOperation op,
                                false);
             }
             //* Intentional fall though for arithmatic op & type checking
-        case SCC::SCCBinaryOperation::OP_ADD:
+        case SCC::OP_ADD:
             PRINT_IF_DEBUG("Handeling MINUS/ADD");
             //! [spec] `num+ptr(T)` OR `ptr(T)+num`
             //! where T is not VOID (T can be ptr(VOID))
@@ -243,21 +243,21 @@ SCCType typeOfExpression(SCC::SCCBinaryOperation op,
                 return SCCType(operand1.specifier(), SCCType::SCALAR,
                                operand1.indirection(), 0, nullptr, false);
             } else if (  //! Special case for `num+ptr(T) -> ptr(T)`
-                op == SCC::SCCBinaryOperation::OP_ADD &&
+                op == SCC::OP_ADD &&
                 operand1.isNumeric() && operand2.isDereferencablePtr()) {
                 return SCCType(operand2.specifier(), SCCType::SCALAR,
                                operand2.indirection(), 0, nullptr, false);
             }
             //* Intentional fall though for arithmatic op & type checking
-        case SCC::SCCBinaryOperation::OP_MUL:
-        case SCC::SCCBinaryOperation::OP_DIV:
-        case SCC::SCCBinaryOperation::OP_MOD:
+        case SCC::OP_MUL:
+        case SCC::OP_DIV:
+        case SCC::OP_MOD:
             PRINT_IF_DEBUG("Handeling MINUS/ADD/MUL/DIV/MOD");
             //! [spec] op1 & op2 both num
             //! + - * / % shared code region for numeric arithmatic operation
             if (!(operand1.isNumeric() && operand2.isNumeric())) {
                 printAndReport("Phase4: ops not compatible with +/-.",
-                               SCCSemanticError::EXP_INV_OP_BIN,
+                               EXP_INV_OP_BIN,
                                binaryOperatorStr[op]);
                 break;
             }
@@ -270,12 +270,12 @@ SCCType typeOfExpression(SCC::SCCBinaryOperation op,
                 return SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, nullptr,
                                false);
             }
-        case SCC::SCCBinaryOperation::OP_SUBSCRIPT:
+        case SCC::OP_SUBSCRIPT:
             PRINT_IF_DEBUG("Handeling SUBSCRIPT");
             //! [spec] op1 must be ptr(T) where T is not void, op2 must be num
             if (!(operand1.isDereferencablePtr() && operand2.isNumeric())) {
                 printAndReport("Phase4: ops not compatible with []",
-                               SCCSemanticError::EXP_INV_OP_BIN,
+                               EXP_INV_OP_BIN,
                                binaryOperatorStr[op]);
                 break;
             }
@@ -297,7 +297,7 @@ SCCType typeOfExpression(SCCType func, std::vector<SCCType>* parameters) {
     //! Check func is FUNCTION
     if (!func.isFunc()) {
         printAndReport("Phase4: Callee not function.",
-                       SCCSemanticError::EXP_NOT_FUNC);
+                       EXP_NOT_FUNC);
 #ifdef VERBOSE_ERROR_MSG
         PRINT_IF_DEBUG("Calling: " << func);
 #endif
@@ -315,7 +315,7 @@ SCCType typeOfExpression(SCCType func, std::vector<SCCType>* parameters) {
     size_t actualArgCount = parameters ? parameters->size() : 0;
     if (expectedArgCount != actualArgCount) {
         printAndReport("Phase4: Calling function with mismatched param count.",
-                       SCCSemanticError::EXP_INV_ARG);
+                       EXP_INV_ARG);
 #ifdef VERBOSE_ERROR_MSG
         std::cout << "[DEBUG] Calling function " << func << "with param: ";
         if (parameters) {
@@ -336,7 +336,7 @@ SCCType typeOfExpression(SCCType func, std::vector<SCCType>* parameters) {
                 continue;
             // Mis match params
             printAndReport("Phase4: Calling function with mismatched params.",
-                           SCCSemanticError::EXP_INV_ARG);
+                           EXP_INV_ARG);
 #ifdef VERBOSE_ERROR_MSG
             PRINT_IF_DEBUG("Func: " << func << "Parameter: " << parameters);
 #endif
@@ -356,13 +356,13 @@ void checkAssign(SCCType lhs, SCCType rhs) {
     //! Check is LValue
     if (!lhs.isLValue()) {
         printAndReport("Phase4: Assigning to RValue",
-                       SCCSemanticError::EXP_INV_EXPECT_LVALUE);
+                       EXP_INV_EXPECT_LVALUE);
         return;
     }
     //! Check compatible
     if (!rhs.isCompatible(lhs)) {
         printAndReport("Phase4: Assign to imcompatible type",
-                       SCCSemanticError::EXP_INV_OP_BIN, "=");
+                       EXP_INV_OP_BIN, "=");
         return;
     }
 }
@@ -375,7 +375,7 @@ void checkTestExpr(SCCType testExpr) {
     //! check is Predicate
     if (!testExpr.isPredicate()) {
         printAndReport("Phase4: test expr is not Predicate",
-                       SCCSemanticError::EXP_INV_TEST);
+                       EXP_INV_TEST);
         return;
     }
 }
@@ -394,7 +394,7 @@ void checkReturnType(SCCScope* context, SCCType returnType) {
     expectedReturnType.promoteFunc();
     if (!returnType.isCompatible(expectedReturnType)) {
         printAndReport("Phase4: return type incompatible",
-                       SCCSemanticError::EXP_INV_RETURN);
+                       EXP_INV_RETURN);
         return;
     }
 }
