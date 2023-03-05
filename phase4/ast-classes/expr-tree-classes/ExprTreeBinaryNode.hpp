@@ -14,7 +14,9 @@ class ExprTreeBinaryNode : public ExprTreeNode {
 
    public:
     ExprTreeBinaryNode(ExprTreeNode* arg1, ExprTreeNode* arg2)
-        : arg1(arg1), arg2(arg2) {}
+        : arg1(arg1), arg2(arg2) {
+        this->performTypeChecking();
+    }
 };
 
 class ExprTreeNodeBinaryAdd : public ExprTreeBinaryNode {

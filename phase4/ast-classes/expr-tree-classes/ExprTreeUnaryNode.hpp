@@ -14,7 +14,9 @@ class ExprTreeUnaryNode : public ExprTreeNode {
     ExprTreeNode* arg1;
 
    public:
-    ExprTreeUnaryNode(ExprTreeNode* arg1) : arg1(arg1) {}
+    ExprTreeUnaryNode(ExprTreeNode* arg1) : arg1(arg1) {
+        this->performTypeChecking();
+    }
 };
 
 class ExprTreeNodeUnaryAddrOf : public ExprTreeUnaryNode {

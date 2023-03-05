@@ -31,8 +31,6 @@ class CFSReturn : public CtrFlowStmt {
         if (expectedReturnType.declaratorType() == SCCType::ERROR) return false;
         expectedReturnType.promoteFunc();
         if (!returnType.isCompatible(expectedReturnType)) {
-            printAndReport("Phase4: return type incompatible",
-                           EXP_INV_RETURN);
             return false;
         }
         return true;

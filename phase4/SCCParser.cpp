@@ -23,6 +23,7 @@
 #include "semantic-classes/SCCScope.hpp"
 #include "semantic-classes/SCCSymbol.hpp"
 #include "semantic-classes/SCCType.hpp"
+#include "semantic-classes/SCCTypeChecker.hpp"
 #include "tokens.h"
 
 static SCCAST *astRoot = new SCCAST();
@@ -32,7 +33,7 @@ static SCCASTClasses::StmtBlock *currentBlock = nullptr;
 
 #ifdef DEBUG
 #define DEBUG_PRINT_FUNC_TRACE_FLG
-// #define DEBUG_PRINT_MATCHING
+#define DEBUG_PRINT_MATCHING
 // #define DUMP_SYMBOL_TABLE
 #define PRINT_IF_DEBUG(sth) cout << sth << endl;
 #else
@@ -420,8 +421,10 @@ SCCASTClasses::Statement *statement() {
     } else if (lookahead == RETURN) {
         //* return expr
         match();
-        astStmt = new SCCASTClasses::CFSReturn(
-            new SCCASTClasses::Expression(expression()), currentBlock);
+        SCCASTClasses::Expression *expr1 =
+            new SCCASTClasses::Expression(expression());
+        astStmt = new SCCASTClasses::CFSReturn(expr1, currentBlock);
+        checkReturnType(currentScope, expr1->getType());
         match(OP_SC);
     } else if (lookahead == WHILE) {
         //* while ( expression ) statement
@@ -429,6 +432,7 @@ SCCASTClasses::Statement *statement() {
         match(OP_L_PARENT);
         SCCASTClasses::Expression *expr1 =
             new SCCASTClasses::Expression(expression());
+        checkTestExpr(expr1->getType());
         match(OP_R_PARENT);
         SCCASTClasses::Statement *body = statement();
         astStmt = new SCCASTClasses::CFSWhile(expr1, body);
@@ -440,10 +444,11 @@ SCCASTClasses::Statement *statement() {
         match(OP_SC);
         SCCASTClasses::Expression *expr1 =
             new SCCASTClasses::Expression(expression());
+        checkTestExpr(expr1->getType());
         match(OP_SC);
         SCCASTClasses::Statement *assign2 = assignment();
         match(OP_R_PARENT);
-        SCCASTClasses::Statement *body = assignment();
+        SCCASTClasses::Statement *body = statement();
         astStmt = new SCCASTClasses::CFSFor(assign1, expr1, assign2, body);
     } else if (lookahead == IF) {
         //* if ( expression ) statement
@@ -452,17 +457,17 @@ SCCASTClasses::Statement *statement() {
         match(OP_L_PARENT);
         SCCASTClasses::Expression *expr1 =
             new SCCASTClasses::Expression(expression());
+        checkTestExpr(expr1->getType());
         match(OP_R_PARENT);
         SCCASTClasses::Statement *stmt1 = statement();
-        SCCASTClasses::Statement *stmt2 = nullptr;
+        astStmt = new SCCASTClasses::CFSIf(expr1, nullptr, nullptr);
         if (lookahead == ELSE) {
             match();
-            stmt2 = statement();
+            ((SCCASTClasses::CFSIf *)astStmt)->stmt2 = statement();
         }
-        astStmt = new SCCASTClasses::CFSIf(expr1, stmt1, stmt2);
     } else {
         // | assignment ;
-        astStmt = assignment();
+        astStmt = assignment();  // type checking handled in assignment
         match(OP_SC);
     }
     return astStmt;
@@ -476,9 +481,13 @@ SCCASTClasses::Statement *assignment() {
     if (lookahead == '=') {
         match();
         SCCASTClasses::ExprTreeClasses::ExprTreeNode *rhs = expression();
-        return new SCCASTClasses::Assignment(expr1, rhs);
+        checkAssign(expr1->getType(), rhs->getType());
+        SCCASTClasses::Assignment *res =
+            new SCCASTClasses::Assignment(expr1, rhs);
+        return res;
     }
-    return new SCCASTClasses::Expression(expr1);
+    SCCASTClasses::Expression *res = new SCCASTClasses::Expression(expr1);
+    return res;
 }
 
 // expression -> expression || expression
@@ -520,6 +529,7 @@ SCCASTClasses::ExprTreeClasses::ExprTreeNode *expression_level_1() {
         op1 = new SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryOR(
             op1, expression_level_2());
     }
+    op1->performTypeChecking();
     return op1;
 }
 
@@ -696,6 +706,7 @@ SCCASTClasses::ExprTreeClasses::ExprTreeNode *expression_term() {
             if (lookahead == ')') {
                 // id()
                 match();
+                res->performTypeChecking();
                 return res;
             }
             std::vector<SCCASTClasses::Expression *> *parameters =
@@ -705,6 +716,7 @@ SCCASTClasses::ExprTreeClasses::ExprTreeNode *expression_term() {
             }
             // id(expr-list)
             match(OP_R_PARENT);
+            res->performTypeChecking();
             return res;
         } else {
             // id
@@ -729,7 +741,9 @@ SCCASTClasses::ExprTreeClasses::ExprTreeNode *expression_term() {
             charStr);
     } else {  //! MUST be '('
         match(OP_L_PARENT);
-        return expression();
+        SCCASTClasses::ExprTreeClasses::ExprTreeNode *res = expression();
         match(OP_R_PARENT);
+        res->performTypeChecking();
+        return res;
     }
 }

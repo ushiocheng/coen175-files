@@ -39,7 +39,7 @@ class ExprTreeNode {
     }
 
    private:
-    virtual void _checkAndSetTypeOfNode() const = 0;
+    virtual void _checkAndSetTypeOfNode() const {};
 };
 
 };  // namespace ExprTreeClasses
