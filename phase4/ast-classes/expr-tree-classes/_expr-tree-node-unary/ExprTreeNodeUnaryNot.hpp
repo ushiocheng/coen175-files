@@ -8,7 +8,8 @@ class ExprTreeNodeUnaryNot : public ExprTreeUnaryNode {
    private:
    public:
     NodeType identify() const { return NodeType::OP_NOT; }
-    bool performTypeChecking(SCCASTClasses::Expression* expr) const {
+   private:
+    void _checkAndSetTypeOfNode() const {
         // TODO
     }
 };

@@ -8,7 +8,8 @@ class ExprTreeNodeUnaryNegation : public ExprTreeUnaryNode {
    private:
    public:
     NodeType identify() const { return NodeType::OP_NEGATION; }
-    bool performTypeChecking(SCCASTClasses::Expression* expr) const {
+   private:
+    void _checkAndSetTypeOfNode() const {
         // TODO
     }
 };

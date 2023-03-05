@@ -8,7 +8,8 @@ class ExprTreeNodeBinaryOR : public ExprTreeBinaryNode {
    private:
    public:
     NodeType identify() const { return NodeType::OP_OR; }
-    bool performTypeChecking(SCCASTClasses::Expression* expr) const {
+   private:
+    void _checkAndSetTypeOfNode() const {
         // TODO
     }
 };

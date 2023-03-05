@@ -8,7 +8,8 @@ class ExprTreeNodeBinaryMod : public ExprTreeBinaryNode {
    private:
    public:
     NodeType identify() const { return NodeType::OP_MOD; }
-    bool performTypeChecking(SCCASTClasses::Expression* expr) const {
+   private:
+    void _checkAndSetTypeOfNode() const {
         // TODO
     }
 };
