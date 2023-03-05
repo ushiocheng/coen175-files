@@ -12,7 +12,7 @@
         "phase1*": true,
         "phase2*": true,
         "phase3*": true,
-        "phase4*": false,
+        "phase4*": true,
         "phase5*": false,
         "phase6*": false,
         ".vscode": false,
