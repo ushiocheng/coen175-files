@@ -40,13 +40,13 @@ for f in *-lib.c; do
     ../test-output/$BASE.o \
         > ../test-output/$BASE.runtime.out \
         2>../test-output/$BASE.runtime.err
-    cmp -s ../test-output/$BASE.runtime.out $BASE.err 2>/dev/null &&
+    cmp -s ../test-output/$BASE.runtime.out $BASE.out 2>/dev/null &&
         printf "ok\n" ||
         (
             printf "failed\n"
             printf "\x1b[33;41m[ERROR]\x1b[0m Test case $BASE failed!\n"
             cp $BASE.out ../test-output/$BASE.runtime.out.expected
-            diff $BASE.out ../test-output/$BASE.runtime.out > ../test-output/$f.runtime.out.diff
+            diff $BASE.out ../test-output/$BASE.runtime.out > ../test-output/$BASE.runtime.out.diff
         )
 done
 
