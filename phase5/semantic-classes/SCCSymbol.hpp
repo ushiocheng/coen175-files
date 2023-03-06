@@ -22,7 +22,8 @@ class SCCSymbol {
     SCCSymbol(const std::string &id, const SCCType &type);
     SCCSymbol(const SCCSymbol &that);
     ~SCCSymbol() {
-        if (this->location) delete location;
+        // TODO Fix this
+        // if (this->location) delete location;
     }
     const std::string &id() const;
     const SCCType &type() const;
