@@ -23,7 +23,7 @@ class ExprTreeBinaryNode : public ExprTreeNode {
     SCCDataLocation* generateCodeToEvaluateExprNode(
         std::ostream& out, const char* indentation = "") const {
         assert(false);
-        return nullptr;
+        return NULL;
     }
 };
 
