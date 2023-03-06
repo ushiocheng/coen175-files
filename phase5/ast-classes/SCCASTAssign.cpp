@@ -1,4 +1,6 @@
 #include "SCCASTAssign.hpp"
+#include "../GlobalConfig.hpp"
+#include <cassert>
 
 SCCASTClasses::Assignment::Assignment(ExprTreeClasses::ExprTreeNode* lhs,
                                       ExprTreeClasses::ExprTreeNode* rhs)

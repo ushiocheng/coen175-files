@@ -2,6 +2,8 @@
 
 #include "../semantic-classes/SCCScope.hpp"
 #include "SCCASTStmtBlock.hpp"
+#include "../GlobalConfig.hpp"
+#include <cassert>
 
 SCCASTClasses::Function::Function(SCCScope* functionScope) {
     this->innerBlock = new StmtBlock(functionScope);
