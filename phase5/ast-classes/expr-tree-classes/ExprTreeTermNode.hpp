@@ -1,14 +1,15 @@
 #if !defined(EXPR_TREE_TERM_NODE_HPP)
 #define EXPR_TREE_TERM_NODE_HPP
 
+#include <cassert>
+
+#include "../../GlobalConfig.hpp"
 #include "../../code-generation-classes/SCCRegisterManager.hpp"
 #include "../../exceptions/SCCError.hpp"
 #include "../../semantic-classes/SCCSymbol.hpp"
 #include "../SCCASTExpression.hpp"
 #include "ExprTreeNode.hpp"
 #include "NodeType.hpp"
-#include "../../GlobalConfig.hpp"
-#include <cassert>
 
 namespace SCCASTClasses {
 namespace ExprTreeClasses {
@@ -37,23 +38,41 @@ class ExprTreeNodeTermFuncCall : public ExprTreeTermNode {
         //! Evaluate Param
         for (size_t paramNum = 0; paramNum < paramList->size(); paramNum++) {
             SCCDataLocation* paramLocation =
-                paramList->at(paramNum)->exprTreeRoot->generateCodeToEvaluateExprNode(
-                    out, indentation);
+                paramList->at(paramNum)
+                    ->exprTreeRoot->generateCodeToEvaluateExprNode(out,
+                                                                   indentation);
             out << indentation << "movl    " << paramLocation->generateAccess()
                 << ", ";
             switch (paramNum) {
-                case 0: out << X86Register::nameStr[X86Register::Arg0Reg]; break;
-                case 1: out << X86Register::nameStr[X86Register::Arg1Reg]; break;
-                case 2: out << X86Register::nameStr[X86Register::Arg2Reg]; break;
-                case 3: out << X86Register::nameStr[X86Register::Arg3Reg]; break;
-                case 4: out << X86Register::nameStr[X86Register::Arg4Reg]; break;
-                case 5: out << X86Register::nameStr[X86Register::Arg5Reg]; break;
+                case 0:
+                    out << "%" << X86Register::nameStr[X86Register::Arg0Reg];
+                    break;
+                case 1:
+                    out << "%" << X86Register::nameStr[X86Register::Arg1Reg];
+                    break;
+                case 2:
+                    out << "%" << X86Register::nameStr[X86Register::Arg2Reg];
+                    break;
+                case 3:
+                    out << "%" << X86Register::nameStr[X86Register::Arg3Reg];
+                    break;
+                case 4:
+                    out << "%" << X86Register::nameStr[X86Register::Arg4Reg];
+                    break;
+                case 5:
+                    out << "%" << X86Register::nameStr[X86Register::Arg5Reg];
+                    break;
             }
             out << std::endl;
             delete paramLocation;
         }
-        out << indentation << "movq    $0, " << X86Register::nameStr[X86Register::FPArgcReg] << std::endl;
-        out << indentation << "call " << this->function->id() << std::endl;
+        out << indentation << "movq    $0, "
+            << "%" << X86Register::nameStr[X86Register::FPArgcReg] << std::endl;
+        // if (this->function->type().parameters() == NULL) {
+        //     out << indentation << "extern  " << this->function->id()
+        //         << std::endl;
+        // }
+        out << indentation << "call    " << this->function->id() << std::endl;
         return new SCCDataLocationRegister(X86Register::ReturnReg);
     }
 

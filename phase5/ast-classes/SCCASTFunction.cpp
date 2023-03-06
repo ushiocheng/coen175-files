@@ -1,9 +1,10 @@
 #include "SCCASTFunction.hpp"
 
+#include <cassert>
+
+#include "../GlobalConfig.hpp"
 #include "../semantic-classes/SCCScope.hpp"
 #include "SCCASTStmtBlock.hpp"
-#include "../GlobalConfig.hpp"
-#include <cassert>
 
 SCCASTClasses::Function::Function(SCCScope* functionScope) {
     this->innerBlock = new StmtBlock(functionScope);
@@ -19,7 +20,8 @@ bool SCCASTClasses::Function::performTypeChecking() {
 void SCCASTClasses::Function::generateCode(std::ostream& out) const {
     using std::endl;
     const SCCSymbol* func = this->innerBlock->scope()->getEnclosingFunc();
-    out << func->id() << ":" << endl;
+    out << ".globl  " << func->id() << endl;
+    out << func->id() << " :" << endl;
     //! Setup parameters
     std::vector<SCCSymbol*> params =
         const_cast<SCCScope*>(this->innerBlock->scope())->getFunctionParams();
@@ -70,7 +72,7 @@ void SCCASTClasses::Function::generateCode(std::ostream& out) const {
         functionStackSize = (functionStackSize & (!0xFFFF)) + 16;
     //! Generate Prologue
     out << "    pushq   %rbp" << endl;
-    out << "    movq    %rsq, %rbp" << endl;
+    out << "    movq    %rsp, %rbp" << endl;
     out << "    subq    $" << functionStackSize
         << ", %rsp \t\t# Allocate Stack Space" << endl;
     //! spill params
@@ -90,6 +92,10 @@ void SCCASTClasses::Function::generateCode(std::ostream& out) const {
             param->location = newLocation;
         }
     }
+    // ! Put Stack Variables
+    const_cast<SCCScope*>(this->innerBlock->scope())
+        ->performStackAllocation(stackAllocationOffset);
+    // ! Generate Function Body
     out << "    # Function Body" << endl;
     this->innerBlock->generateCode(out, "    ");
     out << "    # Function Epilogue" << endl;

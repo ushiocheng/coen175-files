@@ -64,6 +64,7 @@ class SCCScope {
     std::vector<const SCCSymbol*> getFunctionParams() const;
 
     size_t maxSizeUtilization() const;
+    void performStackAllocation(size_t stackBaseOffset = 0);
 
     // Dump content for debug purpose
     void _dump() const;

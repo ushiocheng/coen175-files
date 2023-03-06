@@ -34,7 +34,7 @@ bool SCCASTClasses::Assignment::performTypeChecking() const {
 void SCCASTClasses::Assignment::generateCode(std::ostream& out, const char* indentation) const{
     //! For Phase 5 ONLY, lhs will always be a scalar int
     assert(lhs->identify() == ExprTreeClasses::T_VAR);
-    SCCDataLocation* targetLocation = ((ExprTreeClasses::ExprTreeNodeTermVariable *) lhs)->generateCodeToEvaluateExprNode(out, indentation);
+    SCCDataLocation* targetLocation = lhs->generateCodeToEvaluateExprNode(out, indentation);
     SCCDataLocation* sourceLocation = rhs->generateCodeToEvaluateExprNode(out, indentation);
     if (sourceLocation->requireMemoryAccess()) {
         out << indentation << "movl    " << sourceLocation->generateAccess() << ", %eax" << std::endl;

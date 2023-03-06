@@ -17,6 +17,12 @@ class ExprTreeBinaryNode : public ExprTreeNode {
         : arg1(arg1), arg2(arg2) {
         this->performTypeChecking();
     }
+
+    SCCDataLocation* generateCodeToEvaluateExprNode(
+        std::ostream& out, const char* indentation = "") const {
+        assert(false);
+        return nullptr;
+    }
 };
 
 class ExprTreeNodeBinaryAdd : public ExprTreeBinaryNode {

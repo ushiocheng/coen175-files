@@ -22,13 +22,15 @@ namespace X86Register{
         "rip"
     };
     
+    //TODO Phase 6
+    // support any reg size
     const int FPArgcReg = RAX;
-    const int Arg0Reg = RDI;
-    const int Arg1Reg = RSI;
-    const int Arg2Reg = RDX;
-    const int Arg3Reg = RCX;
-    const int Arg4Reg = R8;
-    const int Arg5Reg = R9;
+    const int Arg0Reg = EDI;
+    const int Arg1Reg = ESI;
+    const int Arg2Reg = EDX;
+    const int Arg3Reg = ECX;
+    const int Arg4Reg = R8D;
+    const int Arg5Reg = R9D;
     
     const int ReturnReg = RAX;
     

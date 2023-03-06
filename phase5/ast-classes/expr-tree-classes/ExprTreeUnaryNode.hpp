@@ -17,6 +17,12 @@ class ExprTreeUnaryNode : public ExprTreeNode {
     ExprTreeUnaryNode(ExprTreeNode* arg1) : arg1(arg1) {
         this->performTypeChecking();
     }
+
+    SCCDataLocation* generateCodeToEvaluateExprNode(
+        std::ostream& out, const char* indentation = "") const {
+        assert(false);
+        return nullptr;
+    }
 };
 
 class ExprTreeNodeUnaryAddrOf : public ExprTreeUnaryNode {

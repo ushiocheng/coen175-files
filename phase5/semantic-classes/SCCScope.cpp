@@ -203,6 +203,16 @@ size_t SCCScope::maxSizeUtilization() const{
     return currentScopeUtilization + maxInnerScopeUtilization;
 }
 
+void SCCScope::performStackAllocation(size_t stackBaseOffset) {
+    for (SCCSymbol* sym : this->getStatics()) {
+        stackBaseOffset+= sym->type().sizeOf();
+        sym->location = new SCCDataLocationStack(stackBaseOffset);
+    }
+    for (SCCScope* innerScope : this->_innerScopes) {
+        // Intentional pass by value so nested stack var can be reclaimed.
+        innerScope->performStackAllocation(stackBaseOffset);
+    }
+}
 
 void SCCScope::_dump() const {
     std::cerr << "==================== BEGIN SCOPE " << this
