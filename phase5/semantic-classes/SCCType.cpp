@@ -1,10 +1,10 @@
 #include "SCCType.hpp"
 
+#include <cassert>
 #include <iostream>
 #include <string>
 
 #include "../GlobalConfig.hpp"
-#include <cassert>
 
 #ifdef DEBUG
 // #define DEBUG_ADDITIONAL_WARNING
@@ -157,7 +157,30 @@ void SCCType::promoteFunc() {
 size_t SCCType::sizeOf() const {
     if (this->_declaratorType == ERROR) return SIZEOF_ERROR;
     if (this->_declaratorType == FUNCTION) return SIZEOF_ERROR;
-    if (this->_declaratorType == ARRAY) return ARCH_PTR_SIZE;
+    if (this->_declaratorType == ARRAY) {
+        switch (this->_specifier) {
+            case INT:
+#ifdef SIZEOF_INT
+                return SIZEOF_INT * this->_arrLength;
+#else
+                return ARCH_PTR_SIZE * this->_arrLength;
+#endif
+            case LONG:
+#ifdef SIZEOF_LONG
+                return SIZEOF_LONG * this->_arrLength;
+#else
+                return ARCH_PTR_SIZE * this->_arrLength;
+#endif
+            case CHAR:
+#ifdef SIZEOF_CHAR
+                return SIZEOF_CHAR * this->_arrLength;
+#else
+                return ARCH_PTR_SIZE * this->_arrLength;
+#endif
+            default:
+                return SIZEOF_ERROR;
+        }
+    }
     if (this->_indirection > 0) return ARCH_PTR_SIZE;
     // Otherwise this can be one of 3 thing, int, long, char
     switch (this->_specifier) {
