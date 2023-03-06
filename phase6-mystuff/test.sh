@@ -28,26 +28,40 @@ mkdir -p test-output
 rm test-output/*
 cd examples
 
-for f in *-lib.c; do
-    BASE=$(basename $f -lib.c)
-    printf "\x1b[102;30m[INFO]\x1b[0m Testing $BASE ... "
-    ulimit -t 1
-    ../../phase6/scc \
-        <$BASE.c \
-        >../test-output/$BASE.s \
-        2>../test-output/$BASE.compile.err
-    gcc ../test-output/$BASE.s $BASE-lib.c -o ../test-output/$BASE.o
-    ../test-output/$BASE.o \
-        > ../test-output/$BASE.runtime.out \
-        2>../test-output/$BASE.runtime.err
-    cmp -s ../test-output/$BASE.runtime.out $BASE.out 2>/dev/null &&
-        printf "ok\n" ||
-        (
-            printf "failed\n"
-            printf "\x1b[33;41m[ERROR]\x1b[0m Test case $BASE failed!\n"
-            cp $BASE.out ../test-output/$BASE.runtime.out.expected
-            diff $BASE.out ../test-output/$BASE.runtime.out > ../test-output/$BASE.runtime.out.diff
-        )
+for f in *.c; do
+    if [[ ! "a-li.c" =~ ".*-lib\.c" ]]; then
+        BASE=$(basename $f .c)
+        printf "\x1b[102;30m[INFO]\x1b[0m Testing $BASE ... "
+        ulimit -t 1
+        ../../phase6/scc \
+            <$BASE.c \
+            >../test-output/$BASE.s \
+            2>../test-output/$BASE.compile.err
+        # Compile & Link with lib
+        if [ -e $BASE-lib.c ]; then
+            gcc ../test-output/$BASE.s $BASE-lib.c -o ../test-output/$BASE.o
+        else
+            gcc ../test-output/$BASE.s -o ../test-output/$BASE.o
+        fi
+        if [ -e $BASE.in ]; then
+            ../test-output/$BASE.o \
+                <$BASE.in \
+                >../test-output/$BASE.runtime.out \
+                2>../test-output/$BASE.runtime.err
+        else
+            ../test-output/$BASE.o \
+                >../test-output/$BASE.runtime.out \
+                2>../test-output/$BASE.runtime.err
+        fi
+        cmp -s ../test-output/$BASE.runtime.out $BASE.out 2>/dev/null &&
+            printf "ok\n" ||
+            (
+                printf "failed\n"
+                printf "\x1b[33;41m[ERROR]\x1b[0m Test case $BASE failed!\n"
+                cp $BASE.out ../test-output/$BASE.runtime.out.expected
+                diff $BASE.out ../test-output/$BASE.runtime.out >../test-output/$BASE.runtime.out.diff
+            )
+    fi
 done
 
 # !Make clean but not delete executable
