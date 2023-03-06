@@ -3,6 +3,8 @@
 
 #include "ExprTreeNode.hpp"
 #include "NodeType.hpp"
+#include "../../GlobalConfig.hpp"
+#include <cassert>
 
 namespace SCCASTClasses {
 namespace ExprTreeClasses {
