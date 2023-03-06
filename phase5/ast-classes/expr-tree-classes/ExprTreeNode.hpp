@@ -1,8 +1,8 @@
 #if !defined(EXPR_TREE_NODE_HPP)
 #define EXPR_TREE_NODE_HPP
 
-#include "../../semantic-classes/SCCType.hpp"
 #include "../../code-generation-classes/data-location/SCCDataLocation.hpp"
+#include "../../semantic-classes/SCCType.hpp"
 #include "NodeType.hpp"
 namespace SCCASTClasses {
 namespace ExprTreeClasses {
@@ -37,8 +37,10 @@ class ExprTreeNode {
      * Phase 5 - Generate Code
      * @param out output stream
      */
-    virtual SCCDataLocation* generateCodeToEvaluateExprNode(std::ostream& out,
-                              const char* indentation = "") const {};
+    virtual SCCDataLocation* generateCodeToEvaluateExprNode(
+        std::ostream& out, const char* indentation = "") const {
+        return nullptr;  // TODO Phase 6
+    };
 
     SCCType getType() const {
         if (_typeOfNodeSet) return _typeOfNode;

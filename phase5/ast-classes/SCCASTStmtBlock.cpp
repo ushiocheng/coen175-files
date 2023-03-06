@@ -23,7 +23,7 @@ bool SCCASTClasses::StmtBlock::performTypeChecking() const {
     return noError;
 }
 
-// #define DEBUG_OUTPUT_STMT_CODE
+#define DEBUG_OUTPUT_STMT_CODE
 static const char* stmtTypeStr[] = {"ASSIGN", "EXPR  ", "RETURN", "WHILE ",
                                     "FOR   ", "IF    ", "BLOCK "};
 
