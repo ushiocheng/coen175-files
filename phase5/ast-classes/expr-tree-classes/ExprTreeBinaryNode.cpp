@@ -188,7 +188,7 @@ SCCType typeOfBinaryExpression(SCC::SCCBinaryOperation op, SCCType operand1,
                                binaryOperatorStr[op]);
                 break;
             }
-            return SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, nullptr, false);
+            return SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, NULL, false);
         case SCC::OP_EQ:
         case SCC::OP_NEQ:
             PRINT_IF_DEBUG("Handeling EQ/NEQ");
@@ -198,7 +198,7 @@ SCCType typeOfBinaryExpression(SCC::SCCBinaryOperation op, SCCType operand1,
                                binaryOperatorStr[op]);
                 break;
             }
-            return SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, nullptr, false);
+            return SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, NULL, false);
         case SCC::OP_LT:
         case SCC::OP_GT:
         case SCC::OP_LE:
@@ -213,7 +213,7 @@ SCCType typeOfBinaryExpression(SCC::SCCBinaryOperation op, SCCType operand1,
                                binaryOperatorStr[op]);
                 break;
             }
-            return SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, nullptr, false);
+            return SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, NULL, false);
         case SCC::OP_MINUS:
             PRINT_IF_DEBUG("Handeling MINUS");
             //! [spec] `ptr(T)-ptr(T)` OR `ptr(T)-num`
@@ -223,7 +223,7 @@ SCCType typeOfBinaryExpression(SCC::SCCBinaryOperation op, SCCType operand1,
             //! Special case for pointer arithmatic `ptr(T)-ptr(T) -> long`
             if (operand1.isDereferencablePtr() &&
                 operand2.isDereferencablePtr() && (operand1 == operand2)) {
-                return SCCType(SCCType::LONG, SCCType::SCALAR, 0, 0, nullptr,
+                return SCCType(SCCType::LONG, SCCType::SCALAR, 0, 0, NULL,
                                false);
             }
             //* Intentional fall though for arithmatic op & type checking
@@ -236,12 +236,12 @@ SCCType typeOfBinaryExpression(SCC::SCCBinaryOperation op, SCCType operand1,
             //! Special case for pointer arithmatic `ptr(T)+-num -> ptr(T)`
             if (operand1.isDereferencablePtr() && operand2.isNumeric()) {
                 return SCCType(operand1.specifier(), SCCType::SCALAR,
-                               operand1.indirection(), 0, nullptr, false);
+                               operand1.indirection(), 0, NULL, false);
             } else if (  //! Special case for `num+ptr(T) -> ptr(T)`
                 op == SCC::OP_ADD && operand1.isNumeric() &&
                 operand2.isDereferencablePtr()) {
                 return SCCType(operand2.specifier(), SCCType::SCALAR,
-                               operand2.indirection(), 0, nullptr, false);
+                               operand2.indirection(), 0, NULL, false);
             }
             //* Intentional fall though for arithmatic op & type checking
         case SCC::OP_MUL:
@@ -259,10 +259,10 @@ SCCType typeOfBinaryExpression(SCC::SCCBinaryOperation op, SCCType operand1,
             //! op1 and op2 both numeric
             if (operand1.specifier() == SCCType::LONG ||
                 operand2.specifier() == SCCType::LONG) {
-                return SCCType(SCCType::LONG, SCCType::SCALAR, 0, 0, nullptr,
+                return SCCType(SCCType::LONG, SCCType::SCALAR, 0, 0, NULL,
                                false);
             } else {
-                return SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, nullptr,
+                return SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, NULL,
                                false);
             }
         case SCC::OP_SUBSCRIPT:
@@ -275,7 +275,7 @@ SCCType typeOfBinaryExpression(SCC::SCCBinaryOperation op, SCCType operand1,
                 break;
             }
             return SCCType(operand1.specifier(), operand1.declaratorType(),
-                           operand1.indirection() - 1, 0, nullptr, true);
+                           operand1.indirection() - 1, 0, NULL, true);
         default:
             break;
     }

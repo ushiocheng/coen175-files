@@ -9,10 +9,10 @@ SCCSymbol::SCCSymbol(const std::string &id)
     : _id(id),
       _type(SCCType::SCCType_Specifier::VOID,
             SCCType::SCCType_DeclaratorType::ERROR),
-      location(nullptr) {}
+      location(NULL) {}
 
 SCCSymbol::SCCSymbol(const std::string &id, const SCCType &type)
-    : _id(id), _type(type), location(nullptr) {}
+    : _id(id), _type(type), location(NULL) {}
 
 SCCSymbol::SCCSymbol(const SCCSymbol &that)
     : _id(that._id), _type(that._type), location(that.location) {}

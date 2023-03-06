@@ -22,7 +22,7 @@ class SCCScope {
      * Constructor
      * @remark should only be used to make global scope
      */
-    SCCScope(SCCScope* outerScope = nullptr);
+    SCCScope(SCCScope* outerScope = NULL);
     /**
      * Create a inner
      */

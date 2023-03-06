@@ -39,7 +39,7 @@ class ExprTreeNode {
      */
     virtual SCCDataLocation* generateCodeToEvaluateExprNode(
         std::ostream& out, const char* indentation = "") const {
-        return nullptr;  // TODO Phase 6
+        return NULL;  // TODO Phase 6
     };
 
     SCCType getType() const {

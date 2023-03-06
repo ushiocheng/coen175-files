@@ -34,7 +34,7 @@ class SCCType {
     SCCType(const SCCType_Specifier specifier,
             const SCCType_DeclaratorType declaratorType = SCCType::SCALAR,
             const unsigned int indirection = 0, size_t arrLength = 0,
-            SCCType_Parameters *parameters = nullptr, bool isLValue = true);
+            SCCType_Parameters *parameters = NULL, bool isLValue = true);
     SCCType(const SCCType &that);
     SCCType &operator=(const SCCType &rhs);
     /**
@@ -74,7 +74,7 @@ class SCCType {
     size_t sizeOf() const;
     /**
      * whether param is defined
-     * @return true if param==nullptr
+     * @return true if param==NULL
      */
     bool noParam() const;
     SCCType_Specifier specifier() const;

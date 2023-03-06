@@ -29,7 +29,7 @@
  */
 SCCScope::SCCScope(SCCScope *outerScope)
     : _symbols(),
-      _enclosingFunc(nullptr),
+      _enclosingFunc(NULL),
       _outerScope(outerScope),
       _innerScopes() {
     if (outerScope) {
@@ -51,13 +51,13 @@ void SCCScope::setEnclosingFunc(SCCSymbol *func) {
 
 const SCCSymbol *SCCScope::getEnclosingFunc() const {
     const SCCScope *tp = this;
-    while (tp != nullptr) {
-        if (tp->_enclosingFunc != nullptr) {
+    while (tp != NULL) {
+        if (tp->_enclosingFunc != NULL) {
             return tp->_enclosingFunc;
         }
         tp = tp->_outerScope;
     }
-    return nullptr;
+    return NULL;
 }
 
 /**
@@ -161,7 +161,7 @@ const SCCSymbol *SCCScope::_findSymbol(const std::string &id) const {
     if (this->_outerScope) {
         return this->_outerScope->_findSymbol(id);
     } else {
-        return nullptr;
+        return NULL;
     }
 }
 
@@ -220,8 +220,8 @@ void SCCScope::_dump() const {
 }
 
 SCCScope::~SCCScope() {
-    _enclosingFunc = nullptr;
-    _outerScope = nullptr;
+    _enclosingFunc = NULL;
+    _outerScope = NULL;
     for (SCCSymbol symbol : _symbols) {
         if (symbol.type().declaratorType() == SCCType::ERROR) continue;
         if (symbol.type().parameters()) delete symbol.type().parameters();

@@ -7,7 +7,7 @@
 #include "SCCASTFunction.hpp"
 
 SCCAST::SCCAST() {
-    this->globalScope = new SCCScope(nullptr);
+    this->globalScope = new SCCScope(NULL);
     this->functionDefinitions = std::vector<SCCASTClasses::Function*>();
 }
 

@@ -148,7 +148,7 @@ void SCCType::promoteFunc() {
     PRINT_FUNC_IF_ENABLED;
     if (this->isFunc()) {
         this->_declaratorType = SCALAR;
-        this->_parameters = nullptr;
+        this->_parameters = NULL;
         // Function return result cannot be an LValue
         this->_isLValue = false;
     }
@@ -284,11 +284,11 @@ void SCCType::printTo(std::ostream &out, const std::string &base) const {
     out << base << "}" << std::endl;
 }
 
-void SCCType::_clearParams() { this->_parameters = nullptr; }
+void SCCType::_clearParams() { this->_parameters = NULL; }
 
 SCCType::~SCCType() {
     PRINT_FUNC_IF_ENABLED;
-    _parameters = nullptr;
+    _parameters = NULL;
     //! Intentionally choose not to delete _parameters
     //! Since SCCType are passed by value.
     //! Deletion is handled by `SCCScope` when main scope exits

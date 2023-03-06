@@ -29,7 +29,7 @@
 static SCCAST *astRoot = new SCCAST();
 static SCCScope *globalScope = new SCCScope();
 static SCCScope *currentScope = globalScope;
-static SCCASTClasses::StmtBlock *currentBlock = nullptr;
+static SCCASTClasses::StmtBlock *currentBlock = NULL;
 
 #ifdef DEBUG
 // #define DEBUG_PRINT_FUNC_TRACE_FLG
@@ -130,7 +130,7 @@ void translation_unit() {
                 //! A function with return type sp-idr is declared, save it
                 currentScope->addSymbol(SCCSymbol(
                     firstID,
-                    SCCType(sp, SCCType::FUNCTION, idr, 0, nullptr, false)));
+                    SCCType(sp, SCCType::FUNCTION, idr, 0, NULL, false)));
                 // This is a global-declaration
                 rest_of_global_declarator_list(sp);
             } else {
@@ -152,7 +152,7 @@ void translation_unit() {
                 //! 1st item is an array
                 currentScope->addSymbol(SCCSymbol(
                     firstID,
-                    SCCType(sp, SCCType::ARRAY, idr, num, nullptr, false)));
+                    SCCType(sp, SCCType::ARRAY, idr, num, NULL, false)));
             } else {
                 //! 1st item is a scalar
                 currentScope->addSymbol(
@@ -190,7 +190,7 @@ void global_declarator(SCCType::SCCType_Specifier currentSpecifier) {
         match(OP_R_PARENT);
         currentScope->addSymbol(
             SCCSymbol(id, SCCType(currentSpecifier, SCCType::FUNCTION, idr, 0,
-                                  nullptr, false)));
+                                  NULL, false)));
     } else if (lookahead == '[') {
         //! is ARRAY declaration
         match();
@@ -204,7 +204,7 @@ void global_declarator(SCCType::SCCType_Specifier currentSpecifier) {
         }
         currentScope->addSymbol(
             SCCSymbol(id, SCCType(currentSpecifier, SCCType::ARRAY, idr, num,
-                                  nullptr, false)));
+                                  NULL, false)));
     } else {
         //! is SCALAR declaration
         currentScope->addSymbol(
@@ -286,7 +286,7 @@ void rest_of_function_definition(SCCType::SCCType_Specifier currentSpecifier,
     match(OP_R_BRACE);
     //! Exit function scope
     currentScope = currentScope->exitScope();
-    currentBlock = nullptr;
+    currentBlock = NULL;
 }
 
 // parameters -> void
@@ -309,7 +309,7 @@ std::vector<SCCType> *parameters() {
             size_t idr = pointers();
             string id = matchAndReturn(ID);
             SCCType type =
-                SCCType(SCCType::VOID, SCCType::SCALAR, idr, 0, nullptr, true);
+                SCCType(SCCType::VOID, SCCType::SCALAR, idr, 0, NULL, true);
             params->push_back(SCCType(type));
             currentScope->addSymbol(SCCSymbol(id, type));
         }
@@ -329,7 +329,7 @@ SCCType parameter() {
     SCCType::SCCType_Specifier sp = specifier();
     size_t idr = pointers();
     string id = matchAndReturn(ID);
-    SCCType type = SCCType(sp, SCCType::SCALAR, idr, 0, nullptr, true);
+    SCCType type = SCCType(sp, SCCType::SCALAR, idr, 0, NULL, true);
     currentScope->addSymbol(SCCSymbol(id, type));
     return type;
 }
@@ -379,11 +379,11 @@ void declarator(SCCType::SCCType_Specifier sp) {
             num = 0;
         }
         currentScope->addSymbol(SCCSymbol(
-            id, SCCType(sp, SCCType::ARRAY, idr, num, nullptr, false)));
+            id, SCCType(sp, SCCType::ARRAY, idr, num, NULL, false)));
     } else {
         //! scalar
         currentScope->addSymbol(
-            SCCSymbol(id, SCCType(sp, SCCType::SCALAR, idr, 0, nullptr, true)));
+            SCCSymbol(id, SCCType(sp, SCCType::SCALAR, idr, 0, NULL, true)));
     }
 }
 
@@ -462,7 +462,7 @@ SCCASTClasses::Statement *statement() {
         checkTestExpr(expr1->getType());
         match(OP_R_PARENT);
         SCCASTClasses::Statement *stmt1 = statement();
-        astStmt = new SCCASTClasses::CFSIf(expr1, stmt1, nullptr);
+        astStmt = new SCCASTClasses::CFSIf(expr1, stmt1, NULL);
         if (lookahead == ELSE) {
             match();
             ((SCCASTClasses::CFSIf *)astStmt)->stmt2 = statement();

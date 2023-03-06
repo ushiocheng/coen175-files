@@ -22,7 +22,7 @@ class ExprTreeNodeTermFuncCall : public ExprTreeTermNode {
    public:
     const SCCSymbol* function;
     std::vector<SCCASTClasses::Expression*>* paramList;
-    ExprTreeNodeTermFuncCall(SCCSymbol* func = nullptr) : function(func) {
+    ExprTreeNodeTermFuncCall(SCCSymbol* func = NULL) : function(func) {
         this->paramList = new std::vector<SCCASTClasses::Expression*>();
     }
     ~ExprTreeNodeTermFuncCall() {
@@ -93,7 +93,7 @@ class ExprTreeNodeTermFuncCall : public ExprTreeTermNode {
             return;
         }
         //! check if func is defined/declared
-        if (func.parameters() == nullptr) {
+        if (func.parameters() == NULL) {
             //! Function is undefined in this scope, skip param checking
             // // return SCCType();
             func.promoteFunc();
@@ -208,7 +208,7 @@ class ExprTreeNodeTermLiteralChar : public ExprTreeTermNode {
    private:
     void _checkAndSetTypeOfNode() const {
         const_cast<ExprTreeNodeTermLiteralChar*>(this)->_typeOfNode =
-            SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, nullptr, false);
+            SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, NULL, false);
         const_cast<ExprTreeNodeTermLiteralChar*>(this)->_typeOfNodeSet = true;
     }
 };
@@ -232,7 +232,7 @@ class ExprTreeNodeTermLiteralNumber : public ExprTreeTermNode {
         const_cast<ExprTreeNodeTermLiteralNumber*>(this)->_typeOfNode = SCCType(
             (this->_value < INT_MIN || this->_value > INT_MAX) ? SCCType::LONG
                                                                : SCCType::INT,
-            SCCType::SCALAR, 0, 0, nullptr, false);
+            SCCType::SCALAR, 0, 0, NULL, false);
         const_cast<ExprTreeNodeTermLiteralNumber*>(this)->_typeOfNodeSet = true;
     }
 };
@@ -247,14 +247,14 @@ class ExprTreeNodeTermLiteralString : public ExprTreeTermNode {
     SCCDataLocation* generateCodeToEvaluateExprNode(
         std::ostream& out, const char* indentation = "") const {
         // TODO Phase 6
-        return nullptr;
+        return NULL;
     }
 
    private:
     void _checkAndSetTypeOfNode() const {
         const_cast<ExprTreeNodeTermLiteralString*>(this)->_typeOfNode =
             SCCType(SCCType::CHAR, SCCType::ARRAY, 0, this->_value.length() - 2,
-                    nullptr, false);
+                    NULL, false);
         const_cast<ExprTreeNodeTermLiteralString*>(this)->_typeOfNodeSet = true;
     }
 };

@@ -110,7 +110,7 @@ SCCType typeOfUnaryExpression(SCC::SCCUnaryOperation op, SCCType operand1) {
                                unaryOperatorStr[op]);
                 break;
             }
-            return SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, nullptr, false);
+            return SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, NULL, false);
 
         case SCC::OP_NEGATION:
             if (!operand1.isNumeric()) {
@@ -123,7 +123,7 @@ SCCType typeOfUnaryExpression(SCC::SCCUnaryOperation op, SCCType operand1) {
                                 ? (SCCType::INT)
                                 : (operand1.specifier())),
                            operand1.declaratorType(), operand1.indirection(), 0,
-                           nullptr, false);
+                           NULL, false);
 
         case SCC::OP_ADDR_OF:
             if (!operand1.isLValue()) {
@@ -132,7 +132,7 @@ SCCType typeOfUnaryExpression(SCC::SCCUnaryOperation op, SCCType operand1) {
                 break;
             }
             return SCCType(operand1.specifier(), operand1.declaratorType(),
-                           operand1.indirection() + 1, 0, nullptr, false);
+                           operand1.indirection() + 1, 0, NULL, false);
 
         case SCC::OP_DEREF:
             if (!(operand1.isDereferencablePtr())) {
@@ -143,12 +143,12 @@ SCCType typeOfUnaryExpression(SCC::SCCUnaryOperation op, SCCType operand1) {
             }
             //! Return LValue, this fact is be checked on addrof or runtime
             return SCCType(operand1.specifier(), operand1.declaratorType(),
-                           operand1.indirection() - 1, 0, nullptr, true);
+                           operand1.indirection() - 1, 0, NULL, true);
 
         case SCC::OP_SIZEOF:
             //* Sizeof (predicate)
             // Everything is a predicate at this point
-            return SCCType(SCCType::LONG, SCCType::SCALAR, 0, 0, nullptr,
+            return SCCType(SCCType::LONG, SCCType::SCALAR, 0, 0, NULL,
                            false);
 
         default:

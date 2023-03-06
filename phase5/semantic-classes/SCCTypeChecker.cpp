@@ -36,7 +36,7 @@ SCCType typeOfExpression(SCCType func, std::vector<SCCType>* parameters) {
 #endif
     }
     //! check if func is defined/declared
-    if (func.parameters() == nullptr) {
+    if (func.parameters() == NULL) {
         //! Function is undefined in this scope, skip param checking
         // // return SCCType();
         func.promoteFunc();
