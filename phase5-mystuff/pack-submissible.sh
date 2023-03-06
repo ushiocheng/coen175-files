@@ -11,7 +11,7 @@ fi
 
 basedir=$(pwd)
 
-if [ -e $basedir/phase4-mystuff ]; then
+if [ -e $basedir/phase5-mystuff ]; then
     cd $basedir
     printf "\x1b[102;30m[INFO]\x1b[0m working in $(pwd)\n"
 else
@@ -20,23 +20,23 @@ else
 fi
 
 printf "\x1b[102;30m[INFO]\x1b[0m Cleaning up workspace...\n"
-cd $basedir/phase4 \
+cd $basedir/phase5 \
     && make clean \
     || printf "\x1b[33;41m[ERROR]\x1b[0m Working Dir does not exist\n"
 cd $basedir
 
-tar -cf phase4-mystuff/phase4.tar phase4 &&
-    printf "\x1b[102;30m[INFO]\x1b[0m packed phase4-mystuff/phase4.tar\n" ||
-    printf "\x1b[33;41m[ERROR]\x1b[0m Failed to pack phase4-mystuff/phase4.tar\n"
+tar -cf phase5-mystuff/phase5.tar phase5 &&
+    printf "\x1b[102;30m[INFO]\x1b[0m packed phase5-mystuff/phase5.tar\n" ||
+    printf "\x1b[33;41m[ERROR]\x1b[0m Failed to pack phase5-mystuff/phase5.tar\n"
 
-cd $basedir/phase4-mystuff/
+cd $basedir/phase5-mystuff/
 
-tar -cf phase4-examples.tar examples &&
-    printf "\x1b[102;30m[INFO]\x1b[0m packed phase4-mystuff/phase4-examples.tar\n" ||
-    printf "\x1b[33;41m[ERROR]\x1b[0m Failed to pack phase4-mystuff/phase4-examples.tar\n"
+tar -cf phase5-examples.tar examples &&
+    printf "\x1b[102;30m[INFO]\x1b[0m packed phase5-mystuff/phase5-examples.tar\n" ||
+    printf "\x1b[33;41m[ERROR]\x1b[0m Failed to pack phase5-mystuff/phase5-examples.tar\n"
 
 printf "\x1b[102;30m[INFO]\x1b[0m calling checksub.sh\n"
-sh checksub.sh phase4.tar phase4-examples.tar
+sh checksub.sh phase5.tar phase5-examples.tar
 
-printf "\x1b[102;30m[INFO]\x1b[0m Removing phase4-examples.tar\n"
-rm phase4-examples.tar
+printf "\x1b[102;30m[INFO]\x1b[0m Removing phase5-examples.tar\n"
+rm phase5-examples.tar

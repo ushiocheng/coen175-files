@@ -10,19 +10,52 @@
 # ifndef TOKENS_H
 # define TOKENS_H
 
-enum {
-    ASSIGN = '=', LTN = '<', GTN = '>', PLUS = '+', MINUS = '-',
-    STAR = '*', DIV = '/', REM = '%', ADDR = '&', NOT = '!', DOT = '.',
-    LPAREN = '(', RPAREN = ')', LBRACK = '[', RBRACK = ']',
-    LBRACE = '{', RBRACE = '}', SEMI = ';', COLON = ':', COMMA = ',',
+enum Token {
+    // single character operators
+    OP_ASSIGN = '=',
+    OP_MINUS = '-',
+    OP_LT = '<',
+    OP_GT = '>',
+    OP_PLUS = '+',
+    OP_AST = '*',
+    OP_DIV = '/',
+    OP_MOD = '%',
+    OP_BIN_AND = '&',
+    OP_BIN_OR = '|',
+    OP_NOT = '!',
+    OP_L_PARENT = '(',
+    OP_R_PARENT = ')',
+    OP_L_BRACKET = '[',
+    OP_R_BRACKET = ']',
+    OP_L_BRACE = '{',
+    OP_R_BRACE = '}',
+    OP_SC = ';',
+    OP_COL = ':',
+    OP_DOT = '.',
+    OP_COMMA = ',',
 
+    // keywords
     AUTO = 256, BREAK, CASE, CHAR, CONST, CONTINUE, DEFAULT, DO, DOUBLE,
     ELSE, ENUM, EXTERN, FLOAT, FOR, GOTO, IF, INT, LONG, REGISTER,
     RETURN, SHORT, SIGNED, SIZEOF, STATIC, STRUCT, SWITCH, TYPEDEF,
     UNION, UNSIGNED, VOID, VOLATILE, WHILE,
 
-    OR, AND, EQL, NEQ, LEQ, GEQ, INC, DEC, ARROW,
-    ID, NUM, STRING, CHARACTER, ERROR, DONE = 0
+    // two character operators, ID, num, string, done
+    OP_OR, OP_AND,
+    OP_EQ, OP_NE,
+    OP_LE, OP_GE,
+    OP_INC, OP_DEC,
+    OP_ARROW,
+    STRING,
+    CHARACTER,
+    ID,
+    NUM,
+    
+    Done = 0
 };
+
+#include <iostream>
+
+void prettyPrintToken(Token tmp, std::ostream& out = std::cerr);
 
 # endif /* TOKENS_H */

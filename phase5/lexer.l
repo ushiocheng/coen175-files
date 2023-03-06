@@ -15,8 +15,14 @@
 # include <cstdlib>
 # include <iostream>
 # include "string.h"
-# include "tokens.h"
 # include "lexer.h"
+# include "tokens.h"
+
+/* This used to be a function, but students wouldn't remove the definition
+   when they moved to the next phase, even though the function wasn't used
+   anymore and they'd get a warning telling them that.  It annoyed me. */
+
+# define printToken(s)	(cout << s << " " << yytext << endl)
 
 
 using namespace std;
@@ -30,6 +36,8 @@ static void ignoreComment();
 
 %option nounput noyywrap yylineno
 %%
+
+(\/\*([^*]|\*+[^/\*])*\*+\/|\/\/[^\n]*)     { /* ignored - comment */   }
 
 "/*"					{ignoreComment();}
 
@@ -66,16 +74,37 @@ static void ignoreComment();
 "volatile"				{return VOLATILE;}
 "while"					{return WHILE;}
 
-"||"					{return OR;}
-"&&"					{return AND;}
-"=="					{return EQL;}
-"!="					{return NEQ;}
-"<="					{return LEQ;}
-">="					{return GEQ;}
-"++"					{return INC;}
-"--"					{return DEC;}
-"->"					{return ARROW;}
-[-|=<>+*/%&!()\[\]{};:.,]		{return *yytext;}
+"||"					{return OP_OR;}
+"&&"					{return OP_AND;}
+"=="					{return OP_EQ;}
+"!="					{return OP_NE;}
+"<="					{return OP_LE;}
+">="					{return OP_GE;}
+"++"					{return OP_INC;}
+"--"					{return OP_DEC;}
+"->"					{return OP_ARROW;}
+"="                                     {return OP_ASSIGN;}
+"|"                                     {return OP_BIN_OR;} 
+"&"                                     {return OP_BIN_AND;} 
+"!"                                     {return OP_NOT;} 
+"<"                                     {return OP_LT;} 
+">"                                     {return OP_GT;} 
+"+"                                     {return OP_PLUS;} 
+"-"                                     {return OP_MINUS;} 
+"*"                                     {return OP_AST;} 
+"/"                                     {return OP_DIV;} 
+"%"                                     {return OP_MOD;} 
+"("                                     {return OP_L_PARENT;} 
+")"                                     {return OP_R_PARENT;} 
+"["                                     {return OP_L_BRACKET;} 
+"]"                                     {return OP_R_BRACKET;} 
+"{"                                     {return OP_L_BRACE;} 
+"}"                                     {return OP_R_BRACE;} 
+";"                                     {return OP_SC;} 
+":"                                     {return OP_COL;} 
+"."                                     {return OP_DOT;} 
+","                                     {return OP_COMMA;} 
+
 
 [a-zA-Z_][a-zA-Z_0-9]*			{return ID;}
 
@@ -84,7 +113,7 @@ static void ignoreComment();
 \'(\\.|[^\\\n'])+\'			{checkChar(); return CHARACTER;}
 
 [ \f\n\r\t\v]+				{/* ignored */}
-.					{return ERROR;}
+.					{cerr << "oops: " << yytext << endl; /* ignored */}
 
 %%
 
