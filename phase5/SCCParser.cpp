@@ -34,7 +34,7 @@ static SCCASTClasses::StmtBlock *currentBlock = NULL;
 #ifdef DEBUG
 // #define DEBUG_PRINT_FUNC_TRACE_FLG
 // #define DEBUG_PRINT_MATCHING
-// #define DUMP_SYMBOL_TABLE
+#define DUMP_SYMBOL_TABLE
 #define PRINT_IF_DEBUG(sth) cerr << sth << endl;
 #else
 #define PRINT_IF_DEBUG(sth) /* debug print: sth */
@@ -698,8 +698,7 @@ SCCASTClasses::ExprTreeClasses::ExprTreeNode *expression_term() {
     PRINT_FUNC_IF_ENABLED;
     if (lookahead == ID) {
         string id = matchAndReturn(ID);
-        SCCSymbol *idSymbol =
-            const_cast<SCCSymbol *>(currentScope->lookupSymbol(id));
+        const SCCSymbol *idSymbol = currentScope->lookupSymbol(id);
         if (lookahead == '(') {
             match();
             

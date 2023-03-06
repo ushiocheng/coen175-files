@@ -23,7 +23,7 @@ class ExprTreeNodeTermFuncCall : public ExprTreeTermNode {
    public:
     const SCCSymbol* function;
     std::vector<SCCASTClasses::Expression*>* paramList;
-    ExprTreeNodeTermFuncCall(SCCSymbol* func = NULL) : function(func) {
+    ExprTreeNodeTermFuncCall(const SCCSymbol* func = NULL) : function(func) {
         this->paramList = new std::vector<SCCASTClasses::Expression*>();
     }
     ~ExprTreeNodeTermFuncCall() {
@@ -280,10 +280,10 @@ class ExprTreeNodeTermLiteralString : public ExprTreeTermNode {
 
 class ExprTreeNodeTermVariable : public ExprTreeTermNode {
    private:
-    SCCSymbol* _symbol;
+    const SCCSymbol* _symbol;
 
    public:
-    ExprTreeNodeTermVariable(SCCSymbol* symbol) : _symbol(symbol) {}
+    ExprTreeNodeTermVariable(const SCCSymbol* symbol) : _symbol(symbol) {}
     NodeType identify() const { return T_VAR; }
     SCCDataLocation* generateCodeToEvaluateExprNode(
         std::ostream& out, const char* indentation = "") const {
