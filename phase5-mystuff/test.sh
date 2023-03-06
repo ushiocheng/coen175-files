@@ -37,8 +37,8 @@ for f in *-lib.c; do
         >../test-output/$BASE.s \
         2>../test-output/$BASE.compile.err
     gcc ../test-output/$BASE.s $BASE-lib.c -o ../test-output/$BASE.o
-    ../test-output/$BASE.o
-        > ../test-output/$BASE.runtime.out 
+    ../test-output/$BASE.o \
+        > ../test-output/$BASE.runtime.out \
         2>../test-output/$BASE.runtime.err
     cmp -s ../test-output/$BASE.runtime.out $BASE.err 2>/dev/null &&
         printf "ok\n" ||
