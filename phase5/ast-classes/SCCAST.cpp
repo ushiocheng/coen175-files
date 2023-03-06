@@ -31,7 +31,8 @@ void SCCAST::generateCode(std::ostream& out) const {
     using std::endl;
     for (SCCSymbol* statics : this->globalScope->getStatics()) {
         if (statics->type().isFunc()) continue;
-        out << ".comm   " << statics->id() << "," << statics->type().sizeOf() << endl; 
+        out << ".comm   " << statics->id() << "," << statics->type().sizeOf() << endl;
+        statics->location = new SCCDataLocationStatic(statics->id());
     }
     out << endl;
     for (SCCASTClasses::Function* funcDef : this->functionDefinitions) {
