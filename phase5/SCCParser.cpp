@@ -34,7 +34,7 @@ static SCCASTClasses::StmtBlock *currentBlock = NULL;
 #ifdef DEBUG
 // #define DEBUG_PRINT_FUNC_TRACE_FLG
 // #define DEBUG_PRINT_MATCHING
-#define DUMP_SYMBOL_TABLE
+// #define DUMP_SYMBOL_TABLE
 #define PRINT_IF_DEBUG(sth) cerr << sth << endl;
 #else
 #define PRINT_IF_DEBUG(sth) /* debug print: sth */
