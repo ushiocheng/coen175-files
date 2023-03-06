@@ -99,8 +99,7 @@ void SCCScope::addSymbol(const SCCSymbol &symbol) {
             if (!symbol.type().isFunc()) {
                 if (symbolInArr.type() != symbol.type()) {
                     //! Check E2 for variable
-                    printAndReport("Conflict type declaration",
-                                   CONFLICT_TYPE,
+                    printAndReport("Conflict type declaration", CONFLICT_TYPE,
                                    symbol.id());
                     return;
                 }
@@ -112,8 +111,8 @@ void SCCScope::addSymbol(const SCCSymbol &symbol) {
             //! Check E1
             if ((!symbolInArr.type().noParam()) && (!symbol.type().noParam())) {
                 // If both are definition
-                printAndReport("Redefinition of function",
-                               REDEFINITION, symbol.id());
+                printAndReport("Redefinition of function", REDEFINITION,
+                               symbol.id());
                 //! ACCEPT inbound definition per specification
                 this->_symbols.at(i) = symbol;
                 symbol.validatePhase3E5();
@@ -121,8 +120,8 @@ void SCCScope::addSymbol(const SCCSymbol &symbol) {
             }
             //! Check E2 for func
             if (symbolInArr.type() != symbol.type()) {
-                printAndReport("Conflict type declaration",
-                               CONFLICT_TYPE, symbol.id());
+                printAndReport("Conflict type declaration", CONFLICT_TYPE,
+                               symbol.id());
                 return;
             }
             //! This func sym have no error, update it if necessary
@@ -148,8 +147,7 @@ void SCCScope::addSymbol(const SCCSymbol &symbol) {
 const SCCSymbol *SCCScope::lookupSymbol(const std::string &id) const {
     PRINT_FUNC_IF_ENABLED;
     const SCCSymbol *ptr = this->_findSymbol(id);
-    if (!ptr)
-        printAndReport("Symbol not declared", UNDECLARED, id);
+    if (!ptr) printAndReport("Symbol not declared", UNDECLARED, id);
     return ptr;
 }
 
@@ -167,6 +165,45 @@ const SCCSymbol *SCCScope::_findSymbol(const std::string &id) const {
     }
 }
 
+std::vector<SCCSymbol *> SCCScope::getStatics() {
+    std::vector<SCCSymbol *> res;
+    size_t readPtr = 0;
+    if (this->_enclosingFunc) {
+        readPtr += this->_enclosingFunc->type().parameters()->size();
+    }
+    while (readPtr < this->_symbols.size()) {
+        res.push_back(&(this->_symbols.at(readPtr)));
+        readPtr++;
+    }
+    return res;
+}
+std::vector<SCCSymbol *> SCCScope::getFunctionParams() {
+    std::vector<SCCSymbol *> res;
+    size_t readPtr = 0;
+    if (!this->_enclosingFunc) return res;
+    size_t argc = this->_enclosingFunc->type().parameters()->size();
+    while (readPtr < argc) {
+        res.push_back(&(this->_symbols.at(readPtr)));
+        readPtr++;
+    }
+    return res;
+}
+
+
+size_t SCCScope::maxSizeUtilization() const{
+    size_t currentScopeUtilization = 0;
+    for (const SCCSymbol& sym: this->_symbols) {
+        currentScopeUtilization += sym.type().sizeOf();
+    }
+    size_t maxInnerScopeUtilization = 0;
+    for (const SCCScope* scope : this->_innerScopes) {
+        size_t a = scope->maxSizeUtilization();
+        if (a > maxInnerScopeUtilization) maxInnerScopeUtilization = a;
+    }
+    return currentScopeUtilization + maxInnerScopeUtilization;
+}
+
+
 void SCCScope::_dump() const {
     std::cerr << "==================== BEGIN SCOPE " << this
               << " ====================" << std::endl;
@@ -176,7 +213,7 @@ void SCCScope::_dump() const {
         std::cerr << symbol << std::endl;
     }
     for (SCCScope *scope : _innerScopes) {
-        scope -> _dump();
+        scope->_dump();
     }
     std::cerr << "==================== END SCOPE " << this
               << " ====================" << std::endl;

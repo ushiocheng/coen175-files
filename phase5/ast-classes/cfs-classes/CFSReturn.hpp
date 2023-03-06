@@ -35,6 +35,7 @@ class CFSReturn : public CtrFlowStmt {
         }
         return true;
     }
+    void generateCode(std::ostream& out) const{} // TODO Phase 6
 };
 }  // namespace SCCASTClasses
 

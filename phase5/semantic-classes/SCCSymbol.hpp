@@ -4,6 +4,7 @@
 #include <ostream>
 #include <string>
 
+#include "../code-generation-classes/data-location/SCCDataLocation.hpp"
 #include "SCCType.hpp"
 
 class SCCSymbol {
@@ -12,6 +13,7 @@ class SCCSymbol {
     SCCType _type;
 
    public:
+    SCCDataLocation *location;
     /**
      * Default Constructor, returns error type
      * @remark only use for returning an error
@@ -19,6 +21,9 @@ class SCCSymbol {
     SCCSymbol(const std::string &id);
     SCCSymbol(const std::string &id, const SCCType &type);
     SCCSymbol(const SCCSymbol &that);
+    ~SCCSymbol() {
+        if (this->location) delete location;
+    }
     const std::string &id() const;
     const SCCType &type() const;
     /**

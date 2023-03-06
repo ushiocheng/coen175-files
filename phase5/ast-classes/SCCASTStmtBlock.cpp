@@ -22,3 +22,7 @@ bool SCCASTClasses::StmtBlock::performTypeChecking() const {
     }
     return noError;
 }
+
+void SCCASTClasses::StmtBlock::generateCode(std::ostream& out) const{
+    // TODO
+}

@@ -2,6 +2,7 @@
 #define SCC_AST_HPP
 
 #include <vector>
+#include <ostream>
 
 #include "../semantic-classes/SCCScope.hpp"
 
@@ -23,6 +24,12 @@ class SCCAST {
      * @return true if no error is generated on type checking
      */
     bool performTypeChecking();
+
+    /**
+     * Phase 5 - Generate Code
+     * @param out output stream
+    */
+    void generateCode(std::ostream& out) const;
 };
 
 #endif  // SCC_AST_HPP

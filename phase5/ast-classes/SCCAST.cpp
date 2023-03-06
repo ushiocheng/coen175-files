@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "../semantic-classes/SCCScope.hpp"
+#include "../semantic-classes/SCCSymbol.hpp"
 #include "SCCASTFunction.hpp"
 
 SCCAST::SCCAST() {
@@ -23,4 +24,18 @@ bool SCCAST::performTypeChecking() {
         if (!funcDef->performTypeChecking()) noError = false;
     }
     return noError;
+}
+
+void SCCAST::generateCode(std::ostream& out) const {
+    //! Generate Statics
+    using std::endl;
+    for (SCCSymbol* statics : this->globalScope->getStatics()) {
+        if (statics->type().isFunc()) continue;
+        out << ".comm   " << statics->id() << "," << statics->type().sizeOf() << endl; 
+    }
+    out << endl;
+    for (SCCASTClasses::Function* funcDef : this->functionDefinitions) {
+        funcDef->generateCode(out);
+        out << endl;
+    }
 }

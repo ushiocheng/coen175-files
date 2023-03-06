@@ -60,12 +60,14 @@ int main() {
 #endif
     start();
     bool typeCheckingPass = astRoot->performTypeChecking();
+    assert (typeCheckingPass ); // Change this to if
+    astRoot->generateCode(cout);
     //! Cleanup
     //! DEBUG - Dump global scope
 #ifdef DUMP_SYMBOL_TABLE
     globalScope->_dump();
 #endif
-    delete globalScope;
+    delete astRoot;
 }
 
 /**
@@ -700,6 +702,10 @@ SCCASTClasses::ExprTreeClasses::ExprTreeNode *expression_term() {
             const_cast<SCCSymbol *>(currentScope->lookupSymbol(id));
         if (lookahead == '(') {
             match();
+            
+            //! Bodge: Find enclosing Function, this behavior is dependent on the fact that the latest Function Definition is the current one.
+            astRoot->functionDefinitions.back()->haveFunctionCall = true;
+
             SCCASTClasses::ExprTreeClasses::ExprTreeNodeTermFuncCall *res =
                 new SCCASTClasses::ExprTreeClasses::ExprTreeNodeTermFuncCall(
                     idSymbol);

@@ -8,13 +8,14 @@
 SCCSymbol::SCCSymbol(const std::string &id)
     : _id(id),
       _type(SCCType::SCCType_Specifier::VOID,
-            SCCType::SCCType_DeclaratorType::ERROR) {}
+            SCCType::SCCType_DeclaratorType::ERROR),
+      location(nullptr) {}
 
 SCCSymbol::SCCSymbol(const std::string &id, const SCCType &type)
-    : _id(id), _type(type) {}
+    : _id(id), _type(type), location(nullptr) {}
 
 SCCSymbol::SCCSymbol(const SCCSymbol &that)
-    : _id(that._id), _type(that._type) {}
+    : _id(that._id), _type(that._type), location(that.location) {}
 
 const std::string &SCCSymbol::id() const { return this->_id; }
 const SCCType &SCCSymbol::type() const { return this->_type; }
@@ -23,10 +24,10 @@ void SCCSymbol::validatePhase3E5() const {
     if (_type.typeIsNotValid()) {
         //! do not output E5 if type is error
         if (_type.declaratorType() == SCCType::ERROR) return;
-        printAndReport("Type is not valid.", VOID_VARIABLE,
-                       this->id());
+        printAndReport("Type is not valid.", VOID_VARIABLE, this->id());
         std::cerr << *this;
-        const_cast<SCCSymbol*>(this)->_type = SCCType(); //! Set this to error type
+        const_cast<SCCSymbol *>(this)->_type =
+            SCCType();  //! Set this to error type
     }
     //! Function parameter is deliberately not checked since this object have no
     //! idea what they are called (id). Func Param will be validated when they

@@ -22,6 +22,12 @@ class Statement {
      * @return true if no error is generated on type checking
      */
     virtual bool performTypeChecking() const = 0;
+
+    /**
+     * Phase 5 - Generate Code
+     * @param out output stream
+    */
+    virtual void generateCode(std::ostream& out) const = 0;
 };
 
 }  // namespace SCCASTClasses

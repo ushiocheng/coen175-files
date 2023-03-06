@@ -9,8 +9,8 @@
 #endif
 
 // PTR Size on target arch
-// 4 => 32bit as of x86-32
-#define ARCH_PTR_SIZE 4
+// 8 => 64bit as of x86-64
+#define ARCH_PTR_SIZE 8
 
 #define SIZEOF_INT 4
 #define SIZEOF_LONG 8

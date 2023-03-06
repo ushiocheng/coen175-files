@@ -23,6 +23,7 @@ class Expression : public Statement {
     }
 
     SCCType getType() const { return exprTreeRoot->getType(); }
+    void generateCode(std::ostream& out) const{} // TODO Phase 6
 };
 
 }  // namespace SCCASTClasses
