@@ -10,7 +10,7 @@
 
 class SCCScope {
    private:
-    std::vector<SCCSymbol> _symbols;
+    std::vector<SCCSymbol*> _symbols;
     SCCSymbol* _enclosingFunc;
     SCCScope* _outerScope;
     std::vector<SCCScope*> _innerScopes;
