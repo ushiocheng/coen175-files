@@ -70,7 +70,7 @@ void SCCASTClasses::Function::generateCode(std::ostream& out) const {
     out << "    pushq   %rbp" << endl;
     out << "    movq    %rsq, %rbp" << endl;
     out << "    subq    $" << functionStackSize
-        << ", %rsp \t# Allocate Stack Space" << endl;
+        << ", %rsp \t\t# Allocate Stack Space" << endl;
     //! spill params
     if (this->haveFunctionCall) {
         out << "    # Spilling Parameters" << endl;
@@ -78,11 +78,20 @@ void SCCASTClasses::Function::generateCode(std::ostream& out) const {
             if (paramNum >= 6) break;
             SCCSymbol* param = params.at(paramNum);
             stackAllocationOffset += param->type().sizeOf();
-            SCCDataLocationStack* newLocation = new SCCDataLocationStack(stackAllocationOffset);
-            out << "    mov" << X86Register::sizeSpecifier(param->type().sizeOf()) <<"    "<< param->location->generateAccess() << ", " << newLocation->generateAccess() << endl;
+            SCCDataLocationStack* newLocation =
+                new SCCDataLocationStack(stackAllocationOffset);
+            out << "    mov"
+                << X86Register::sizeSpecifier(param->type().sizeOf()) << "    "
+                << param->location->generateAccess() << ", "
+                << newLocation->generateAccess() << endl;
             delete param->location;
             param->location = newLocation;
         }
     }
-    this->innerBlock->generateCode(out);
+    out << "    # Function Body" << endl;
+    this->innerBlock->generateCode(out, "    ");
+    out << "    # Function Epilogue" << endl;
+    out << "    movq    %rbp, %rsp" << endl;
+    out << "    popq    %rbp" << endl;
+    out << "    ret" << endl;
 }

@@ -10,6 +10,7 @@ public:
     virtual ~SCCDataLocation() {};
     virtual bool requireMemoryAccess() = 0;
     virtual std::string generateAccess() = 0;
+    virtual SCCDataLocation* copy() = 0;
 };
 
 class SCCDataLocationStatic : public SCCDataLocation {
@@ -20,6 +21,9 @@ public:
     bool requireMemoryAccess() { return true; };
     std::string generateAccess() {
         return this->_name;
+    }
+    SCCDataLocation* copy() {
+        return new SCCDataLocationStatic(_name);
     }
 };
 
@@ -33,6 +37,9 @@ public:
         std::stringstream ss;
         ss << "$" << _value;
         return ss.str();
+    }
+    SCCDataLocation* copy(){
+        return new SCCDataLocationLiteral(_value);
     }
 };
 
@@ -49,6 +56,9 @@ public:
         ss << "-" << _offset << "(%rbp)";
         return ss.str();
     }
+    SCCDataLocation* copy(){
+        return new SCCDataLocationStack(_offset);
+    }
 };
 
 class SCCDataLocationRegister : public SCCDataLocation {
@@ -61,6 +71,9 @@ public:
         std::stringstream ss;
         ss << "%" << X86Register::nameStr[this->_register];
         return ss.str();
+    }
+    SCCDataLocation* copy() {
+        return new SCCDataLocationRegister(_register);
     }
 };
 

@@ -27,6 +27,6 @@ bool SCCASTClasses::Assignment::performTypeChecking() const {
     return true;
 }
 
-void SCCASTClasses::Assignment::generateCode(std::ostream& out) const{
+void SCCASTClasses::Assignment::generateCode(std::ostream& out, const char* indentation) const{
     // TODO
 }

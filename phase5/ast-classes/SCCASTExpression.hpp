@@ -23,7 +23,7 @@ class Expression : public Statement {
     }
 
     SCCType getType() const { return exprTreeRoot->getType(); }
-    void generateCode(std::ostream& out) const{} // TODO Phase 6
+    void generateCode(std::ostream& out, const char* indentation = "") const{} // TODO Phase 6
 };
 
 }  // namespace SCCASTClasses

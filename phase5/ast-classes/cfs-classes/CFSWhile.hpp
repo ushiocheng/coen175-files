@@ -20,7 +20,7 @@ class CFSWhile : public CtrFlowStmt {
         SCCType expr1Type = expr1->getType();
         return checkTestExpr(expr1Type);
     }
-    void generateCode(std::ostream& out) const{} // TODO Phase 6
+    void generateCode(std::ostream& out, const char* indentation = "") const{} // TODO Phase 6
 };
 }  // namespace SCCASTClasses
 

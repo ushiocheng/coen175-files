@@ -1,9 +1,10 @@
 #if !defined(EXPR_TREE_TERM_NODE_HPP)
 #define EXPR_TREE_TERM_NODE_HPP
 
+#include "../../exceptions/SCCError.hpp"
+#include "../../code-generation-classes/SCCRegisterManager.hpp"
 #include "ExprTreeNode.hpp"
 #include "NodeType.hpp"
-#include "../../exceptions/SCCError.hpp"
 
 namespace SCCASTClasses {
 namespace ExprTreeClasses {
@@ -27,6 +28,11 @@ class ExprTreeNodeTermFuncCall : public ExprTreeTermNode {
         delete paramList;
     }
     NodeType identify() const { return T_FUNC_CALL; }
+    SCCDataLocation* generateCodeToEvaluateExprNode(
+        std::ostream& out, const char* indentation = "") const {
+        
+        return nullptr;
+    }
 
    private:
     void _checkAndSetTypeOfNode() const {
@@ -57,8 +63,7 @@ class ExprTreeNodeTermFuncCall : public ExprTreeTermNode {
         }
         //! Check func is FUNCTION
         if (!func.isFunc()) {
-            printAndReport("Phase4: Callee not function.",
-                           EXP_NOT_FUNC);
+            printAndReport("Phase4: Callee not function.", EXP_NOT_FUNC);
             const_cast<ExprTreeNodeTermFuncCall*>(this)->_typeOfNode =
                 SCCType();
             const_cast<ExprTreeNodeTermFuncCall*>(this)->_typeOfNodeSet = true;
@@ -172,6 +177,10 @@ class ExprTreeNodeTermLiteralChar : public ExprTreeTermNode {
         }
     }
     NodeType identify() const { return T_LITERAL_CHAR; }
+    SCCDataLocation* generateCodeToEvaluateExprNode(
+        std::ostream& out, const char* indentation = "") const {
+        return new SCCDataLocationLiteral(this->_valueOfLiteral);
+    }
 
    private:
     void _checkAndSetTypeOfNode() const {
@@ -190,6 +199,10 @@ class ExprTreeNodeTermLiteralNumber : public ExprTreeTermNode {
         this->_checkAndSetTypeOfNode();
     }
     NodeType identify() const { return T_LITERAL_NUM; }
+    SCCDataLocation* generateCodeToEvaluateExprNode(
+        std::ostream& out, const char* indentation = "") const {
+        return new SCCDataLocationLiteral(this->_value);
+    }
 
    private:
     void _checkAndSetTypeOfNode() const {
@@ -208,6 +221,11 @@ class ExprTreeNodeTermLiteralString : public ExprTreeTermNode {
    public:
     ExprTreeNodeTermLiteralString(const std::string& value) : _value(value) {}
     NodeType identify() const { return T_LITERAL_STR; }
+    SCCDataLocation* generateCodeToEvaluateExprNode(
+        std::ostream& out, const char* indentation = "") const {
+        //TODO Phase 6
+        return nullptr;
+    }
 
    private:
     void _checkAndSetTypeOfNode() const {
@@ -225,6 +243,10 @@ class ExprTreeNodeTermVariable : public ExprTreeTermNode {
    public:
     ExprTreeNodeTermVariable(SCCSymbol* symbol) : _symbol(symbol) {}
     NodeType identify() const { return T_VAR; }
+    SCCDataLocation* generateCodeToEvaluateExprNode(
+        std::ostream& out, const char* indentation = "") const {
+        return this->_symbol->location->copy();
+    }
 
    private:
     void _checkAndSetTypeOfNode() const {

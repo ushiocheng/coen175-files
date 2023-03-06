@@ -18,7 +18,7 @@ class Assignment : public Statement {
 
     StmtType identify() const { return StmtType::ASSIGN; }
     bool performTypeChecking() const;
-    void generateCode(std::ostream& out) const;
+    void generateCode(std::ostream& out, const char* indentation) const;
 };
 
 }  // namespace SCCASTClasses

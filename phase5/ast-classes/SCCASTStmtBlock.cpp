@@ -23,6 +23,17 @@ bool SCCASTClasses::StmtBlock::performTypeChecking() const {
     return noError;
 }
 
-void SCCASTClasses::StmtBlock::generateCode(std::ostream& out) const{
-    // TODO
+// #define DEBUG_OUTPUT_STMT_CODE
+static const char* stmtTypeStr[] = {"ASSIGN", "EXPR  ", "RETURN", "WHILE ",
+                                    "FOR   ", "IF    ", "BLOCK "};
+
+void SCCASTClasses::StmtBlock::generateCode(std::ostream& out,
+                                            const char* indentation) const {
+    using std::endl;
+    for (Statement* stmt : *(this->innerStatements)) {
+        #ifdef DEBUG_OUTPUT_STMT_CODE
+        out << indentation << "  # " << stmtTypeStr[stmt->identify()] << endl;
+        #endif
+        stmt->generateCode(out,indentation);
+    }
 }
