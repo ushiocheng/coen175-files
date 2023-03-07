@@ -1,10 +1,14 @@
-#if !defined(SCC_REGISTER_HPP)
-#define SCC_REGISTER_HPP
+#if !defined(X86_REGISTER_NAMES_HPP)
+#define X86_REGISTER_NAMES_HPP
 
-#include <ostream>
-
-namespace X86Register{
-    enum RegisterName {
+namespace X86Reg {
+    enum Reg {
+    //! Sequence here affects the behavior of SCCX86Register::SCCX86Register()
+    //! 64 bit variant of a reg = reg&(!0x3)+0x0
+    //! 32 bit variant of a reg = reg&(!0x3)+0x1
+    //! 16 bit variant of a reg = reg&(!0x3)+0x2
+    //! 08 bit variant of a reg = reg&(!0x3)+0x3
+    //! !! but only for reg < RSP
     //   64 ,  32  ,  16  ,  08  bit size
     RAX = 0 ,  EAX ,  AX  ,  AL  ,
         RBX ,  EBX ,  BX  ,  BL  ,
@@ -20,22 +24,11 @@ namespace X86Register{
         R13 , R13D , R13W , R13B ,
         R14 , R14D , R14W , R14B ,
         R15 , R15D , R15W , R15B ,
-        RSP ,
+        RSP , //! Control registers do not have size variants
         RFP ,
         RIP
     };
-    extern const char* nameStr[];
-    
-    extern const int FPArgcReg;
-    extern const int Arg0Reg;
-    extern const int Arg1Reg;
-    extern const int Arg2Reg;
-    extern const int Arg3Reg;
-    extern const int Arg4Reg;
-    extern const int Arg5Reg;
-
-    extern const int ReturnReg;
-    char sizeSpecifier(size_t size);
+    inline const char* nameOf(Reg reg);
 }
 
-#endif // SCC_REGISTER_HPP
+#endif // X86_REGISTER_NAMES_HPP

@@ -1,0 +1,6 @@
+#if !defined(SCC_STACK_FRAME_HPP)
+#define SCC_STACK_FRAME_HPP
+
+
+
+#endif // SCC_STACK_FRAME_HPP

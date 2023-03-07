@@ -1,8 +1,7 @@
-#include "SCCRegister.hpp"
+#include "X86RegisterNames.hpp"
 
-namespace X86Register{
-
-    const char* nameStr[] = {
+namespace X86Reg {
+    const char* name[] = {
         "rax" ,  "eax" ,  "ax"  ,  "al"  ,
         "rbx" ,  "ebx" ,  "bx"  ,  "bl"  ,
         "rcx" ,  "ecx" ,  "cx"  ,  "cl"  ,
@@ -21,23 +20,8 @@ namespace X86Register{
         "rfp" ,
         "rip"
     };
-    
-    //TODO Phase 6
-    // support any reg size
-    const int FPArgcReg = RAX;
-    const int Arg0Reg = EDI;
-    const int Arg1Reg = ESI;
-    const int Arg2Reg = EDX;
-    const int Arg3Reg = ECX;
-    const int Arg4Reg = R8D;
-    const int Arg5Reg = R9D;
-    
-    const int ReturnReg = RAX;
-    
-    char sizeSpecifier(size_t size){
-        if (size == 1) return 'b';
-        if (size == 2) return 'w';
-        if (size == 4) return 'l';
-        return 'q';
+
+    inline const char* nameOf(Reg reg) {
+        return name[reg];
     }
 }
