@@ -1,7 +1,5 @@
 #include "SCCASTFunction.hpp"
 
-#include <cassert>
-
 #include "../GlobalConfig.hpp"
 #include "../semantic-classes/SCCScope.hpp"
 #include "SCCASTStmtBlock.hpp"

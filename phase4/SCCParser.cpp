@@ -17,7 +17,6 @@
 #include "ast-classes/expr-tree-classes/ExprTreeBinaryNode.hpp"
 #include "ast-classes/expr-tree-classes/ExprTreeTermNode.hpp"
 #include "ast-classes/expr-tree-classes/ExprTreeUnaryNode.hpp"
-#include "cassert"
 #include "exceptions/SCCError.hpp"
 #include "lexer.h"
 #include "semantic-classes/SCCScope.hpp"

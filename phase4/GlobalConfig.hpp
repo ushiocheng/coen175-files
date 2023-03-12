@@ -3,10 +3,13 @@
 
 #define DEBUG
 #ifdef DEBUG
+#include <cassert>
 #define VERBOSE_ERROR_MSG
 #else
 #define NDEBUG  // to suppress assert
+#define assert(sth) /* (Suppressed by DEBUG Flag) Assert sth */
 #endif
+
 
 // PTR Size on target arch
 // 4 => 32bit as of x86-32

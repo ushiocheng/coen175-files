@@ -1,6 +1,7 @@
 #if !defined(SCC_AST_CFS_RETURN_HPP)
 #define SCC_AST_CFS_RETURN_HPP
 
+#include "../../GlobalConfig.hpp"
 #include "../SCCASTControlFlowStatement.hpp"
 #include "../SCCASTExpression.hpp"
 #include "../SCCASTStatement.hpp"
@@ -16,7 +17,7 @@ class CFSReturn : public CtrFlowStmt {
     CFSReturn(Expression* expr1, StmtBlock* enclosingBlock)
         : expr1(expr1), enclosingBlock(enclosingBlock) {}
     StmtType identify() const { return StmtType::RETURN; }
-    
+
     bool performTypeChecking() const {
         SCCType returnType = expr1->getType();
         //! if expr have error type, skip check

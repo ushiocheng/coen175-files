@@ -1,6 +1,5 @@
 #include "SCCScope.hpp"
 
-#include <cassert>
 #include <iostream>
 
 #include "../GlobalConfig.hpp"
