@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/zsh
 
 if [ -z $1 ]; then
     # printf "\x1b[33;41m[ERROR]\x1b[0m Usage: $0 <path-to-coen175-workspace>\n"
