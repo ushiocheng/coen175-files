@@ -1,6 +1,5 @@
 #include "ExprTreeUnaryNode.hpp"
 
-#include <cassert>
 #include <iostream>
 #include <string>
 

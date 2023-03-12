@@ -1,6 +1,5 @@
 #include "ExprTreeBinaryNode.hpp"
 
-#include <cassert>
 #include <iostream>
 #include <string>
 

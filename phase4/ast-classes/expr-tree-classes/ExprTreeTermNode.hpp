@@ -1,6 +1,7 @@
 #if !defined(EXPR_TREE_TERM_NODE_HPP)
 #define EXPR_TREE_TERM_NODE_HPP
 
+#include "../../GlobalConfig.hpp"
 #include "ExprTreeNode.hpp"
 #include "NodeType.hpp"
 #include "../../exceptions/SCCError.hpp"
