@@ -6,7 +6,6 @@
 #include "../SCCASTStatement.hpp"
 #include "../SCCASTStmtBlock.hpp"
 #include "../../GlobalConfig.hpp"
-#include <cassert>
 
 namespace SCCASTClasses {
 class CFSReturn : public CtrFlowStmt {

@@ -1,6 +1,5 @@
 #include "SCCType.hpp"
 
-#include <cassert>
 #include <iostream>
 #include <string>
 

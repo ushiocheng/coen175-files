@@ -1,8 +1,6 @@
 #if !defined(EXPR_TREE_TERM_NODE_HPP)
 #define EXPR_TREE_TERM_NODE_HPP
 
-#include <cassert>
-
 #include "../../GlobalConfig.hpp"
 #include "../../code-generation-classes/SCCRegisterManager.hpp"
 #include "../../exceptions/SCCError.hpp"
