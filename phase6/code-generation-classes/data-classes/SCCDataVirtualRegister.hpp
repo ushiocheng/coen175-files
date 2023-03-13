@@ -17,20 +17,14 @@ class SCCDataVirtualRegister : public SCCData {
         F_REG,
         //! This flag does nothing here, it informs certain ExprTreeNode's
         //! decision
-        F_LVALUE, // This VReg would be used as a location
+        F_LVALUE,
         //! The following flag enforces which reg this must be placed when
         //! accessed
-        F_DIV,
-        F_ARG0,
-        F_ARG1,
-        F_ARG2,
-        F_ARG3,
-        F_ARG4,
-        F_ARG5
+        F_DIV
     };
 
    private:
-    /* data */
+    
    public:
     SCCVirtualRegister(/* args */);
     ~SCCVirtualRegister();

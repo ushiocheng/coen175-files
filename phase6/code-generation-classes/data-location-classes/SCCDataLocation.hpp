@@ -2,7 +2,7 @@
 #define SCC_DATA_LOCATION_HPP
 
 #include <string>
-#include "../SCCRegisterManager.hpp"
+#include "../register-classes/SCCRegisterManager.hpp"
 #include <sstream>
 
 class SCCDataLocation {
@@ -12,6 +12,9 @@ public:
     virtual std::string generateAccess() = 0;
     virtual std::string toString() = 0;
     virtual SCCDataLocation* copy() = 0;
+    void movTo(SCCDataLocation* location, unsigned char size) {
+        
+    }
 };
 
 class SCCDataLocationStatic : public SCCDataLocation {
