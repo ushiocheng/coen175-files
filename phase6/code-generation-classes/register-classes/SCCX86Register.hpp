@@ -82,4 +82,13 @@ class SCCX86Register {
     ~SCCX86Register();
 };
 
+SCCX86Register getRegForFPArgc()  { return SCCX86Register(SCCX86Register::AX); }
+SCCX86Register getRegForArg0()  { return SCCX86Register(SCCX86Register::DI); }
+SCCX86Register getRegForArg1()  { return SCCX86Register(SCCX86Register::SI); }
+SCCX86Register getRegForArg2()  { return SCCX86Register(SCCX86Register::DX); }
+SCCX86Register getRegForArg3()  { return SCCX86Register(SCCX86Register::CX); }
+SCCX86Register getRegForArg4()  { return SCCX86Register(SCCX86Register::R8); }
+SCCX86Register getRegForArg5()  { return SCCX86Register(SCCX86Register::R9); }
+SCCX86Register getRegForRet()   { return SCCX86Register(SCCX86Register::AX); }
+
 #endif  // SCC_X86_REGISTER_HPP
