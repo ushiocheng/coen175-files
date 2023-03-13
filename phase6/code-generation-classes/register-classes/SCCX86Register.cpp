@@ -48,6 +48,13 @@ inline const char* SCCX86Register::getName() {
     return X86Reg::nameOf(((X86Reg::Reg)this->_actualRegCode));
 }
 
+inline const char* SCCX86Register::get64bitName(){
+    if (_actualRegCode >= X86Reg::RSP) {
+        return getName();
+    }
+    return X86Reg::nameOf(((X86Reg::Reg)(_actualRegCode & (!0x3))));
+}
+
 unsigned char SCCX86Register::getSize() {
     if (_actualRegCode >= X86Reg::RSP) {
         return 8;

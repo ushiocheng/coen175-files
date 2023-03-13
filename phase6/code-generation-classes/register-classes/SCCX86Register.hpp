@@ -63,6 +63,11 @@ class SCCX86Register {
     inline const char* getName();
 
     /**
+     * get name of 64 bit version of this register
+    */
+    inline const char* get64bitName();
+
+    /**
      * get size of this register
     */
     unsigned char getSize();
