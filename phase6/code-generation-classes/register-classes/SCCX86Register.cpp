@@ -55,6 +55,24 @@ inline const char* SCCX86Register::get64bitName(){
     return X86Reg::nameOf(((X86Reg::Reg)(_actualRegCode & (!0x3))));
 }
 
+void SCCX86Register::castTo(std::ostream& out, unsigned char size) {
+    unsigned char currentSize = getSize();
+    if (currentSize==size) return;
+    if (currentSize<size) {
+        //! Sign Extend current reg to 8 bytes
+        out << "    movsx   %" << getName() << ", %" << get64bitName() << std::endl;
+    }
+    //! modify Reg code to reflect the change in size
+    this->_actualRegCode = (this->_actualRegCode & (!0x3));
+    if (size == 1) {
+        this->_actualRegCode = _actualRegCode + 3;
+    } else if (size == 2) {
+        this->_actualRegCode = _actualRegCode + 2;
+    } else if (size == 2) {
+        this->_actualRegCode = _actualRegCode + 1;
+    }
+}
+
 unsigned char SCCX86Register::getSize() {
     if (_actualRegCode >= X86Reg::RSP) {
         return 8;

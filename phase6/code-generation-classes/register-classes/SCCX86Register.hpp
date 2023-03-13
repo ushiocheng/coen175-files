@@ -1,6 +1,8 @@
 #if !defined(SCC_X86_REGISTER_HPP)
 #define SCC_X86_REGISTER_HPP
 
+#include <ostream>
+
 /**
  * (Stack) X86 Register object
  * This is a helper class to declear register in a size-aware way
@@ -66,6 +68,11 @@ class SCCX86Register {
      * get name of 64 bit version of this register
     */
     inline const char* get64bitName();
+
+    /**
+     * Cast this register to a specific size and sign extend as needed
+    */
+    void castTo(std::ostream& out, unsigned char size);
 
     /**
      * get size of this register
