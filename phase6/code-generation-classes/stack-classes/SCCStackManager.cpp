@@ -3,7 +3,7 @@
 #include "../../GlobalConfig.hpp"
 
 namespace SCCStackManager {
-size_t currentRSP;
+static size_t currentRSP;
 /*
     A full stack frame of a function can look like this
         Args (Multiple of 16 bytes)
