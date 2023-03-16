@@ -9,6 +9,7 @@
  * Manages Stack Frame
 */
 namespace SCCStackManager {
+    extern size_t currentRSP;
     /*
         A full stack frame of a function can look like this
             Args (Multiple of 16 bytes)

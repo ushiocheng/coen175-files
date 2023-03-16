@@ -4,6 +4,7 @@
 
 #include "../../GlobalConfig.hpp"
 #include "X86RegisterNames.hpp"
+#include "../data-location-classes/SCCDataLocation.hpp"
 
 SCCX86Register::SCCX86Register(SizeIndependentRegCode regCode,
                                unsigned char size) {
@@ -13,8 +14,8 @@ SCCX86Register::SCCX86Register(SizeIndependentRegCode regCode,
             case RSP:
                 this->_actualRegCode = X86Reg::RSP;
                 return;
-            case RFP:
-                this->_actualRegCode = X86Reg::RFP;
+            case RBP:
+                this->_actualRegCode = X86Reg::RBP;
                 return;
             case RIP:
                 this->_actualRegCode = X86Reg::RIP;
@@ -44,11 +45,25 @@ bool SCCX86Register::conflictsWith(SCCX86Register that) {
     return (this->_actualRegCode >> 2) == (that._actualRegCode >> 2);
 }
 
+
+
+int SCCX86Register::actualRegCode() const { return _actualRegCode; }
+SizeIndependentRegCode SCCX86Register::siRegCode() const {
+    if (_actualRegCode < X86Reg::RSP) return _actualRegCode<<2;
+    switch (_actualRegCode)
+    {
+    case X86Reg::RSP: return SizeIndependentRegCode::RSP;
+    case X86Reg::RBP: return SizeIndependentRegCode::RBP;
+    default:          return SizeIndependentRegCode::RIP;
+    }
+}
+
+
 inline const char* SCCX86Register::getName() {
     return X86Reg::nameOf(((X86Reg::Reg)this->_actualRegCode));
 }
 
-inline const char* SCCX86Register::get64bitName(){
+inline const char* SCCX86Register::get64bitName() {
     if (_actualRegCode >= X86Reg::RSP) {
         return getName();
     }
@@ -57,10 +72,11 @@ inline const char* SCCX86Register::get64bitName(){
 
 void SCCX86Register::castTo(std::ostream& out, unsigned char size) {
     unsigned char currentSize = getSize();
-    if (currentSize==size) return;
-    if (currentSize<size) {
+    if (currentSize == size) return;
+    if (currentSize < size) {
         //! Sign Extend current reg to 8 bytes
-        out << "    movsx   %" << getName() << ", %" << get64bitName() << std::endl;
+        out << "    movsx   %" << getName() << ", %" << get64bitName()
+            << std::endl;
     }
     //! modify Reg code to reflect the change in size
     this->_actualRegCode = (this->_actualRegCode & (!0x3));
@@ -71,6 +87,48 @@ void SCCX86Register::castTo(std::ostream& out, unsigned char size) {
     } else if (size == 2) {
         this->_actualRegCode = _actualRegCode + 1;
     }
+}
+
+/**
+ * Move this register to another register
+ * @remark would modify this
+ */
+void SCCX86Register::moveTo(std::ostream& out, SCCX86Register::SizeIndependentRegCode dest) {
+    switch (this->_actualRegCode & 0x3)
+    {
+        case 3: // 1 byte
+        out << "    movb    ";break;
+        case 2: // 2 byte
+        out << "    movw    ";break;
+        case 1: // 4 byte
+        out << "    movl    ";break;
+        default: // 8 byte
+        out << "    movq    ";break;
+    }
+    out << "%" << getName();
+    out << ", %" << SCCX86Register(dest, this->getSize()).getName();
+    out << std::endl;
+}
+
+/**
+ * Move this register to another location
+ * @remark would modify this
+ */
+void SCCX86Register::moveTo(std::ostream& out, SCCDataLocation* dest){
+    switch (this->_actualRegCode & 0x3)
+    {
+        case 3: // 1 byte
+        out << "    movb    ";break;
+        case 2: // 2 byte
+        out << "    movw    ";break;
+        case 1: // 4 byte
+        out << "    movl    ";break;
+        default: // 8 byte
+        out << "    movq    ";break;
+    }
+    out << "%" << getName();
+    out << ", " << dest->generateAccess();
+    out << std::endl;
 }
 
 unsigned char SCCX86Register::getSize() {

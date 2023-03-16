@@ -3,6 +3,7 @@
 
 #include <string>
 #include "../register-classes/SCCRegisterManager.hpp"
+#include "../register-classes/SCCX86Register.hpp"
 #include <sstream>
 
 class SCCDataLocation {
@@ -82,13 +83,13 @@ public:
 
 class SCCDataLocationRegister : public SCCDataLocation {
 private:
-    int _register;
+    SCCX86Register _register;
 public:
-    SCCDataLocationRegister(int reg) : _register(reg) {}
+    SCCDataLocationRegister(SCCX86Register reg) : _register(reg) {}
     bool requireMemoryAccess() { return false; };
     std::string generateAccess() {
         std::stringstream ss;
-        ss << "%" << X86Register::nameStr[this->_register];
+        ss << "%" << this->_register.getName();
         return ss.str();
     }
     std::string toString(){
@@ -99,6 +100,7 @@ public:
     SCCDataLocation* copy() {
         return new SCCDataLocationRegister(_register);
     }
+    SCCX86Register reg() const { return _register; }
 };
 
 #endif // SCC_DATA_LOCATION_HPP

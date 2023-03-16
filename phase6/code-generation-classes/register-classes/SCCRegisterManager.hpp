@@ -2,8 +2,10 @@
 #define SCC_REGISTER_MANAGER_HPP
 
 #include <ostream>
+#include "SCCX86Register.hpp"
 
 class SCCVirtualRegister;
+class SCCDataLocation;
 
 /**
  * (Static) Register Manager
@@ -11,19 +13,35 @@ class SCCVirtualRegister;
  * Manage spilling register
 */
 namespace SCCRegisterManager {
-    extern bool useCalleeSave;
 
-    void enterFunc();
+    /**
+     * What can be done on a register
+     * - hold
+     * - release
+     * 
+     * What can be done on a VReg
+     * - allocateAndHold
+     * - deallocate
+     * - put in reg
+     * - put In Specific Register
+     * - release/preempt to stack
+     * - move to another reg
+    */
+
+    void enterFunc(bool useCalleeSave);
     void exitFunc();
 
-    void allocateVReg(std::ostream& out, SCCVirtualRegister* reg);
-    void deallocateVReg(std::ostream& out, SCCVirtualRegister* reg);
-
     void useReg(std::ostream& out, SCCX86Register reg);
-    void reselaseReg(std::ostream& out, SCCX86Register reg);
+    void releaseReg(std::ostream& out, SCCX86Register reg);
 
     void holdCallerSaves(std::ostream& out);
     void releaseCallerSaves(std::ostream& out);
+
+    SCCVirtualRegister* allocateAndHoldVReg(std::ostream& out, SCCVirtualRegister* reg);
+    void deallocateVReg(std::ostream& out, SCCVirtualRegister* reg);
+    void loadVReg(std::ostream& out, SCCVirtualRegister* reg);
+    void loadVReg(std::ostream& out, SCCVirtualRegister* reg, SCCX86Register dest);
+    void releaseVReg(SCCVirtualRegister* reg);
 }
 
 #endif // SCC_REGISTER_MANAGER_HPP

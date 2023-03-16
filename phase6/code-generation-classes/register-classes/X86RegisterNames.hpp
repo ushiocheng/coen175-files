@@ -25,7 +25,7 @@ namespace X86Reg {
         R14 , R14D , R14W , R14B ,
         R15 , R15D , R15W , R15B ,
         RSP , //! Control registers do not have size variants
-        RFP ,
+        RBP ,
         RIP
     };
     inline const char* nameOf(Reg reg);
