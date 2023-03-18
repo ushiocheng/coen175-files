@@ -5,13 +5,6 @@
 #include "../instruction-helper/X86InstructionHelper.hpp"
 
 /**
- * Load this Data for access
- */
-void SCCDataNumericLiteral::load(std::ostream& out) {
-    //! Do nothing
-}
-
-/**
  * Load this Data to a specific register
  * Overrides _placeInSpecificRegister Flag
  */

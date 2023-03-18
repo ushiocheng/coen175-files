@@ -4,16 +4,7 @@
 
 #include "../../GlobalConfig.hpp"
 
-SCCData::SCCData(bool placeInReg, bool placeInSpecificReg, bool useAsLValue,
-                 unsigned char size,
-                 SCCX86Register::SizeIndependentRegCode regToPlaceIn =
-                     SCCX86Register::SizeIndependentRegCode::AX)
-    : _placeInRegister(placeInReg),
-      _placeInSpecifiedReg(placeInSpecificReg),
-      _useAsLValue(useAsLValue),
-      _size(size),
-      _specifiedReg(regToPlaceIn),
-      _location(nullptr) {}
+SCCData::SCCData(unsigned char size) : _size(size), _location(nullptr) {}
 
 SCCData::~SCCData() {
     if (_location) delete _location;

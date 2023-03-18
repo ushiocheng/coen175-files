@@ -8,20 +8,10 @@ class SCCDataNumericLiteral : public SCCData {
     size_t _value;
 
    public:
-    SCCDataNumericLiteral(bool placeInReg, bool placeInSpecificReg,
-                          bool useAsLValue, unsigned char size, size_t value,
-                          SCCX86Register::SizeIndependentRegCode regToPlaceIn =
-                              SCCX86Register::AX)
-        : SCCData(placeInReg, placeInSpecificReg, useAsLValue, size,
-                  regToPlaceIn),
-          _value(value) {}
+    SCCDataNumericLiteral(unsigned char size, size_t value)
+        : SCCData(size), _value(value) {}
 
     //! Implement Interfaces
-
-    /**
-     * Load this Data for access
-     */
-    void load(std::ostream& out);
 
     /**
      * Load this Data to a specific register

@@ -14,32 +14,17 @@
  */
 class SCCData {
    protected:
-    // To be placed in
-    bool _placeInRegister;
-    bool _placeInSpecifiedReg;  // Return value / Dividend
-    SCCX86Register::SizeIndependentRegCode _specifiedReg;
-    // To be used as LHS in assignment
-    bool _useAsLValue;
     // Size of this data, can be 1,2,4,8 bytes
     unsigned char _size;
     SCCDataLocation* _location;
 
    public:
-    SCCData(bool placeInReg, bool placeInSpecificReg, bool useAsLValue,
-            unsigned char size,
-            SCCX86Register::SizeIndependentRegCode regToPlaceIn =
-                SCCX86Register::SizeIndependentRegCode::AX);
+    SCCData(unsigned char size);
 
     virtual ~SCCData();
 
     //! Setters and getters
 
-    bool placeInRegister() const { return _placeInRegister; }
-    bool placeInSpecifiedReg() const { return _placeInSpecifiedReg; }
-    SCCX86Register::SizeIndependentRegCode specifiedReg() const {
-        return _specifiedReg;
-    }
-    bool useAsLValue() const { return _useAsLValue; }
     unsigned char size() const { return _size; }
     const SCCDataLocation* location() const { return _location; }
     SCCDataLocation* location() { return _location; }
@@ -48,11 +33,6 @@ class SCCData {
     }
 
     //! Interfaces
-
-    /**
-     * Load this Data for access
-     */
-    virtual void load(std::ostream& out) = 0;
 
     /**
      * Load this Data to a specific register
