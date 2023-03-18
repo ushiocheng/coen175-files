@@ -2,49 +2,66 @@
 #define SCC_DATA_HPP
 
 #include <iostream>
-#include "../register-classes/SCCX86Register.hpp"
-#include "../data-location-classes/SCCDataLocation.hpp"
 
-std::ostream& SCCCodeGeneration_outputStream = std::cout;
+#include "../data-location-classes/SCCDataLocation.hpp"
+#include "../register-classes/SCCX86Register.hpp"
 
 /**
  * (Dynamic) Data
  * Abstract representation of data
  * including static, variables, and intermediate values
  * Provides unified interface to load and access a data in code generation
- * @remark need to set Global `SCCCodeGeneration_outputStream` to indicate
- *         output location
  */
 class SCCData {
    protected:
-    // Indicate this data must be loaded to a register when accessed
-    bool _isReg;
-    unsigned char _size;  // Size of this data, can be 1,2,4,8 bytes
+    // To be placed in
+    bool _placeInRegister;
+    bool _placeInSpecifiedReg;  // Return value / Dividend
+    SCCX86Register::SizeIndependentRegCode _specifiedReg;
+    // To be used as LHS in assignment
+    bool _useAsLValue;
+    // Size of this data, can be 1,2,4,8 bytes
+    unsigned char _size;
     SCCDataLocation* _location;
+
    public:
-    SCCData(bool isReg, unsigned char size) : _isReg(isReg), _size(size) {}
+    SCCData(bool placeInReg, bool placeInSpecificReg, bool useAsLValue,
+            unsigned char size,
+            SCCX86Register::SizeIndependentRegCode regToPlaceIn =
+                SCCX86Register::SizeIndependentRegCode::AX);
     ~SCCData();
 
-    bool isReg() const { return _isReg; }
+    //! Setters and getters
 
-    bool size() const { return _size; }
-
-    /**
-     * Load this Data for access
-     */
-    virtual void load() = 0;
-    /**
-     * Load this Data to a specific register (for Division or argument)
-    */
-    virtual void loadTo(SCCX86Register::SizeIndependentRegCode regCode) {
-        if (this->_location->requireMemoryAccess()) {
-            // mov to regCode
-        }
+    bool placeInRegister() const { return _placeInRegister; }
+    bool placeInSpecifiedReg() const { return _placeInSpecifiedReg; }
+    SCCX86Register::SizeIndependentRegCode specifiedReg() const {
+        return _specifiedReg;
     }
+    bool useAsLValue() const { return _useAsLValue; }
+    unsigned char size() const { return _size; }
+    const SCCDataLocation* location() const { return _location; }
+    SCCDataLocation* location() { return _location; }
+    void setLocation(SCCDataLocation* newLocation) {
+        this->_location = newLocation;
+    }
+
+    //! Interfaces
+
     /**
      * Load this Data for access
      */
-    virtual void access() = 0;
+    virtual void load(std::ostream& out) = 0;
+    /**
+     * Load this Data to a specific register
+     * Overrides _placeInSpecificRegister Flag
+     */
+    virtual void loadTo(SCCX86Register::SizeIndependentRegCode regCode) = 0;
+    /**
+     * Generate access to this data
+     * @remark this should not be used to generate LValue access
+     */
+    virtual std::string access();
 };
 
 #endif  // SCC_DATA_HPP
