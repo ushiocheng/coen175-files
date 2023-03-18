@@ -3,6 +3,8 @@
 
 #include <ostream>
 
+class SCCDataLocation;
+
 /**
  * (Stack) X86 Register object
  * This is a helper class to declear register in a size-aware way

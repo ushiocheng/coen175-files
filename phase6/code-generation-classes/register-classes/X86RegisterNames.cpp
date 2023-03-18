@@ -21,7 +21,7 @@ namespace X86Reg {
         "rip"
     };
 
-    inline const char* nameOf(Reg reg) {
+    const char* nameOf(Reg reg) {
         return name[reg];
     }
 }

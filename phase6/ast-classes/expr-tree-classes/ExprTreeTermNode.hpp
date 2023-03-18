@@ -4,7 +4,8 @@
 #include <cassert>
 
 #include "../../GlobalConfig.hpp"
-#include "../../code-generation-classes/SCCRegisterManager.hpp"
+#include "../../code-generation-classes/register-classes/SCCRegisterManager.hpp"
+#include "../../code-generation-classes/register-classes/X86RegisterNames.hpp"
 #include "../../exceptions/SCCError.hpp"
 #include "../../semantic-classes/SCCSymbol.hpp"
 #include "../SCCASTExpression.hpp"
@@ -45,35 +46,35 @@ class ExprTreeNodeTermFuncCall : public ExprTreeTermNode {
                 << ", ";
             switch (paramNum) {
                 case 0:
-                    out << "%" << X86Register::nameStr[X86Register::Arg0Reg];
+                    out << "%" << X86Reg::nameOf(X86Reg::RDI);
                     break;
                 case 1:
-                    out << "%" << X86Register::nameStr[X86Register::Arg1Reg];
+                    out << "%" << X86Reg::nameOf(X86Reg::RSI);
                     break;
                 case 2:
-                    out << "%" << X86Register::nameStr[X86Register::Arg2Reg];
+                    out << "%" << X86Reg::nameOf(X86Reg::RDX);
                     break;
                 case 3:
-                    out << "%" << X86Register::nameStr[X86Register::Arg3Reg];
+                    out << "%" << X86Reg::nameOf(X86Reg::RCX);
                     break;
                 case 4:
-                    out << "%" << X86Register::nameStr[X86Register::Arg4Reg];
+                    out << "%" << X86Reg::nameOf(X86Reg::R8);
                     break;
                 case 5:
-                    out << "%" << X86Register::nameStr[X86Register::Arg5Reg];
+                    out << "%" << X86Reg::nameOf(X86Reg::R9);
                     break;
             }
             out << std::endl;
             delete paramLocation;
         }
         out << indentation << "movq    $0, "
-            << "%" << X86Register::nameStr[X86Register::FPArgcReg] << std::endl;
+            << "%" << X86Reg::nameOf(X86Reg::EAX) << std::endl;
         // if (this->function->type().parameters() == NULL) {
         //     out << indentation << "extern  " << this->function->id()
         //         << std::endl;
         // }
         out << indentation << "call    " << this->function->id() << std::endl;
-        return new SCCDataLocationRegister(X86Register::ReturnReg);
+        return new SCCDataLocationRegister(SCCX86Register(SCCX86Register::AX, 4));
     }
 
    private:

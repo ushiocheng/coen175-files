@@ -4,7 +4,7 @@
 #include <ostream>
 #include <string>
 
-#include "../code-generation-classes/data-location/SCCDataLocation.hpp"
+#include "../code-generation-classes/data-location-classes/SCCDataLocation.hpp"
 #include "SCCType.hpp"
 
 class SCCSymbol {

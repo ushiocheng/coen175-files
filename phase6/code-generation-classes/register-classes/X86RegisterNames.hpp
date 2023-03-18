@@ -28,7 +28,7 @@ namespace X86Reg {
         RBP ,
         RIP
     };
-    inline const char* nameOf(Reg reg);
+    const char* nameOf(Reg reg);
 }
 
 #endif // X86_REGISTER_NAMES_HPP

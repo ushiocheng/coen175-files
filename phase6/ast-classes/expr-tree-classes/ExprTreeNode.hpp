@@ -1,7 +1,7 @@
 #if !defined(EXPR_TREE_NODE_HPP)
 #define EXPR_TREE_NODE_HPP
 
-#include "../../code-generation-classes/data-location/SCCDataLocation.hpp"
+#include "../../code-generation-classes/data-location-classes/SCCDataLocation.hpp"
 #include "../../semantic-classes/SCCType.hpp"
 #include "NodeType.hpp"
 namespace SCCASTClasses {
