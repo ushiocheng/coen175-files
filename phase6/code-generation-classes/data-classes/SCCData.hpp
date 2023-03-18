@@ -29,7 +29,8 @@ class SCCData {
             unsigned char size,
             SCCX86Register::SizeIndependentRegCode regToPlaceIn =
                 SCCX86Register::SizeIndependentRegCode::AX);
-    ~SCCData();
+
+    virtual ~SCCData();
 
     //! Setters and getters
 
@@ -52,11 +53,14 @@ class SCCData {
      * Load this Data for access
      */
     virtual void load(std::ostream& out) = 0;
+
     /**
      * Load this Data to a specific register
      * Overrides _placeInSpecificRegister Flag
      */
-    virtual void loadTo(SCCX86Register::SizeIndependentRegCode regCode) = 0;
+    virtual void loadTo(std::ostream& out,
+                        SCCX86Register::SizeIndependentRegCode regCode) = 0;
+
     /**
      * Generate access to this data
      * @remark this should not be used to generate LValue access
