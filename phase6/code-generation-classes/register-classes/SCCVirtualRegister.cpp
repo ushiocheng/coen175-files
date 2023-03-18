@@ -1,4 +1,5 @@
 #include "SCCVirtualRegister.hpp"
+
 #include "../data-location-classes/SCCDataLocation.hpp"
 #include "SCCRegisterManager.hpp"
 
@@ -24,7 +25,7 @@ void SCCVirtualRegister::loadToRegister(std::ostream& out, SCCX86Register reg) {
  */
 void SCCVirtualRegister::castTo(std::ostream& out, unsigned char size) {
     if (!this->location->requireMemoryAccess()) {
-        ((SCCDataLocationRegister*) this->location)->reg().castTo(out, size);
+        ((SCCDataLocationRegister*)this->location)->reg().castTo(out, size);
     }
     // If this is stack then it doesn't matter
     this->_size = size;
@@ -33,6 +34,4 @@ void SCCVirtualRegister::castTo(std::ostream& out, unsigned char size) {
 /**
  * get size of this register
  */
-unsigned char SCCVirtualRegister::getSize() {
-    return this->_size;
-}
+unsigned char SCCVirtualRegister::getSize() { return this->_size; }

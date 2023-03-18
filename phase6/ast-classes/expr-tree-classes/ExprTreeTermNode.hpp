@@ -4,11 +4,7 @@
 #include <cassert>
 
 #include "../../GlobalConfig.hpp"
-#include "../../code-generation-classes/register-classes/SCCRegisterManager.hpp"
-#include "../../code-generation-classes/register-classes/X86RegisterNames.hpp"
 #include "../../exceptions/SCCError.hpp"
-#include "../../semantic-classes/SCCSymbol.hpp"
-#include "../SCCASTExpression.hpp"
 #include "ExprTreeNode.hpp"
 #include "NodeType.hpp"
 
@@ -24,7 +20,7 @@ class ExprTreeNodeTermFuncCall : public ExprTreeTermNode {
    public:
     const SCCSymbol* function;
     std::vector<SCCASTClasses::Expression*>* paramList;
-    ExprTreeNodeTermFuncCall(const SCCSymbol* func = NULL) : function(func) {
+    ExprTreeNodeTermFuncCall(const SCCSymbol* func = nullptr) : function(func) {
         this->paramList = new std::vector<SCCASTClasses::Expression*>();
     }
     ~ExprTreeNodeTermFuncCall() {
@@ -34,48 +30,6 @@ class ExprTreeNodeTermFuncCall : public ExprTreeTermNode {
         delete paramList;
     }
     NodeType identify() const { return T_FUNC_CALL; }
-    SCCDataLocation* generateCodeToEvaluateExprNode(
-        std::ostream& out, const char* indentation = "") const {
-        //! Evaluate Param
-        for (size_t paramNum = 0; paramNum < paramList->size(); paramNum++) {
-            SCCDataLocation* paramLocation =
-                paramList->at(paramNum)
-                    ->exprTreeRoot->generateCodeToEvaluateExprNode(out,
-                                                                   indentation);
-            out << indentation << "movl    " << paramLocation->generateAccess()
-                << ", ";
-            switch (paramNum) {
-                case 0:
-                    out << "%" << X86Reg::nameOf(X86Reg::RDI);
-                    break;
-                case 1:
-                    out << "%" << X86Reg::nameOf(X86Reg::RSI);
-                    break;
-                case 2:
-                    out << "%" << X86Reg::nameOf(X86Reg::RDX);
-                    break;
-                case 3:
-                    out << "%" << X86Reg::nameOf(X86Reg::RCX);
-                    break;
-                case 4:
-                    out << "%" << X86Reg::nameOf(X86Reg::R8);
-                    break;
-                case 5:
-                    out << "%" << X86Reg::nameOf(X86Reg::R9);
-                    break;
-            }
-            out << std::endl;
-            delete paramLocation;
-        }
-        out << indentation << "movq    $0, "
-            << "%" << X86Reg::nameOf(X86Reg::EAX) << std::endl;
-        // if (this->function->type().parameters() == NULL) {
-        //     out << indentation << "extern  " << this->function->id()
-        //         << std::endl;
-        // }
-        out << indentation << "call    " << this->function->id() << std::endl;
-        return new SCCDataLocationRegister(SCCX86Register(SCCX86Register::AX, 4));
-    }
 
    private:
     void _checkAndSetTypeOfNode() const {
@@ -113,7 +67,7 @@ class ExprTreeNodeTermFuncCall : public ExprTreeTermNode {
             return;
         }
         //! check if func is defined/declared
-        if (func.parameters() == NULL) {
+        if (func.parameters() == nullptr) {
             //! Function is undefined in this scope, skip param checking
             // // return SCCType();
             func.promoteFunc();
@@ -220,15 +174,11 @@ class ExprTreeNodeTermLiteralChar : public ExprTreeTermNode {
         }
     }
     NodeType identify() const { return T_LITERAL_CHAR; }
-    SCCDataLocation* generateCodeToEvaluateExprNode(
-        std::ostream& out, const char* indentation = "") const {
-        return new SCCDataLocationLiteral(this->_valueOfLiteral);
-    }
 
    private:
     void _checkAndSetTypeOfNode() const {
         const_cast<ExprTreeNodeTermLiteralChar*>(this)->_typeOfNode =
-            SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, NULL, false);
+            SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, nullptr, false);
         const_cast<ExprTreeNodeTermLiteralChar*>(this)->_typeOfNodeSet = true;
     }
 };
@@ -242,17 +192,13 @@ class ExprTreeNodeTermLiteralNumber : public ExprTreeTermNode {
         this->_checkAndSetTypeOfNode();
     }
     NodeType identify() const { return T_LITERAL_NUM; }
-    SCCDataLocation* generateCodeToEvaluateExprNode(
-        std::ostream& out, const char* indentation = "") const {
-        return new SCCDataLocationLiteral(this->_value);
-    }
 
    private:
     void _checkAndSetTypeOfNode() const {
         const_cast<ExprTreeNodeTermLiteralNumber*>(this)->_typeOfNode = SCCType(
             (this->_value < INT_MIN || this->_value > INT_MAX) ? SCCType::LONG
                                                                : SCCType::INT,
-            SCCType::SCALAR, 0, 0, NULL, false);
+            SCCType::SCALAR, 0, 0, nullptr, false);
         const_cast<ExprTreeNodeTermLiteralNumber*>(this)->_typeOfNodeSet = true;
     }
 };
@@ -264,17 +210,12 @@ class ExprTreeNodeTermLiteralString : public ExprTreeTermNode {
    public:
     ExprTreeNodeTermLiteralString(const std::string& value) : _value(value) {}
     NodeType identify() const { return T_LITERAL_STR; }
-    SCCDataLocation* generateCodeToEvaluateExprNode(
-        std::ostream& out, const char* indentation = "") const {
-        // TODO Phase 6
-        return NULL;
-    }
 
    private:
     void _checkAndSetTypeOfNode() const {
         const_cast<ExprTreeNodeTermLiteralString*>(this)->_typeOfNode =
             SCCType(SCCType::CHAR, SCCType::ARRAY, 0, this->_value.length() - 2,
-                    NULL, false);
+                    nullptr, false);
         const_cast<ExprTreeNodeTermLiteralString*>(this)->_typeOfNodeSet = true;
     }
 };
@@ -286,10 +227,6 @@ class ExprTreeNodeTermVariable : public ExprTreeTermNode {
    public:
     ExprTreeNodeTermVariable(const SCCSymbol* symbol) : _symbol(symbol) {}
     NodeType identify() const { return T_VAR; }
-    SCCDataLocation* generateCodeToEvaluateExprNode(
-        std::ostream& out, const char* indentation = "") const {
-        return this->_symbol->location->copy();
-    }
 
    private:
     void _checkAndSetTypeOfNode() const {

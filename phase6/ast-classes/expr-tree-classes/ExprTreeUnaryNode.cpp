@@ -11,15 +11,15 @@
 #include "../../semantic-classes/SCCType.hpp"
 
 #ifdef DEBUG
-// #define DEBUG_PRINT_FUNC_TRACE_FLG
-#define PRINT_IF_DEBUG(sth) std::cerr << "[DEBUG] " << sth << std::endl;
+#define DEBUG_PRINT_FUNC_TRACE_FLG
+#define PRINT_IF_DEBUG(sth) std::cout << "[DEBUG] " << sth << std::endl;
 #else
 #define PRINT_IF_DEBUG(sth) /* debug print: sth */
 #endif
 
 #ifdef DEBUG_PRINT_FUNC_TRACE_FLG
 #define PRINT_FUNC_IF_ENABLED                                              \
-    std::cerr << "[DEBUG] Running " << __func__ << " on line " << __LINE__ \
+    std::cout << "[DEBUG] Running " << __func__ << " on line " << __LINE__ \
               << std::endl
 #else
 #define PRINT_FUNC_IF_ENABLED ;
@@ -37,32 +37,32 @@ SCCType typeOfUnaryExpression(SCC::SCCUnaryOperation op, SCCType operand1);
 
 void SCCASTClasses::ExprTreeClasses::ExprTreeNodeUnaryAddrOf::
     _checkAndSetTypeOfNode() const {
-    this->_setNodeType(typeOfUnaryExpression(SCC::OP_ADDR_OF,
-                                             this->arg1->getType()));
+    this->_setNodeType(
+        typeOfUnaryExpression(SCC::OP_ADDR_OF, this->arg1->getType()));
 }
 
 void SCCASTClasses::ExprTreeClasses::ExprTreeNodeUnaryDeref::
     _checkAndSetTypeOfNode() const {
-    this->_setNodeType(typeOfUnaryExpression(SCC::OP_DEREF,
-                                             this->arg1->getType()));
+    this->_setNodeType(
+        typeOfUnaryExpression(SCC::OP_DEREF, this->arg1->getType()));
 }
 
 void SCCASTClasses::ExprTreeClasses::ExprTreeNodeUnaryNegation::
     _checkAndSetTypeOfNode() const {
-    this->_setNodeType(typeOfUnaryExpression(
-        SCC::OP_NEGATION, this->arg1->getType()));
+    this->_setNodeType(
+        typeOfUnaryExpression(SCC::OP_NEGATION, this->arg1->getType()));
 }
 
 void SCCASTClasses::ExprTreeClasses::ExprTreeNodeUnaryNot::
     _checkAndSetTypeOfNode() const {
-    this->_setNodeType(typeOfUnaryExpression(SCC::OP_NOT,
-                                             this->arg1->getType()));
+    this->_setNodeType(
+        typeOfUnaryExpression(SCC::OP_NOT, this->arg1->getType()));
 }
 
 void SCCASTClasses::ExprTreeClasses::ExprTreeNodeUnarySizeof::
     _checkAndSetTypeOfNode() const {
-    this->_setNodeType(typeOfUnaryExpression(SCC::OP_SIZEOF,
-                                             this->arg1->getType()));
+    this->_setNodeType(
+        typeOfUnaryExpression(SCC::OP_SIZEOF, this->arg1->getType()));
 }
 
 SCCType typeOfUnaryExpression(SCC::SCCUnaryOperation op, SCCType operand1) {
@@ -87,8 +87,7 @@ SCCType typeOfUnaryExpression(SCC::SCCUnaryOperation op, SCCType operand1) {
             printAndReport("Phase4: passing function as value.",
                            EXP_INV_EXPECT_LVALUE);
         } else {
-            printAndReport("Phase4: passing function as value.",
-                           EXP_INV_OP_UNI,
+            printAndReport("Phase4: passing function as value.", EXP_INV_OP_UNI,
                            unaryOperatorStr[op]);
         }
         return SCCType();
@@ -97,7 +96,7 @@ SCCType typeOfUnaryExpression(SCC::SCCUnaryOperation op, SCCType operand1) {
 //! => At this point, op1 must be scalar
 #ifdef DEBUG
     if (!(operand1.declaratorType() == SCCType::SCALAR)) {
-        std::cerr << "Assertion Failed, op1: " << operand1 << std::endl;
+        std::cout << "Assertion Failed, op1: " << operand1 << std::endl;
         assert(false);
     }
 #endif
@@ -106,24 +105,22 @@ SCCType typeOfUnaryExpression(SCC::SCCUnaryOperation op, SCCType operand1) {
         case SCC::OP_NOT:
             if (!operand1.isPredicate()) {
                 printAndReport("Phase4: OP_NOT arg1 is not predicate.",
-                               EXP_INV_OP_UNI,
-                               unaryOperatorStr[op]);
+                               EXP_INV_OP_UNI, unaryOperatorStr[op]);
                 break;
             }
-            return SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, NULL, false);
+            return SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, nullptr, false);
 
         case SCC::OP_NEGATION:
             if (!operand1.isNumeric()) {
                 printAndReport("Phase4: OP_NEGATION arg1 is not numeric.",
-                               EXP_INV_OP_UNI,
-                               unaryOperatorStr[op]);
+                               EXP_INV_OP_UNI, unaryOperatorStr[op]);
                 break;
             }
             return SCCType(((operand1.specifier() == SCCType::CHAR)
                                 ? (SCCType::INT)
                                 : (operand1.specifier())),
                            operand1.declaratorType(), operand1.indirection(), 0,
-                           NULL, false);
+                           nullptr, false);
 
         case SCC::OP_ADDR_OF:
             if (!operand1.isLValue()) {
@@ -132,23 +129,22 @@ SCCType typeOfUnaryExpression(SCC::SCCUnaryOperation op, SCCType operand1) {
                 break;
             }
             return SCCType(operand1.specifier(), operand1.declaratorType(),
-                           operand1.indirection() + 1, 0, NULL, false);
+                           operand1.indirection() + 1, 0, nullptr, false);
 
         case SCC::OP_DEREF:
             if (!(operand1.isDereferencablePtr())) {
                 printAndReport("Phase4: cannot deref whatever this is.",
-                               EXP_INV_OP_UNI,
-                               unaryOperatorStr[op]);
+                               EXP_INV_OP_UNI, unaryOperatorStr[op]);
                 break;
             }
             //! Return LValue, this fact is be checked on addrof or runtime
             return SCCType(operand1.specifier(), operand1.declaratorType(),
-                           operand1.indirection() - 1, 0, NULL, true);
+                           operand1.indirection() - 1, 0, nullptr, true);
 
         case SCC::OP_SIZEOF:
             //* Sizeof (predicate)
             // Everything is a predicate at this point
-            return SCCType(SCCType::LONG, SCCType::SCALAR, 0, 0, NULL,
+            return SCCType(SCCType::LONG, SCCType::SCALAR, 0, 0, nullptr,
                            false);
 
         default:

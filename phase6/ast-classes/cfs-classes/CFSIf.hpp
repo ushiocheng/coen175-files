@@ -14,14 +14,13 @@ class CFSIf : public CtrFlowStmt {
     Statement* stmt2;
 
     // if(expr1) stmt1 [else stmt2]
-    CFSIf(Expression* expr1, Statement* stmt1, Statement* stmt2 = NULL)
+    CFSIf(Expression* expr1, Statement* stmt1, Statement* stmt2 = nullptr)
         : expr1(expr1), stmt1(stmt1), stmt2(stmt2) {}
     StmtType identify() const { return StmtType::IF; }
     bool performTypeChecking() const {
         SCCType expr1Type = expr1->getType();
         return checkTestExpr(expr1Type);
     }
-    void generateCode(std::ostream& out, const char* indentation = "") const{} // TODO Phase 6
 };
 }  // namespace SCCASTClasses
 

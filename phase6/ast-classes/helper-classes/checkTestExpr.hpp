@@ -3,7 +3,7 @@
 #define CHECK_TEST_EXPR_HPP
 
 #include "../../exceptions/SCCError.hpp"
-namespace SCCASTClasses{
+namespace SCCASTClasses {
 bool checkTestExpr(SCCType testExpr) {
     //! if expr have error type, skip check
     if (testExpr.declaratorType() == SCCType::ERROR) return false;
@@ -13,6 +13,6 @@ bool checkTestExpr(SCCType testExpr) {
     }
     return true;
 }
-}
+}  // namespace SCCASTClasses
 
 #endif  // CHECK_TEST_EXPR_HPP

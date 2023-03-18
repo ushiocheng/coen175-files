@@ -13,12 +13,12 @@ class Assignment : public Statement {
     ExprTreeClasses::ExprTreeNode* lhs;
     ExprTreeClasses::ExprTreeNode* rhs;
 
-    Assignment(ExprTreeClasses::ExprTreeNode* lhs, ExprTreeClasses::ExprTreeNode* rhs);
+    Assignment(ExprTreeClasses::ExprTreeNode* lhs,
+               ExprTreeClasses::ExprTreeNode* rhs);
     ~Assignment();
 
     StmtType identify() const { return StmtType::ASSIGN; }
     bool performTypeChecking() const;
-    void generateCode(std::ostream& out, const char* indentation) const;
 };
 
 }  // namespace SCCASTClasses

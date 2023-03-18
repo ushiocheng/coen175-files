@@ -17,12 +17,6 @@ class Function {
      * @return true if no error is generated on type checking
      */
     bool performTypeChecking();
-
-    /**
-     * Phase 5 - Generate Code
-     * @param out output stream
-    */
-    void generateCode(std::ostream& out) const;
 };
 
 }  // namespace SCCASTClasses

@@ -3,8 +3,6 @@
 
 #include "ExprTreeNode.hpp"
 #include "NodeType.hpp"
-#include "../../GlobalConfig.hpp"
-#include <cassert>
 
 namespace SCCASTClasses {
 namespace ExprTreeClasses {
@@ -18,12 +16,6 @@ class ExprTreeBinaryNode : public ExprTreeNode {
     ExprTreeBinaryNode(ExprTreeNode* arg1, ExprTreeNode* arg2)
         : arg1(arg1), arg2(arg2) {
         this->performTypeChecking();
-    }
-
-    SCCDataLocation* generateCodeToEvaluateExprNode(
-        std::ostream& out, const char* indentation = "") const {
-        assert(false);
-        return NULL;
     }
 };
 

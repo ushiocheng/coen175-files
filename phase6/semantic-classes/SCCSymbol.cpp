@@ -9,13 +9,13 @@ SCCSymbol::SCCSymbol(const std::string &id)
     : _id(id),
       _type(SCCType::SCCType_Specifier::VOID,
             SCCType::SCCType_DeclaratorType::ERROR),
-      location(NULL) {}
+      location(nullptr) {}
 
 SCCSymbol::SCCSymbol(const std::string &id, const SCCType &type)
-    : _id(id), _type(type), location(NULL) {}
+    : _id(id), _type(type), location(nullptr) {}
 
 SCCSymbol::SCCSymbol(const SCCSymbol &that)
-    : _id(that._id), _type(that._type), location(that.location) {}
+    : _id(that._id), _type(that._type), location(nullptr) {}
 
 const std::string &SCCSymbol::id() const { return this->_id; }
 const SCCType &SCCSymbol::type() const { return this->_type; }
@@ -25,7 +25,7 @@ void SCCSymbol::validatePhase3E5() const {
         //! do not output E5 if type is error
         if (_type.declaratorType() == SCCType::ERROR) return;
         printAndReport("Type is not valid.", VOID_VARIABLE, this->id());
-        std::cerr << *this;
+        std::cout << *this;
         const_cast<SCCSymbol *>(this)->_type =
             SCCType();  //! Set this to error type
     }

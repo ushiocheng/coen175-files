@@ -11,7 +11,7 @@ class Statement {
    public:
     virtual ~Statement();
 
-    enum StmtType { ASSIGN = 0, EXPR, RETURN, WHILE, FOR, IF, BLOCK };
+    enum StmtType { ASSIGN, EXPR, RETURN, WHILE, FOR, IF, BLOCK };
     /**
      * idenitfy API for RTTI
      */
@@ -22,13 +22,6 @@ class Statement {
      * @return true if no error is generated on type checking
      */
     virtual bool performTypeChecking() const = 0;
-
-    /**
-     * Phase 5 - Generate Code
-     * @param out output stream
-     */
-    virtual void generateCode(std::ostream& out,
-                              const char* indentation = "") const = 0;
 };
 
 }  // namespace SCCASTClasses

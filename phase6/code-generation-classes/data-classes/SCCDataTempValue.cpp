@@ -2,8 +2,8 @@
 
 #include "../instruction-helper/X86InstructionHelper.hpp"
 
-void SCCDataTempValue::loadTo(
-    std::ostream& out, SCCX86Register::SizeIndependentRegCode regCode) {
+void SCCDataTempValue::loadTo(std::ostream& out,
+                              SCCX86Register::SizeIndependentRegCode regCode) {
     this->vreg->loadToRegister(out, SCCX86Register(regCode, this->_size));
 }
 

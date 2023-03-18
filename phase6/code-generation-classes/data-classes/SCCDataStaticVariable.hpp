@@ -7,7 +7,6 @@
 
 class SCCDataStaticVariable : public SCCData {
    private:
-
    public:
     SCCDataStaticVariable(unsigned char size, const std::string& name)
         : SCCData(size) {

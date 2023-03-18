@@ -13,14 +13,12 @@ class CFSWhile : public CtrFlowStmt {
     Statement* body;
 
     // While (expr1) stmt1
-    CFSWhile(Expression* expr1, Statement* body)
-        : expr1(expr1), body(body) {}
+    CFSWhile(Expression* expr1, Statement* body) : expr1(expr1), body(body) {}
     StmtType identify() const { return StmtType::WHILE; }
     bool performTypeChecking() const {
         SCCType expr1Type = expr1->getType();
         return checkTestExpr(expr1Type);
     }
-    void generateCode(std::ostream& out, const char* indentation = "") const{} // TODO Phase 6
 };
 }  // namespace SCCASTClasses
 

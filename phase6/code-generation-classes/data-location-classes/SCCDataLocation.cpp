@@ -27,7 +27,9 @@ bool SCCDataLocationRegister::requireMemoryAccess() { return false; };
 
 SCCDataLocation::LocationType SCCDataLocationStatic::ident() { return Static; }
 SCCDataLocation::LocationType SCCDataLocationStack::ident() { return Stack; }
-SCCDataLocation::LocationType SCCDataLocationRegister::ident() { return Register; }
+SCCDataLocation::LocationType SCCDataLocationRegister::ident() {
+    return Register;
+}
 
 std::string SCCDataLocationStatic::generateAccess() { return this->_name; }
 std::string SCCDataLocationStack::generateAccess() {
@@ -57,8 +59,6 @@ std::string SCCDataLocationRegister::toString() {
     return ss.str();
 }
 
-SCCX86Register SCCDataLocationRegister::reg() const { return _register; }
-
 // SCCDataLocationLiteral::SCCDataLocationLiteral(long value) : _value(value) {}
 // bool SCCDataLocationLiteral::requireMemoryAccess() { return false; };
 // std::string SCCDataLocationLiteral::generateAccess() {
@@ -74,4 +74,3 @@ SCCX86Register SCCDataLocationRegister::reg() const { return _register; }
 // SCCDataLocation* SCCDataLocationLiteral::copy() {
 //     return new SCCDataLocationLiteral(_value);
 // }
-

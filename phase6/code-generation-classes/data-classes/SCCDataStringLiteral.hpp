@@ -8,6 +8,7 @@
 class SCCDataStringLiteral : public SCCData {
    private:
     std::string _label;
+
    public:
     SCCDataStringLiteral(unsigned char size, const std::string& label)
         : SCCData(size), _label(label) {}

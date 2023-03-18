@@ -1,8 +1,8 @@
 #if !defined(SCC_AST_EXPRESSION_HPP)
 #define SCC_AST_EXPRESSION_HPP
 
-#include "SCCASTStatement.hpp"
 #include "../semantic-classes/SCCType.hpp"
+#include "SCCASTStatement.hpp"
 #include "expr-tree-classes/ExprTreeNode.hpp"
 
 namespace SCCASTClasses {
@@ -23,9 +23,6 @@ class Expression : public Statement {
     }
 
     SCCType getType() const { return exprTreeRoot->getType(); }
-    void generateCode(std::ostream& out, const char* indentation = "") const{
-        this->exprTreeRoot->generateCodeToEvaluateExprNode(out, indentation);
-    }
 };
 
 }  // namespace SCCASTClasses

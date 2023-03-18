@@ -18,7 +18,6 @@ class StmtBlock : public Statement {
     const SCCScope* scope() const;
     StmtType identify() const;
     bool performTypeChecking() const;
-    void generateCode(std::ostream& out, const char* indentation = "") const;
 };
 }  // namespace SCCASTClasses
 

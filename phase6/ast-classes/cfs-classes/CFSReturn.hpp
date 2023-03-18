@@ -1,12 +1,13 @@
 #if !defined(SCC_AST_CFS_RETURN_HPP)
 #define SCC_AST_CFS_RETURN_HPP
 
+#include <cassert>
+
+#include "../../GlobalConfig.hpp"
 #include "../SCCASTControlFlowStatement.hpp"
 #include "../SCCASTExpression.hpp"
 #include "../SCCASTStatement.hpp"
 #include "../SCCASTStmtBlock.hpp"
-#include "../../GlobalConfig.hpp"
-#include <cassert>
 
 namespace SCCASTClasses {
 class CFSReturn : public CtrFlowStmt {
@@ -18,7 +19,7 @@ class CFSReturn : public CtrFlowStmt {
     CFSReturn(Expression* expr1, StmtBlock* enclosingBlock)
         : expr1(expr1), enclosingBlock(enclosingBlock) {}
     StmtType identify() const { return StmtType::RETURN; }
-    
+
     bool performTypeChecking() const {
         SCCType returnType = expr1->getType();
         //! if expr have error type, skip check
@@ -37,7 +38,6 @@ class CFSReturn : public CtrFlowStmt {
         }
         return true;
     }
-    void generateCode(std::ostream& out, const char* indentation = "") const{} // TODO Phase 6
 };
 }  // namespace SCCASTClasses
 

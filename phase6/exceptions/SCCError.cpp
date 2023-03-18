@@ -1,5 +1,6 @@
 #include "SCCError.hpp"
 
+#include <cassert>
 #include <iostream>
 
 #include "../GlobalConfig.hpp"

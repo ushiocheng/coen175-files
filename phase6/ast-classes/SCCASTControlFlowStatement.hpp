@@ -6,8 +6,7 @@
 
 namespace SCCASTClasses {
 
-class CtrFlowStmt : public Statement {
-};
+class CtrFlowStmt : public Statement {};
 
 }  // namespace SCCASTClasses
 

@@ -1,5 +1,6 @@
 #include "SCCParser.hpp"
 
+#include <cassert>
 #include <iostream>
 #include <string>
 
@@ -60,8 +61,8 @@ int main() {
 #endif
     start();
     bool typeCheckingPass = astRoot->performTypeChecking();
-    assert (typeCheckingPass ); // Change this to if
-    astRoot->generateCode(cout);
+    assert(typeCheckingPass);  // Change this to if
+    // astRoot->generateCode(cout);
     //! Cleanup
     //! DEBUG - Dump global scope
 #ifdef DUMP_SYMBOL_TABLE
@@ -188,9 +189,9 @@ void global_declarator(SCCType::SCCType_Specifier currentSpecifier) {
         //! is FUNC declaration
         match();
         match(OP_R_PARENT);
-        currentScope->addSymbol(
-            SCCSymbol(id, SCCType(currentSpecifier, SCCType::FUNCTION, idr, 0,
-                                  NULL, false)));
+        currentScope->addSymbol(SCCSymbol(
+            id,
+            SCCType(currentSpecifier, SCCType::FUNCTION, idr, 0, NULL, false)));
     } else if (lookahead == '[') {
         //! is ARRAY declaration
         match();
@@ -202,9 +203,9 @@ void global_declarator(SCCType::SCCType_Specifier currentSpecifier) {
                  << " <=0 on Line " << yylineno << endl;
             num = 0;
         }
-        currentScope->addSymbol(
-            SCCSymbol(id, SCCType(currentSpecifier, SCCType::ARRAY, idr, num,
-                                  NULL, false)));
+        currentScope->addSymbol(SCCSymbol(
+            id,
+            SCCType(currentSpecifier, SCCType::ARRAY, idr, num, NULL, false)));
     } else {
         //! is SCALAR declaration
         currentScope->addSymbol(
@@ -378,8 +379,8 @@ void declarator(SCCType::SCCType_Specifier sp) {
 #endif
             num = 0;
         }
-        currentScope->addSymbol(SCCSymbol(
-            id, SCCType(sp, SCCType::ARRAY, idr, num, NULL, false)));
+        currentScope->addSymbol(
+            SCCSymbol(id, SCCType(sp, SCCType::ARRAY, idr, num, NULL, false)));
     } else {
         //! scalar
         currentScope->addSymbol(
@@ -701,8 +702,9 @@ SCCASTClasses::ExprTreeClasses::ExprTreeNode *expression_term() {
         const SCCSymbol *idSymbol = currentScope->lookupSymbol(id);
         if (lookahead == '(') {
             match();
-            
-            //! Bodge: Find enclosing Function, this behavior is dependent on the fact that the latest Function Definition is the current one.
+
+            //! Bodge: Find enclosing Function, this behavior is dependent on
+            //! the fact that the latest Function Definition is the current one.
             astRoot->functionDefinitions.back()->haveFunctionCall = true;
 
             SCCASTClasses::ExprTreeClasses::ExprTreeNodeTermFuncCall *res =

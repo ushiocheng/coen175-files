@@ -15,18 +15,14 @@ class CFSFor : public CtrFlowStmt {
     Statement* body;
 
     // For (assignment; expression; assignment) statement
-    CFSFor(Statement* assign1, Expression* expr1,
-           Statement* assign2, Statement* body)
-        : assign1(assign1),
-          expr1(expr1),
-          assign2(assign2),
-          body(body) {}
+    CFSFor(Statement* assign1, Expression* expr1, Statement* assign2,
+           Statement* body)
+        : assign1(assign1), expr1(expr1), assign2(assign2), body(body) {}
     StmtType identify() const { return StmtType::FOR; }
     bool performTypeChecking() const {
         SCCType expr1Type = expr1->getType();
         return checkTestExpr(expr1Type);
     }
-    void generateCode(std::ostream& out, const char* indentation = "") const{} // TODO Phase 6
 };
 }  // namespace SCCASTClasses
 

@@ -3,13 +3,9 @@
 
 #include "ExprTreeNode.hpp"
 #include "NodeType.hpp"
-#include "../../GlobalConfig.hpp"
-#include <cassert>
 
 namespace SCCASTClasses {
 namespace ExprTreeClasses {
-
-    
 
 class ExprTreeUnaryNode : public ExprTreeNode {
    protected:
@@ -19,18 +15,13 @@ class ExprTreeUnaryNode : public ExprTreeNode {
     ExprTreeUnaryNode(ExprTreeNode* arg1) : arg1(arg1) {
         this->performTypeChecking();
     }
-
-    SCCDataLocation* generateCodeToEvaluateExprNode(
-        std::ostream& out, const char* indentation = "") const {
-        assert(false);
-        return NULL;
-    }
 };
 
 class ExprTreeNodeUnaryAddrOf : public ExprTreeUnaryNode {
    public:
     ExprTreeNodeUnaryAddrOf(ExprTreeNode* arg1) : ExprTreeUnaryNode(arg1) {}
     NodeType identify() const { return OP_ADDR_OF; }
+
    private:
     void _checkAndSetTypeOfNode() const;
 };
@@ -38,6 +29,7 @@ class ExprTreeNodeUnaryDeref : public ExprTreeUnaryNode {
    public:
     ExprTreeNodeUnaryDeref(ExprTreeNode* arg1) : ExprTreeUnaryNode(arg1) {}
     NodeType identify() const { return OP_DEREF; }
+
    private:
     void _checkAndSetTypeOfNode() const;
 };
@@ -45,6 +37,7 @@ class ExprTreeNodeUnaryNegation : public ExprTreeUnaryNode {
    public:
     ExprTreeNodeUnaryNegation(ExprTreeNode* arg1) : ExprTreeUnaryNode(arg1) {}
     NodeType identify() const { return OP_NEGATION; }
+
    private:
     void _checkAndSetTypeOfNode() const;
 };
@@ -52,6 +45,7 @@ class ExprTreeNodeUnaryNot : public ExprTreeUnaryNode {
    public:
     ExprTreeNodeUnaryNot(ExprTreeNode* arg1) : ExprTreeUnaryNode(arg1) {}
     NodeType identify() const { return OP_NOT; }
+
    private:
     void _checkAndSetTypeOfNode() const;
 };
@@ -59,6 +53,7 @@ class ExprTreeNodeUnarySizeof : public ExprTreeUnaryNode {
    public:
     ExprTreeNodeUnarySizeof(ExprTreeNode* arg1) : ExprTreeUnaryNode(arg1) {}
     NodeType identify() const { return OP_SIZEOF; }
+
    private:
     void _checkAndSetTypeOfNode() const;
 };
