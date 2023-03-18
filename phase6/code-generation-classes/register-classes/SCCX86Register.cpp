@@ -3,8 +3,9 @@
 #include <cassert>
 
 #include "../../GlobalConfig.hpp"
-#include "X86RegisterNames.hpp"
 #include "../data-location-classes/SCCDataLocation.hpp"
+#include "../instruction-helper/X86InstructionHelper.hpp"
+#include "X86RegisterNames.hpp"
 
 SCCX86Register::SCCX86Register(SizeIndependentRegCode regCode,
                                unsigned char size) {
@@ -45,19 +46,18 @@ bool SCCX86Register::conflictsWith(SCCX86Register that) {
     return (this->_actualRegCode >> 2) == (that._actualRegCode >> 2);
 }
 
-
-
 int SCCX86Register::actualRegCode() const { return _actualRegCode; }
 SizeIndependentRegCode SCCX86Register::siRegCode() const {
-    if (_actualRegCode < X86Reg::RSP) return _actualRegCode<<2;
-    switch (_actualRegCode)
-    {
-    case X86Reg::RSP: return SizeIndependentRegCode::RSP;
-    case X86Reg::RBP: return SizeIndependentRegCode::RBP;
-    default:          return SizeIndependentRegCode::RIP;
+    if (_actualRegCode < X86Reg::RSP) return _actualRegCode << 2;
+    switch (_actualRegCode) {
+        case X86Reg::RSP:
+            return SizeIndependentRegCode::RSP;
+        case X86Reg::RBP:
+            return SizeIndependentRegCode::RBP;
+        default:
+            return SizeIndependentRegCode::RIP;
     }
 }
-
 
 inline const char* SCCX86Register::getName() {
     return X86Reg::nameOf(((X86Reg::Reg)this->_actualRegCode));
@@ -93,42 +93,20 @@ void SCCX86Register::castTo(std::ostream& out, unsigned char size) {
  * Move this register to another register
  * @remark would modify this
  */
-void SCCX86Register::moveTo(std::ostream& out, SCCX86Register::SizeIndependentRegCode dest) {
-    switch (this->_actualRegCode & 0x3)
-    {
-        case 3: // 1 byte
-        out << "    movb    ";break;
-        case 2: // 2 byte
-        out << "    movw    ";break;
-        case 1: // 4 byte
-        out << "    movl    ";break;
-        default: // 8 byte
-        out << "    movq    ";break;
-    }
-    out << "%" << getName();
-    out << ", %" << SCCX86Register(dest, this->getSize()).getName();
-    out << std::endl;
+void SCCX86Register::moveTo(std::ostream& out,
+                            SCCX86Register::SizeIndependentRegCode dest) {
+    out << "    " << X86InstructionHelper::movForSize(this->getSize()) << "    "
+        << "%" << getName() << ", %"
+        << SCCX86Register(dest, this->getSize()).getName() << std::endl;
 }
 
 /**
  * Move this register to another location
  * @remark would modify this
  */
-void SCCX86Register::moveTo(std::ostream& out, SCCDataLocation* dest){
-    switch (this->_actualRegCode & 0x3)
-    {
-        case 3: // 1 byte
-        out << "    movb    ";break;
-        case 2: // 2 byte
-        out << "    movw    ";break;
-        case 1: // 4 byte
-        out << "    movl    ";break;
-        default: // 8 byte
-        out << "    movq    ";break;
-    }
-    out << "%" << getName();
-    out << ", " << dest->generateAccess();
-    out << std::endl;
+void SCCX86Register::moveTo(std::ostream& out, SCCDataLocation* dest) {
+    out << "    " << X86InstructionHelper::movForSize(this->getSize()) << "    "
+        << "%" << getName() << ", " << dest->generateAccess() << std::endl;
 }
 
 unsigned char SCCX86Register::getSize() {
