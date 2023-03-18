@@ -19,7 +19,7 @@ namespace SCCStackManager {
         !-- This RBP -- position 0 for this class
             Spilled Args (Multiple of 8 bytes)
             Stack Variables (May not be all used, anyway)
-            // align this to 16 bytes just because
+            // align this to 16 bytes
         -- RSP when func start --
             Spilled Registers
             Args for called func (need to be 16 byte align)
