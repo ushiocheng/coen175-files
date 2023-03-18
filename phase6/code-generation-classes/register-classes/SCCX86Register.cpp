@@ -47,8 +47,10 @@ bool SCCX86Register::conflictsWith(SCCX86Register that) {
 }
 
 int SCCX86Register::actualRegCode() const { return _actualRegCode; }
-SizeIndependentRegCode SCCX86Register::siRegCode() const {
-    if (_actualRegCode < X86Reg::RSP) return _actualRegCode << 2;
+
+SCCX86Register::SizeIndependentRegCode SCCX86Register::siRegCode() const {
+    if (_actualRegCode < X86Reg::RSP)
+        return (SizeIndependentRegCode)(_actualRegCode << 2);
     switch (_actualRegCode) {
         case X86Reg::RSP:
             return SizeIndependentRegCode::RSP;
@@ -59,11 +61,11 @@ SizeIndependentRegCode SCCX86Register::siRegCode() const {
     }
 }
 
-inline const char* SCCX86Register::getName() {
+const char* SCCX86Register::getName() {
     return X86Reg::nameOf(((X86Reg::Reg)this->_actualRegCode));
 }
 
-inline const char* SCCX86Register::get64bitName() {
+const char* SCCX86Register::get64bitName() {
     if (_actualRegCode >= X86Reg::RSP) {
         return getName();
     }
@@ -126,3 +128,12 @@ unsigned char SCCX86Register::getSize() {
 }
 
 SCCX86Register::~SCCX86Register() {}
+
+SCCX86Register getRegForFPArgc() { return SCCX86Register(SCCX86Register::AX); }
+SCCX86Register getRegForArg0() { return SCCX86Register(SCCX86Register::DI); }
+SCCX86Register getRegForArg1() { return SCCX86Register(SCCX86Register::SI); }
+SCCX86Register getRegForArg2() { return SCCX86Register(SCCX86Register::DX); }
+SCCX86Register getRegForArg3() { return SCCX86Register(SCCX86Register::CX); }
+SCCX86Register getRegForArg4() { return SCCX86Register(SCCX86Register::R8); }
+SCCX86Register getRegForArg5() { return SCCX86Register(SCCX86Register::R9); }
+SCCX86Register getRegForRet() { return SCCX86Register(SCCX86Register::AX); }

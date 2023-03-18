@@ -1,5 +1,7 @@
 #include "SCCStackManager.hpp"
 
+#include <cassert>
+
 #include "../../GlobalConfig.hpp"
 
 namespace SCCStackManager {

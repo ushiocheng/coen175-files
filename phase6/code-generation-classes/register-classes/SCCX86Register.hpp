@@ -68,12 +68,12 @@ class SCCX86Register {
     /**
      * get name of this register
      */
-    inline const char* getName();
+    const char* getName();
 
     /**
      * get name of 64 bit version of this register
      */
-    inline const char* get64bitName();
+    const char* get64bitName();
 
     /**
      * Cast this register to a specific size and sign extend as needed
@@ -100,13 +100,13 @@ class SCCX86Register {
     ~SCCX86Register();
 };
 
-SCCX86Register getRegForFPArgc() { return SCCX86Register(SCCX86Register::AX); }
-SCCX86Register getRegForArg0() { return SCCX86Register(SCCX86Register::DI); }
-SCCX86Register getRegForArg1() { return SCCX86Register(SCCX86Register::SI); }
-SCCX86Register getRegForArg2() { return SCCX86Register(SCCX86Register::DX); }
-SCCX86Register getRegForArg3() { return SCCX86Register(SCCX86Register::CX); }
-SCCX86Register getRegForArg4() { return SCCX86Register(SCCX86Register::R8); }
-SCCX86Register getRegForArg5() { return SCCX86Register(SCCX86Register::R9); }
-SCCX86Register getRegForRet() { return SCCX86Register(SCCX86Register::AX); }
+SCCX86Register getRegForFPArgc();
+SCCX86Register getRegForArg0();
+SCCX86Register getRegForArg1();
+SCCX86Register getRegForArg2();
+SCCX86Register getRegForArg3();
+SCCX86Register getRegForArg4();
+SCCX86Register getRegForArg5();
+SCCX86Register getRegForRet();
 
 #endif  // SCC_X86_REGISTER_HPP
