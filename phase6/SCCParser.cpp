@@ -68,7 +68,7 @@ int main() {
 #ifdef DUMP_SYMBOL_TABLE
     globalScope->_dump();
 #endif
-    delete astRoot;
+    // delete astRoot;
 }
 
 /**

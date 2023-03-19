@@ -12,7 +12,7 @@
 #include "../../semantic-classes/SCCType.hpp"
 
 #ifdef DEBUG
-#define DEBUG_PRINT_FUNC_TRACE_FLG
+// #define DEBUG_PRINT_FUNC_TRACE_FLG
 #define PRINT_IF_DEBUG(sth) std::cout << "[DEBUG] " << sth << std::endl;
 #else
 #define PRINT_IF_DEBUG(sth) /* debug print: sth */
@@ -231,7 +231,7 @@ SCCType typeOfBinaryExpression(SCC::SCCBinaryOperation op, SCCType operand1,
     switch (op) {
         case SCC::OP_OR:
         case SCC::OP_AND:
-            PRINT_IF_DEBUG("Handeling OR/AND");
+            // PRINT_IF_DEBUG("Handeling OR/AND");
             if (!(operand1.isPredicate() && operand2.isPredicate())) {
                 printAndReport("Phase4: OP_OR/OP_AND arg not predicate",
                                EXP_INV_OP_BIN, binaryOperatorStr[op]);
@@ -240,7 +240,7 @@ SCCType typeOfBinaryExpression(SCC::SCCBinaryOperation op, SCCType operand1,
             return SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, nullptr, false);
         case SCC::OP_EQ:
         case SCC::OP_NEQ:
-            PRINT_IF_DEBUG("Handeling EQ/NEQ");
+            // PRINT_IF_DEBUG("Handeling EQ/NEQ");
             if (!operand1.isCompatible(operand2)) {
                 printAndReport("Phase4: ops not comparable.", EXP_INV_OP_BIN,
                                binaryOperatorStr[op]);
@@ -251,7 +251,7 @@ SCCType typeOfBinaryExpression(SCC::SCCBinaryOperation op, SCCType operand1,
         case SCC::OP_GT:
         case SCC::OP_LE:
         case SCC::OP_GE:
-            PRINT_IF_DEBUG("Handeling comparators");
+            // PRINT_IF_DEBUG("Handeling comparators");
             //! [spec] op1 and op2 MUST both be numeric or identital predicate
             //! types, after promotion
             if (!((operand1.isNumeric() && operand2.isNumeric()) ||
@@ -262,7 +262,7 @@ SCCType typeOfBinaryExpression(SCC::SCCBinaryOperation op, SCCType operand1,
             }
             return SCCType(SCCType::INT, SCCType::SCALAR, 0, 0, nullptr, false);
         case SCC::OP_MINUS:
-            PRINT_IF_DEBUG("Handeling MINUS");
+            // PRINT_IF_DEBUG("Handeling MINUS");
             //! [spec] `ptr(T)-ptr(T)` OR `ptr(T)-num`
             //! where T is not VOID (T can be ptr(VOID))
             //! [spec] `num-num`
@@ -275,7 +275,7 @@ SCCType typeOfBinaryExpression(SCC::SCCBinaryOperation op, SCCType operand1,
             }
             //* Intentional fall though for arithmatic op & type checking
         case SCC::OP_ADD:
-            PRINT_IF_DEBUG("Handeling MINUS/ADD");
+            // PRINT_IF_DEBUG("Handeling MINUS/ADD");
             //! [spec] `num+ptr(T)` OR `ptr(T)+num`
             //! where T is not VOID (T can be ptr(VOID))
             //! [spec] `num+num`
@@ -294,7 +294,7 @@ SCCType typeOfBinaryExpression(SCC::SCCBinaryOperation op, SCCType operand1,
         case SCC::OP_MUL:
         case SCC::OP_DIV:
         case SCC::OP_MOD:
-            PRINT_IF_DEBUG("Handeling MINUS/ADD/MUL/DIV/MOD");
+            // PRINT_IF_DEBUG("Handeling MINUS/ADD/MUL/DIV/MOD");
             //! [spec] op1 & op2 both num
             //! + - * / % shared code region for numeric arithmatic operation
             if (!(operand1.isNumeric() && operand2.isNumeric())) {
@@ -312,7 +312,7 @@ SCCType typeOfBinaryExpression(SCC::SCCBinaryOperation op, SCCType operand1,
                                false);
             }
         case SCC::OP_SUBSCRIPT:
-            PRINT_IF_DEBUG("Handeling SUBSCRIPT");
+            // PRINT_IF_DEBUG("Handeling SUBSCRIPT");
             //! [spec] op1 must be ptr(T) where T is not void, op2 must be num
             if (!(operand1.isDereferencablePtr() && operand2.isNumeric())) {
                 printAndReport("Phase4: ops not compatible with []",

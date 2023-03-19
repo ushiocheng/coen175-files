@@ -25,7 +25,7 @@ class CFSIf : public CtrFlowStmt {
     void generateStringLiterals(std::ostream& out) const {
         expr1->generateStringLiterals(out);
         stmt1->generateStringLiterals(out);
-        stmt2->generateStringLiterals(out);
+        if (stmt2) stmt2->generateStringLiterals(out);
     }
     void generateCode(std::ostream& out) const {
         // TODO

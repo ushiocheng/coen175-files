@@ -1,8 +1,10 @@
 #if !defined(SCC_DATA_HPP)
 #define SCC_DATA_HPP
 
+#include <cassert>
 #include <iostream>
 
+#include "../../GlobalConfig.hpp"
 #include "../data-location-classes/SCCDataLocation.hpp"
 #include "../register-classes/SCCX86Register.hpp"
 
@@ -19,6 +21,16 @@ class SCCData {
     SCCDataLocation* _location;
 
    public:
+    enum DataType {
+        Arguments,
+        NumericLiteral,
+        StringLiteral,
+        StackVariable,
+        StaticVariable,
+        TempValue,
+        Indirect
+    };
+
     SCCData(unsigned char size);
 
     virtual ~SCCData();
@@ -31,16 +43,17 @@ class SCCData {
     void setLocation(SCCDataLocation* newLocation) {
         this->_location = newLocation;
     }
+    virtual DataType ident() = 0;
 
     //! Interfaces
 
     /**
      * Load this Data to a specific register
-     * Overrides _placeInSpecificRegister Flag
      */
     virtual void loadTo(std::ostream& out,
                         SCCX86Register::SizeIndependentRegCode regCode) = 0;
 
+    virtual bool requireMemoryAccess() = 0;
     /**
      * Generate access to this data
      * @remark this should not be used to generate LValue access

@@ -3,27 +3,85 @@
 #include <string>
 #include <vector>
 
+#include "../../code-generation-classes/data-classes/SCCData.hpp"
+#include "../../code-generation-classes/data-classes/SCCDataNumericLiteral.hpp"
+#include "../../code-generation-classes/data-classes/SCCDataStackVariable.hpp"
+#include "../../code-generation-classes/data-classes/SCCDataStaticVariable.hpp"
 #include "../../code-generation-classes/data-classes/SCCDataStringLiteral.hpp"
+#include "../../code-generation-classes/data-classes/SCCDataTempValue.hpp"
+#include "../../code-generation-classes/data-classes/SCCDataWrapper.hpp"
 #include "../../code-generation-classes/label-classes/SCCStringLiteralHelper.hpp"
+#include "../../code-generation-classes/register-classes/SCCRegisterManager.hpp"
+#include "../../code-generation-classes/stack-classes/SCCStackManager.hpp"
 #include "../../exceptions/SCCError.hpp"
 #include "../../semantic-classes/SCCSymbol.hpp"
 #include "../SCCASTExpression.hpp"
 
 SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeTermFuncCall::generateCode(
     std::ostream& out) const {
-    // TODO
+    std::vector<SCCData*> paramEvalResults;
+    for (SCCASTClasses::Expression* paramExpr : *paramList) {
+        paramEvalResults.push_back(paramExpr->generateCodeAndReturnValue(out));
+    }
+    // Make sure all VReg are on stack
+    SCCRegisterManager::preemptCallerSaves(out);
+    //! setup stack frame
+    size_t funcCallBasePtr = SCCStackManager::currentRSP;
+    if (paramEvalResults.size() > 6) {
+        if (paramEvalResults.size() & 0x1) {
+            if (!(SCCStackManager::currentRSP % 16)) {
+                SCCStackManager::pushNullArg(out);
+            }
+        }
+        for (size_t i = paramEvalResults.size(); i >= 6; i--) {
+            auto paramVal = paramEvalResults.at(i);
+            // Push all paramVal>=6 to stack
+            if (paramVal->requireMemoryAccess()) {
+                paramVal->loadTo(out, SCCX86Register::AX);
+                SCCStackManager::pushRegister(
+                    out, SCCX86Register(SCCX86Register::AX));
+            } else {
+                out << "    pushq   " << paramVal->access();
+                SCCStackManager::currentRSP += 8;
+            }
+        }
+    } else {
+        SCCStackManager::alignTo16(out);
+    }
+    for (size_t i = 0; i < 6; i++) {
+        if (i >= paramEvalResults.size()) break;
+        auto paramVal = paramEvalResults.at(i);
+        SCCRegisterManager::useReg(out, SCCX86Register(getRegForArg(i)));
+        paramVal->loadTo(out, getRegForArg(i));
+    }
+    //! Generate Call
+    out << "    call    " << this->function->id() << std::endl;
+    //! Cleanup params
+    for (auto paramVal : paramEvalResults) {
+        delete paramVal;
+    }
+    paramEvalResults.empty();
+    //! Cleanup Stack and handle return Value
+    SCCRegisterManager::releaseCallerSaves(out);
+    // SCCRegisterManager::useReg(out, SCCX86Register(getRegForRet()));
+    SCCStackManager::resetRSPTo(out, funcCallBasePtr);
+    SCCType funcType = this->function->type();
+    funcType.promoteFunc();
+    if (funcType.sizeOf() == 0) return nullptr;
+    return new SCCDataTempValue(
+        SCCX86Register(getRegForRet(), funcType.sizeOf()));
 }
 
 SCCData*
 SCCASTClasses::ExprTreeClasses::ExprTreeNodeTermLiteralChar::generateCode(
     std::ostream& out) const {
-    // TODO
+    return new SCCDataNumericLiteral(1, this->_valueOfLiteral);
 }
 
 SCCData*
 SCCASTClasses::ExprTreeClasses::ExprTreeNodeTermLiteralNumber::generateCode(
     std::ostream& out) const {
-    // TODO
+    return new SCCDataNumericLiteral(this->getType().sizeOf(), this->_value);
 }
 
 SCCData*
@@ -34,12 +92,12 @@ SCCASTClasses::ExprTreeClasses::ExprTreeNodeTermLiteralString::generateCode(
 
 SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeTermVariable::generateCode(
     std::ostream& out) const {
-    // TODO
+    return new SCCDataWrapper(this->_symbol->data);
 }
 
 SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeTermVariable::generateCode(
     std::ostream& out, bool retLValue) const {
-    // TODO
+    return this->generateCode(out);
 }
 
 void SCCASTClasses::ExprTreeClasses::ExprTreeNodeTermFuncCall::
@@ -64,9 +122,12 @@ SCCASTClasses::ExprTreeClasses::ExprTreeNodeTermFuncCall::
 SCCASTClasses::ExprTreeClasses::ExprTreeNodeTermFuncCall::
     ~ExprTreeNodeTermFuncCall() {
     for (Expression* nodes : *paramList) {
+        nodes->deleteInnerNode();
         delete nodes;
     }
+    paramList->clear();
     delete paramList;
+    paramList = nullptr;
 }
 
 void SCCASTClasses::ExprTreeClasses::ExprTreeNodeTermFuncCall::

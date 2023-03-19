@@ -24,3 +24,7 @@ std::string SCCDataNumericLiteral::access() {
     ss << "$" << this->_value;
     return ss.str();
 }
+
+SCCDataNumericLiteral::DataType SCCDataNumericLiteral::ident() {
+    return DataType::NumericLiteral;
+}

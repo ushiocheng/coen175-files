@@ -31,14 +31,16 @@ bool SCCASTClasses::Assignment::performTypeChecking() const {
 }
 
 void SCCASTClasses::Assignment::generateCode(std::ostream& out) const {
-    SCCData* lhsRes = lhs->generateCode(out, true);
     SCCData* rhsRes = rhs->generateCode(out);
     SCCX86Register tmp = SCCRegisterManager::useAnyReg(out, rhsRes->size());
     rhsRes->loadTo(out, tmp.siRegCode());
-    if (rhsRes->size() != lhsRes->size()) {
-        tmp.castTo(out, lhsRes->size());
+    if (rhsRes->size() != lhs->getType().sizeOf()) {
+        tmp.castTo(out, lhs->getType().sizeOf());
     }
+    SCCData* lhsRes = lhs->generateCode(out, true);
     out << "    " << X86InstructionHelper::movForSize(lhsRes->size()) << "    "
-        << "%" << tmp.getName() << ", " << lhsRes->location()->generateAccess();
+        << "%" << tmp.getName() << ", " << lhsRes->access();
     SCCRegisterManager::releaseReg(tmp);
+    delete lhsRes;
+    delete rhsRes;
 }

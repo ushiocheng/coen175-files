@@ -10,3 +10,15 @@ void SCCDataTempValue::loadTo(std::ostream& out,
 std::string SCCDataTempValue::access() {
     return this->vreg->location->generateAccess();
 }
+
+SCCDataTempValue::DataType SCCDataTempValue::ident() {
+    return DataType::TempValue;
+}
+
+SCCDataTempValue::~SCCDataTempValue() {
+    if (vreg) {
+        vreg->release();
+        delete vreg;
+        vreg = nullptr;
+    }
+}

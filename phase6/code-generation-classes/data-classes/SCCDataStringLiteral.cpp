@@ -9,3 +9,7 @@ void SCCDataStringLiteral::loadTo(
 }
 
 std::string SCCDataStringLiteral::access() { return std::string(this->_label); }
+
+SCCDataStringLiteral::DataType SCCDataStringLiteral::ident() {
+    return DataType::StringLiteral;
+}

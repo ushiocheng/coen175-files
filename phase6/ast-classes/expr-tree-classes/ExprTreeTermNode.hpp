@@ -94,7 +94,9 @@ class ExprTreeNodeTermLiteralString : public ExprTreeTermNode {
     std::string _label;
 
    public:
-    ExprTreeNodeTermLiteralString(const std::string& value) : _value(value) {}
+    ExprTreeNodeTermLiteralString(const std::string& value) {
+        this->_value = std::string(value);
+    }
     NodeType identify() const { return T_LITERAL_STR; }
     // Code generation Interfaces
     void generateStringLiterals(std::ostream& out) const;

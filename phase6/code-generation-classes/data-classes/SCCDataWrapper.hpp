@@ -1,26 +1,29 @@
-#if !defined(SCC_DATA_ARGUMENT_HPP)
-#define SCC_DATA_ARGUMENT_HPP
+#if !defined(SCC_DATA_WRAPPER_HPP)
+#define SCC_DATA_WRAPPER_HPP
 
 #include "SCCData.hpp"
 
-class SCCDataArgument : public SCCData {
+class SCCDataWrapper : public SCCData {
    private:
+    SCCData* _actual;
+
    public:
-    SCCDataArgument(unsigned char size, size_t argNum) : SCCData(size) {
-        this->_location =
-            new SCCDataLocationStackPositiveOffset(16 + 8 * (argNum - 6));
-    }
+    SCCDataWrapper(SCCData* original);
+    ~SCCDataWrapper();
 
     DataType ident();
+
     //! Implement Interfaces
 
     /**
      * Load this Data to a specific register
+     * Overrides _placeInSpecificRegister Flag
      */
     void loadTo(std::ostream& out,
                 SCCX86Register::SizeIndependentRegCode regCode);
 
-    bool requireMemoryAccess() { return true; }
+    bool requireMemoryAccess();
+
     /**
      * Generate access to this data
      * @remark this should not be used to generate LValue access
@@ -28,4 +31,4 @@ class SCCDataArgument : public SCCData {
     std::string access();
 };
 
-#endif  // SCC_DATA_ARGUMENT_HPP
+#endif  // SCC_DATA_WRAPPER_HPP

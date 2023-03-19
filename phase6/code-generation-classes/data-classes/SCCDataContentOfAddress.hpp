@@ -1,17 +1,15 @@
-#if !defined(SCC_DATA_STRING_LITERAL_HPP)
-#define SCC_DATA_STRING_LITERAL_HPP
-
-#include <string>
+#if !defined(SCC_DATA_CONTENT_OF_ADDRESS_HPP)
+#define SCC_DATA_CONTENT_OF_ADDRESS_HPP
 
 #include "SCCData.hpp"
 
-class SCCDataStringLiteral : public SCCData {
+class SCCDataContentOfAddress : public SCCData {
    private:
-    std::string _label;
+    SCCData* _address;
 
    public:
-    SCCDataStringLiteral(unsigned char size, const std::string& label)
-        : SCCData(size), _label(label) {}
+    SCCDataContentOfAddress(unsigned char size, SCCData* address);
+    ~SCCDataContentOfAddress();
 
     DataType ident();
 
@@ -24,13 +22,16 @@ class SCCDataStringLiteral : public SCCData {
     void loadTo(std::ostream& out,
                 SCCX86Register::SizeIndependentRegCode regCode);
 
-    bool requireMemoryAccess() { return true; }
+    bool requireMemoryAccess();
 
     /**
      * Generate access to this data
      * @remark this should not be used to generate LValue access
      */
     std::string access();
+
+    void loadAddrTo(std::ostream& out,
+                    SCCX86Register::SizeIndependentRegCode regCode);
 };
 
-#endif  // SCC_DATA_STRING_LITERAL_HPP
+#endif  // SCC_DATA_CONTENT_OF_ADDRESS_HPP

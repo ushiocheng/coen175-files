@@ -12,7 +12,7 @@
 #include "../../semantic-classes/SCCType.hpp"
 
 #ifdef DEBUG
-#define DEBUG_PRINT_FUNC_TRACE_FLG
+// #define DEBUG_PRINT_FUNC_TRACE_FLG
 #define PRINT_IF_DEBUG(sth) std::cout << "[DEBUG] " << sth << std::endl;
 #else
 #define PRINT_IF_DEBUG(sth) /* debug print: sth */

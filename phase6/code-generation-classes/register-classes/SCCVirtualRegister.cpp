@@ -20,6 +20,8 @@ void SCCVirtualRegister::loadToRegister(std::ostream& out, SCCX86Register reg) {
     SCCRegisterManager::loadVReg(out, this, reg);
 }
 
+void SCCVirtualRegister::release() { SCCRegisterManager::releaseVReg(this); }
+
 /**
  * Cast this register to a specific size and sign extend as needed
  */

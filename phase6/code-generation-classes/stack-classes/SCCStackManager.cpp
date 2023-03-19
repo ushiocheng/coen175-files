@@ -34,8 +34,12 @@ void generatePrelogue(std::ostream& out, size_t funcStackSize) {
     out << "    # generating func Prologue" << endl;
     out << "    pushq   %rbp" << endl;
     out << "    movq    %rsp, %rbp" << endl;
-    out << "    subq    $" << funcStackSize
-        << ", %rsp \t\t# Allocate Stack Space" << endl;
+    if (funcStackSize) {
+        out << "    subq    $" << funcStackSize
+            << ", %rsp \t\t# Allocate Stack Space" << endl;
+    } else {
+        out << "    # not creating stack space of 0" << endl;
+    }
     alignTo16(out);
 }
 
@@ -80,4 +84,13 @@ void generateEpilogue(std::ostream& out) {
     out << "    ret" << endl;
     currentRSP = 0;
 }
+
+void resetRSPTo(std::ostream& out, size_t newRSP) {
+    using std::endl;
+    if (newRSP == currentRSP) return;
+    assert(newRSP < currentRSP);
+    out << "    # resetting RSP to RBP-" << newRSP << endl;
+    out << "    addq    $" << currentRSP - newRSP << ", %rsp" << endl;
+}
+
 }  // namespace SCCStackManager

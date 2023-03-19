@@ -50,6 +50,8 @@ void pushNullArg(std::ostream& out);
  */
 void alignTo16(std::ostream& out);
 
+void resetRSPTo(std::ostream& out, size_t newRSP);
+
 /**
  * Generate function epilogue
  */

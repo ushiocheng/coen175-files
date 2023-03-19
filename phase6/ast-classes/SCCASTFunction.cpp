@@ -52,5 +52,10 @@ void SCCASTClasses::Function::generateCode(std::ostream& out) const {
     this->innerBlock->generateCode(out);
     out << ".exit." << func->id() << ":" << endl;
     SCCStackManager::generateEpilogue(out);
+    //! Release VRegs for params
+    for (auto param : params) {
+        delete param->data;
+        param->data = nullptr;
+    }
     SCCRegisterManager::exitFunc();
 }

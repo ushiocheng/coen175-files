@@ -36,7 +36,7 @@ void useReg(std::ostream& out, SCCX86Register reg);
 SCCX86Register useAnyReg(std::ostream& out, unsigned char size);
 void releaseReg(SCCX86Register reg);
 
-void holdCallerSaves(std::ostream& out);
+void preemptCallerSaves(std::ostream& out);
 void releaseCallerSaves(std::ostream& out);
 
 SCCVirtualRegister* allocateAndHoldVReg(std::ostream& out, unsigned char size);

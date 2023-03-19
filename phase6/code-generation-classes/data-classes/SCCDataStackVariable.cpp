@@ -12,3 +12,7 @@ void SCCDataStackVariable::loadTo(
 std::string SCCDataStackVariable::access() {
     return this->_location->generateAccess();
 }
+
+SCCDataStackVariable::DataType SCCDataStackVariable::ident() {
+    return DataType::StackVariable;
+}

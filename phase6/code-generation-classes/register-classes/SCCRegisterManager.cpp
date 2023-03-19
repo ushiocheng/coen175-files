@@ -11,6 +11,10 @@
 #include "SCCVirtualRegister.hpp"
 #include "SCCX86Register.hpp"
 
+#ifdef DEBUG
+#include <iostream>
+#endif
+
 /**
  * (Static) Register Manager
  * Manages register usage, VReg
@@ -96,6 +100,9 @@ RegTableEntry* findRegTableEntry(
             return i;
         }
     }
+#ifdef DEBUG
+    std::cerr << "Can't find Reg " << regCode << std::endl;
+#endif
     assert(false);
     return nullptr;
 }
@@ -130,7 +137,7 @@ void moveVReg(std::ostream& out, RegTableEntry* regToMove) {
     assert(nextAvailableReg != regToMove);
     //! Move regToMove to nextAvailableReg
     SCCDataLocationRegister* oldLocation =
-        ((SCCDataLocationRegister*)nextAvailableReg->vRegPtr->location);
+        ((SCCDataLocationRegister*)regToMove->vRegPtr->location);
     SCCDataLocationRegister* newLocation =
         new SCCDataLocationRegister(SCCX86Register(
             nextAvailableReg->regCode, oldLocation->reg().getSize()));
@@ -172,9 +179,24 @@ void enterFunc(bool useCalleeSave) {
         physicalRegEnd = _physicalRegs + 9;
     }
     nextAvailableReg = physicalRegStart;
+//! Check State
+#ifdef DEBUG
+    for (auto rtei = physicalRegStart; rtei < physicalRegEnd; rtei++) {
+        assert(!rtei->regInUse);
+        assert(!rtei->vRegPtr);
+    }
+#endif
 }
 
-void exitFunc() {}
+void exitFunc() {
+    for (auto rtei = physicalRegStart; rtei < physicalRegEnd; rtei++) {
+        if (rtei->regInUse) rtei->regInUse = false;
+        if (rtei->vRegPtr) {
+            // There should not be vregs hanging around
+            assert(false);
+        }
+    }
+}
 
 //! ========== Register Methods ==========
 
@@ -205,23 +227,22 @@ SCCX86Register useAnyReg(std::ostream& out, unsigned char size) {
 
 void releaseReg(SCCX86Register reg) {
     auto rte = findRegTableEntry(reg.siRegCode());
-    assert(rte->regInUse);
-    assert(!rte->preemptable);
-    assert(!rte->movable);
-    assert(!rte->vRegPtr);
+    // Don't assert this since release Caller saves does not guarrantee that
+    // regs are marked to be in use assert(rte->regInUse);
+    // assert(!rte->preemptable);
+    // assert(!rte->movable);
+    // assert(!rte->vRegPtr);
     rte->regInUse = false;
 }
 
-void holdCallerSaves(std::ostream& out) {
-    useReg(out, SCCX86Register(SCCX86Register::R11));
-    useReg(out, SCCX86Register(SCCX86Register::R10));
-    useReg(out, SCCX86Register(SCCX86Register::R9));
-    useReg(out, SCCX86Register(SCCX86Register::R8));
-    useReg(out, SCCX86Register(SCCX86Register::CX));
-    useReg(out, SCCX86Register(SCCX86Register::DX));
-    useReg(out, SCCX86Register(SCCX86Register::SI));
-    useReg(out, SCCX86Register(SCCX86Register::DI));
-    useReg(out, SCCX86Register(SCCX86Register::AX));
+void preemptCallerSaves(std::ostream& out) {
+    // Preempt VRegs in caller saves
+    for (RegTableEntry* i = _physicalRegs; i < _physicalRegs + 9; i++) {
+        if (i->regInUse && i->preemptable && i->vRegPtr) preemptVReg(out, i);
+        i->regInUse = false;
+        i->preemptable = false;
+        i->movable = false;
+    }
 }
 
 void releaseCallerSaves(std::ostream& out) {
@@ -254,6 +275,7 @@ SCCVirtualRegister* createVRegFromReg(SCCX86Register reg) {
     i->regInUse = true;
     i->preemptable = false;
     i->movable = true;
+    i->vRegPtr = vreg;
     return vreg;
 }
 
@@ -306,22 +328,27 @@ void loadVReg(std::ostream& out, SCCVirtualRegister* reg) {
     advanceNextAvailableReg();
 }
 
+/**
+ * load VReg in specific register
+ * @remark destination register is not marked as used by this func
+ */
 void loadVReg(std::ostream& out, SCCVirtualRegister* reg, SCCX86Register dest) {
     auto destRTE = findRegTableEntry(dest.siRegCode());
+    assert(destRTE->regInUse);  // Reg must be manually reserved before loading
     SCCDataLocation* newLocation = new SCCDataLocationRegister(
         SCCX86Register(destRTE->regCode, reg->getSize()));
 
     if (!reg->locationValid) {
         // If Vreg is not created, find reg and use it as vreg location
-        if (destRTE->regInUse) {
-            // ! Two non-preemptable allocation at same physical
-            // register
-            assert(destRTE->preemptable || destRTE->movable);
-            if (destRTE->preemptable)
-                preemptVReg(out, destRTE);
-            else
-                moveVReg(out, destRTE);
-        }
+        // if (destRTE->regInUse) {
+        //     // ! Two non-preemptable allocation at same physical
+        //     // register
+        //     assert(destRTE->preemptable || destRTE->movable);
+        //     if (destRTE->preemptable)
+        //         preemptVReg(out, destRTE);
+        //     else
+        //         moveVReg(out, destRTE);
+        // }
         reg->locationValid = true;
         return;
     } else if (!reg->location->requireMemoryAccess()) {
@@ -362,6 +389,7 @@ void loadVReg(std::ostream& out, SCCVirtualRegister* reg, SCCX86Register dest) {
 void releaseVReg(SCCVirtualRegister* reg) {
     auto rte = findRegTableEntry(reg);
     rte->preemptable = true;
+    rte->vRegPtr = nullptr;
 }
 
 }  // namespace SCCRegisterManager

@@ -28,11 +28,11 @@ SCCX86Register::SCCX86Register(SizeIndependentRegCode regCode,
         }
     }
     if (size == 1) {
-        this->_actualRegCode = regCode << 2 + 3;
+        this->_actualRegCode = (regCode << 2) + 3;
     } else if (size == 2) {
-        this->_actualRegCode = regCode << 2 + 2;
-    } else if (size == 2) {
-        this->_actualRegCode = regCode << 2 + 1;
+        this->_actualRegCode = (regCode << 2) + 2;
+    } else if (size == 4) {
+        this->_actualRegCode = (regCode << 2) + 1;
     } else {
         assert(size == 8);
         this->_actualRegCode = regCode << 2;
@@ -50,7 +50,7 @@ int SCCX86Register::actualRegCode() const { return _actualRegCode; }
 
 SCCX86Register::SizeIndependentRegCode SCCX86Register::siRegCode() const {
     if (_actualRegCode < X86Reg::RSP)
-        return (SizeIndependentRegCode)(_actualRegCode << 2);
+        return (SizeIndependentRegCode)(_actualRegCode >> 2);
     switch (_actualRegCode) {
         case X86Reg::RSP:
             return SizeIndependentRegCode::RSP;

@@ -29,14 +29,16 @@ rm test-output/*
 cd examples
 
 for f in *.c; do
-    if [[ ! "a-li.c" =~ ".*-lib\.c" ]]; then
+    if [[ ! $f =~ ".*-lib\.c" ]]; then
         BASE=$(basename $f .c)
-        printf "\x1b[102;30m[INFO]\x1b[0m Testing $BASE ... \n"
+        printf "\x1b[102;30m[INFO]\x1b[0m Testing $BASE ... \t"
         ulimit -t 1
         ../../phase6/scc \
             <$BASE.c \
             >../test-output/$BASE.s \
-            2>../test-output/$BASE.compile.err
+            2>../test-output/$BASE.compile.err &&
+            printf "Finished\n" ||
+            printf "\x1b[103;30m[WARN]\x1b[0m Finished with Error\n"
     fi
 done
 

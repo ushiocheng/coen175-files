@@ -41,7 +41,6 @@ class CFSReturn : public CtrFlowStmt {
     // Code generation Interfaces
     void generateStringLiterals(std::ostream& out) const {
         expr1->generateStringLiterals(out);
-        enclosingBlock->generateStringLiterals(out);
     }
     void generateCode(std::ostream& out) const {
         // TODO

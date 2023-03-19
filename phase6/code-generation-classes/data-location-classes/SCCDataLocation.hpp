@@ -27,9 +27,8 @@ class SCCDataLocation {
 
 class SCCDataLocationStatic : public SCCDataLocation {
    private:
-    std::string _name;
-
    public:
+    std::string name;
     SCCDataLocationStatic(std::string name);
     bool requireMemoryAccess();
     LocationType ident();
@@ -40,11 +39,10 @@ class SCCDataLocationStatic : public SCCDataLocation {
 
 class SCCDataLocationStack : public SCCDataLocation {
    private:
+   public:
     // Offset from rbp
     // Variable is at -offset(rbp)
-    size_t _offset;
-
-   public:
+    size_t offset;
     SCCDataLocationStack(size_t offset);
     bool requireMemoryAccess();
     LocationType ident();

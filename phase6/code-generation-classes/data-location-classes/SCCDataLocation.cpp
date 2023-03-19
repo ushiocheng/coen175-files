@@ -6,8 +6,8 @@
 #include "../register-classes/SCCRegisterManager.hpp"
 #include "../register-classes/SCCX86Register.hpp"
 
-SCCDataLocationStatic::SCCDataLocationStatic(std::string name) : _name(name) {}
-SCCDataLocationStack::SCCDataLocationStack(size_t offset) : _offset(offset) {}
+SCCDataLocationStatic::SCCDataLocationStatic(std::string name) : name(name) {}
+SCCDataLocationStack::SCCDataLocationStack(size_t offset) : offset(offset) {}
 SCCDataLocationStackPositiveOffset::SCCDataLocationStackPositiveOffset(
     size_t offset)
     : _offset(offset) {}
@@ -15,10 +15,10 @@ SCCDataLocationRegister::SCCDataLocationRegister(SCCX86Register reg)
     : _register(reg) {}
 
 SCCDataLocation* SCCDataLocationStatic::copy() {
-    return new SCCDataLocationStatic(_name);
+    return new SCCDataLocationStatic(name);
 }
 SCCDataLocation* SCCDataLocationStack::copy() {
-    return new SCCDataLocationStack(_offset);
+    return new SCCDataLocationStack(offset);
 }
 SCCDataLocation* SCCDataLocationStackPositiveOffset::copy() {
     return new SCCDataLocationStackPositiveOffset(_offset);
@@ -41,10 +41,10 @@ SCCDataLocation::LocationType SCCDataLocationRegister::ident() {
     return Register;
 }
 
-std::string SCCDataLocationStatic::generateAccess() { return this->_name; }
+std::string SCCDataLocationStatic::generateAccess() { return this->name; }
 std::string SCCDataLocationStack::generateAccess() {
     std::stringstream ss;
-    ss << "-" << _offset << "(%rbp)";
+    ss << "-" << offset << "(%rbp)";
     return ss.str();
 }
 std::string SCCDataLocationStackPositiveOffset::generateAccess() {

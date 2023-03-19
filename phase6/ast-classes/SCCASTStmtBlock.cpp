@@ -1,11 +1,18 @@
 #include "SCCASTStmtBlock.hpp"
 
+#include "SCCASTExpression.hpp"
+
 SCCASTClasses::StmtBlock::StmtBlock(SCCScope* scope) : _scope(scope) {
     this->innerStatements = new std::vector<Statement*>();
 }
 
 SCCASTClasses::StmtBlock::~StmtBlock() {
-    for (Statement* stmt : *innerStatements) delete stmt;
+    for (Statement* stmt : *innerStatements) {
+        if (stmt->identify() == Statement::EXPR) {
+            ((Expression*)stmt)->deleteInnerNode();
+        }
+        delete stmt;
+    }
     delete innerStatements;
 }
 

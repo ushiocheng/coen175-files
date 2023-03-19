@@ -17,16 +17,18 @@ size_t labeluid = 0;
 std::string generateNewLabel(std::ostream& out, const char* postfix) {
     labeluid++;
     std::stringstream sstr;
-    sstr << ".L" << labeluid << "." << postfix;
+    sstr << ".L" << labeluid;
+    if (postfix[0] != '\0') sstr << "." << postfix;
     std::string tmp = sstr.str();
     out << tmp << ":" << std::endl;
     return tmp;
 }
 
-std::string reserveNewLabel(const char* postfix = "") {
+std::string reserveNewLabel(const char* postfix) {
     labeluid++;
     std::stringstream ss;
-    ss << ".L" << labeluid << "." << postfix;
+    ss << ".L" << labeluid;
+    if (postfix[0] != '\0') ss << "." << postfix;
     return ss.str();
 }
 

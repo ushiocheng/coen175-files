@@ -20,6 +20,14 @@ class SCCDataTempValue : public SCCData {
         this->vreg = SCCRegisterManager::createVRegFromReg(reg);
     }
 
+    SCCDataTempValue(const SCCDataTempValue& that) : SCCData(that._size) {
+        this->vreg = new SCCVirtualRegister(*(that.vreg));
+    }
+
+    ~SCCDataTempValue();
+
+    DataType ident();
+
     //! Implement Interfaces
 
     /**
@@ -29,11 +37,17 @@ class SCCDataTempValue : public SCCData {
     void loadTo(std::ostream& out,
                 SCCX86Register::SizeIndependentRegCode regCode);
 
+    bool requireMemoryAccess() {
+        return this->vreg->location->requireMemoryAccess();
+    }
+
     /**
      * Generate access to this data
      * @remark this should not be used to generate LValue access
      */
     std::string access();
+
+    SCCData* copy() const { return new SCCDataTempValue(*this); }
 };
 
 #endif  // SCC_DATA_TEMP_VALUE_HPP

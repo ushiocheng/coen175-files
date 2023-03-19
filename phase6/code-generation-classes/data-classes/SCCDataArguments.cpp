@@ -12,3 +12,7 @@ void SCCDataArgument::loadTo(std::ostream& out,
 std::string SCCDataArgument::access() {
     return this->_location->generateAccess();
 }
+
+SCCDataArgument::DataType SCCDataArgument::ident() {
+    return DataType::Arguments;
+}

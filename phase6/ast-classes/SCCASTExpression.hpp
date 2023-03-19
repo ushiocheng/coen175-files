@@ -12,28 +12,20 @@ class Expression : public Statement {
    public:
     ExprTreeClasses::ExprTreeNode* exprTreeRoot;
 
-    Expression(ExprTreeClasses::ExprTreeNode* exprTreeRoot)
-        : exprTreeRoot(exprTreeRoot) {}
-    ~Expression() { delete exprTreeRoot; }
+    Expression(ExprTreeClasses::ExprTreeNode* exprTreeRoot);
+    virtual ~Expression();
+    void deleteInnerNode();
 
-    StmtType identify() const { return StmtType::EXPR; }
+    StmtType identify() const;
 
-    bool performTypeChecking() const {
-        return exprTreeRoot->performTypeChecking();
-    }
+    bool performTypeChecking() const;
 
-    SCCType getType() const { return exprTreeRoot->getType(); }
+    SCCType getType() const;
 
     // Code generation Interfaces
-    void generateStringLiterals(std::ostream& out) const {
-        exprTreeRoot->generateStringLiterals(out);
-    }
-    void generateCode(std::ostream& out) const {
-        exprTreeRoot->generateCode(out);
-    }
-    SCCData* generateCodeAndReturnValue(std::ostream& out) const {
-        exprTreeRoot->generateCode(out);
-    }
+    void generateStringLiterals(std::ostream& out) const;
+    void generateCode(std::ostream& out) const;
+    SCCData* generateCodeAndReturnValue(std::ostream& out) const;
 };
 
 }  // namespace SCCASTClasses

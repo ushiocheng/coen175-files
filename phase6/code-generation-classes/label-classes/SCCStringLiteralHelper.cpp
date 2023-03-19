@@ -16,8 +16,12 @@ namespace SCCStringLiteralHelper {
 std::string generateStringLiteral(std::ostream& out, const std::string& value,
                                   const char* labelPostfix) {
     std::stringstream ss;
-    ss << "str." << labelPostfix;
-    // Label name strucure: .L<uid>.str.<strname>
+    if (labelPostfix[0] == '\0') {
+        ss << "str";
+    } else {
+        ss << "str." << labelPostfix;
+    }
+    // Label name strucure: .L<uid>.str(.<strname>)
     std::string label = SCCLabelHelper::generateNewLabel(out, ss.str().c_str());
     out << "\t.asciz \"" << value << "\"" << std::endl;
     return label;

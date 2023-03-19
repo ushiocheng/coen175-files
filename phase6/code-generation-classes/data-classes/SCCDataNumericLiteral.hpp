@@ -11,6 +11,8 @@ class SCCDataNumericLiteral : public SCCData {
     SCCDataNumericLiteral(unsigned char size, size_t value)
         : SCCData(size), _value(value) {}
 
+    DataType ident();
+
     //! Implement Interfaces
 
     /**
@@ -19,6 +21,8 @@ class SCCDataNumericLiteral : public SCCData {
      */
     void loadTo(std::ostream& out,
                 SCCX86Register::SizeIndependentRegCode regCode);
+
+    bool requireMemoryAccess() { return false; }
 
     /**
      * Generate access to this data
