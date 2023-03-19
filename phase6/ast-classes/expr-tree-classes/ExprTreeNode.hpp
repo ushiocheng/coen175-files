@@ -3,6 +3,8 @@
 
 #include "../../semantic-classes/SCCType.hpp"
 #include "NodeType.hpp"
+class SCCData;
+
 namespace SCCASTClasses {
 namespace ExprTreeClasses {
 
@@ -36,6 +38,12 @@ class ExprTreeNode {
         if (_typeOfNodeSet) return _typeOfNode;
         this->_checkAndSetTypeOfNode();
         return _typeOfNode;
+    }
+    // Code generation Interfaces
+    virtual void generateStringLiterals(std::ostream& out) const = 0;
+    virtual SCCData* generateCode(std::ostream& out) const = 0;
+    virtual SCCData* generateCode(std::ostream& out, bool retLValue) const {
+        return generateCode(out);
     }
 
    private:

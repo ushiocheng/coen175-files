@@ -22,6 +22,9 @@ class Statement {
      * @return true if no error is generated on type checking
      */
     virtual bool performTypeChecking() const = 0;
+    // Code generation Interfaces
+    virtual void generateStringLiterals(std::ostream& out) const = 0;
+    virtual void generateCode(std::ostream& out) const = 0;
 };
 
 }  // namespace SCCASTClasses

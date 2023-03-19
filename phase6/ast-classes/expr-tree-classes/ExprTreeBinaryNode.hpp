@@ -17,6 +17,11 @@ class ExprTreeBinaryNode : public ExprTreeNode {
         : arg1(arg1), arg2(arg2) {
         this->performTypeChecking();
     }
+    // Code generation Interfaces
+    void generateStringLiterals(std::ostream& out) const {
+        arg1->generateStringLiterals(out);
+        arg2->generateStringLiterals(out);
+    }
 };
 
 class ExprTreeNodeBinaryAdd : public ExprTreeBinaryNode {
@@ -24,6 +29,8 @@ class ExprTreeNodeBinaryAdd : public ExprTreeBinaryNode {
     ExprTreeNodeBinaryAdd(ExprTreeNode* arg1, ExprTreeNode* arg2)
         : ExprTreeBinaryNode(arg1, arg2) {}
     NodeType identify() const { return OP_ADD; }
+    // Code generation Interfaces
+    SCCData* generateCode(std::ostream& out) const;
 
    private:
     void _checkAndSetTypeOfNode() const;
@@ -33,6 +40,8 @@ class ExprTreeNodeBinaryAnd : public ExprTreeBinaryNode {
     ExprTreeNodeBinaryAnd(ExprTreeNode* arg1, ExprTreeNode* arg2)
         : ExprTreeBinaryNode(arg1, arg2) {}
     NodeType identify() const { return OP_AND; }
+    // Code generation Interfaces
+    SCCData* generateCode(std::ostream& out) const;
 
    private:
     void _checkAndSetTypeOfNode() const;
@@ -42,6 +51,8 @@ class ExprTreeNodeBinaryDiv : public ExprTreeBinaryNode {
     ExprTreeNodeBinaryDiv(ExprTreeNode* arg1, ExprTreeNode* arg2)
         : ExprTreeBinaryNode(arg1, arg2) {}
     NodeType identify() const { return OP_DIV; }
+    // Code generation Interfaces
+    SCCData* generateCode(std::ostream& out) const;
 
    private:
     void _checkAndSetTypeOfNode() const;
@@ -51,6 +62,8 @@ class ExprTreeNodeBinaryEQ : public ExprTreeBinaryNode {
     ExprTreeNodeBinaryEQ(ExprTreeNode* arg1, ExprTreeNode* arg2)
         : ExprTreeBinaryNode(arg1, arg2) {}
     NodeType identify() const { return OP_EQ; }
+    // Code generation Interfaces
+    SCCData* generateCode(std::ostream& out) const;
 
    private:
     void _checkAndSetTypeOfNode() const;
@@ -60,6 +73,8 @@ class ExprTreeNodeBinaryGE : public ExprTreeBinaryNode {
     ExprTreeNodeBinaryGE(ExprTreeNode* arg1, ExprTreeNode* arg2)
         : ExprTreeBinaryNode(arg1, arg2) {}
     NodeType identify() const { return OP_GE; }
+    // Code generation Interfaces
+    SCCData* generateCode(std::ostream& out) const;
 
    private:
     void _checkAndSetTypeOfNode() const;
@@ -69,6 +84,8 @@ class ExprTreeNodeBinaryGT : public ExprTreeBinaryNode {
     ExprTreeNodeBinaryGT(ExprTreeNode* arg1, ExprTreeNode* arg2)
         : ExprTreeBinaryNode(arg1, arg2) {}
     NodeType identify() const { return OP_GT; }
+    // Code generation Interfaces
+    SCCData* generateCode(std::ostream& out) const;
 
    private:
     void _checkAndSetTypeOfNode() const;
@@ -78,6 +95,8 @@ class ExprTreeNodeBinaryLE : public ExprTreeBinaryNode {
     ExprTreeNodeBinaryLE(ExprTreeNode* arg1, ExprTreeNode* arg2)
         : ExprTreeBinaryNode(arg1, arg2) {}
     NodeType identify() const { return OP_LE; }
+    // Code generation Interfaces
+    SCCData* generateCode(std::ostream& out) const;
 
    private:
     void _checkAndSetTypeOfNode() const;
@@ -87,6 +106,8 @@ class ExprTreeNodeBinaryLT : public ExprTreeBinaryNode {
     ExprTreeNodeBinaryLT(ExprTreeNode* arg1, ExprTreeNode* arg2)
         : ExprTreeBinaryNode(arg1, arg2) {}
     NodeType identify() const { return OP_LT; }
+    // Code generation Interfaces
+    SCCData* generateCode(std::ostream& out) const;
 
    private:
     void _checkAndSetTypeOfNode() const;
@@ -96,6 +117,8 @@ class ExprTreeNodeBinaryMinus : public ExprTreeBinaryNode {
     ExprTreeNodeBinaryMinus(ExprTreeNode* arg1, ExprTreeNode* arg2)
         : ExprTreeBinaryNode(arg1, arg2) {}
     NodeType identify() const { return OP_MINUS; }
+    // Code generation Interfaces
+    SCCData* generateCode(std::ostream& out) const;
 
    private:
     void _checkAndSetTypeOfNode() const;
@@ -105,6 +128,8 @@ class ExprTreeNodeBinaryMod : public ExprTreeBinaryNode {
     ExprTreeNodeBinaryMod(ExprTreeNode* arg1, ExprTreeNode* arg2)
         : ExprTreeBinaryNode(arg1, arg2) {}
     NodeType identify() const { return OP_MOD; }
+    // Code generation Interfaces
+    SCCData* generateCode(std::ostream& out) const;
 
    private:
     void _checkAndSetTypeOfNode() const;
@@ -114,6 +139,8 @@ class ExprTreeNodeBinaryMUL : public ExprTreeBinaryNode {
     ExprTreeNodeBinaryMUL(ExprTreeNode* arg1, ExprTreeNode* arg2)
         : ExprTreeBinaryNode(arg1, arg2) {}
     NodeType identify() const { return OP_MUL; }
+    // Code generation Interfaces
+    SCCData* generateCode(std::ostream& out) const;
 
    private:
     void _checkAndSetTypeOfNode() const;
@@ -123,6 +150,8 @@ class ExprTreeNodeBinaryNEQ : public ExprTreeBinaryNode {
     ExprTreeNodeBinaryNEQ(ExprTreeNode* arg1, ExprTreeNode* arg2)
         : ExprTreeBinaryNode(arg1, arg2) {}
     NodeType identify() const { return OP_NEQ; }
+    // Code generation Interfaces
+    SCCData* generateCode(std::ostream& out) const;
 
    private:
     void _checkAndSetTypeOfNode() const;
@@ -132,6 +161,8 @@ class ExprTreeNodeBinaryOR : public ExprTreeBinaryNode {
     ExprTreeNodeBinaryOR(ExprTreeNode* arg1, ExprTreeNode* arg2)
         : ExprTreeBinaryNode(arg1, arg2) {}
     NodeType identify() const { return OP_OR; }
+    // Code generation Interfaces
+    SCCData* generateCode(std::ostream& out) const;
 
    private:
     void _checkAndSetTypeOfNode() const;
@@ -141,6 +172,9 @@ class ExprTreeNodeBinarySubscript : public ExprTreeBinaryNode {
     ExprTreeNodeBinarySubscript(ExprTreeNode* arg1, ExprTreeNode* arg2)
         : ExprTreeBinaryNode(arg1, arg2) {}
     NodeType identify() const { return OP_SUBSCRIPT; }
+    // Code generation Interfaces
+    SCCData* generateCode(std::ostream& out) const;
+    SCCData* generateCode(std::ostream& out, bool retLValue) const;
 
    private:
     void _checkAndSetTypeOfNode() const;

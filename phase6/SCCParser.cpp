@@ -62,7 +62,7 @@ int main() {
     start();
     bool typeCheckingPass = astRoot->performTypeChecking();
     assert(typeCheckingPass);  // Change this to if
-    // astRoot->generateCode(cout);
+    astRoot->generateCode(cout);
     //! Cleanup
     //! DEBUG - Dump global scope
 #ifdef DUMP_SYMBOL_TABLE

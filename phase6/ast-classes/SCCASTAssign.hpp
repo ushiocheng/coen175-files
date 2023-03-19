@@ -19,6 +19,12 @@ class Assignment : public Statement {
 
     StmtType identify() const { return StmtType::ASSIGN; }
     bool performTypeChecking() const;
+    // Code generation Interfaces
+    void generateStringLiterals(std::ostream& out) const {
+        lhs->generateStringLiterals(out);
+        rhs->generateStringLiterals(out);
+    }
+    void generateCode(std::ostream& out) const;
 };
 
 }  // namespace SCCASTClasses

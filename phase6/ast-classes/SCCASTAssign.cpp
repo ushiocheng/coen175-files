@@ -26,3 +26,7 @@ bool SCCASTClasses::Assignment::performTypeChecking() const {
     }
     return true;
 }
+
+void SCCASTClasses::Assignment::generateCode(std::ostream& out) const {
+    // TODO
+}

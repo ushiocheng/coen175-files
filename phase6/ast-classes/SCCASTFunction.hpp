@@ -17,6 +17,9 @@ class Function {
      * @return true if no error is generated on type checking
      */
     bool performTypeChecking();
+    // Code generation Interfaces
+    void generateStringLiterals(std::ostream& out) const;
+    void generateCode(std::ostream& out) const;
 };
 
 }  // namespace SCCASTClasses

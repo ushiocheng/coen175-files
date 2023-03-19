@@ -23,6 +23,17 @@ class Expression : public Statement {
     }
 
     SCCType getType() const { return exprTreeRoot->getType(); }
+
+    // Code generation Interfaces
+    void generateStringLiterals(std::ostream& out) const {
+        exprTreeRoot->generateStringLiterals(out);
+    }
+    void generateCode(std::ostream& out) const {
+        exprTreeRoot->generateCode(out);
+    }
+    SCCData* generateCodeAndReturnValue(std::ostream& out) const {
+        exprTreeRoot->generateCode(out);
+    }
 };
 
 }  // namespace SCCASTClasses

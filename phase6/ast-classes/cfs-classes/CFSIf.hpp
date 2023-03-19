@@ -21,6 +21,15 @@ class CFSIf : public CtrFlowStmt {
         SCCType expr1Type = expr1->getType();
         return checkTestExpr(expr1Type);
     }
+    // Code generation Interfaces
+    void generateStringLiterals(std::ostream& out) const {
+        expr1->generateStringLiterals(out);
+        stmt1->generateStringLiterals(out);
+        stmt2->generateStringLiterals(out);
+    }
+    void generateCode(std::ostream& out) const {
+        // TODO
+    }
 };
 }  // namespace SCCASTClasses
 

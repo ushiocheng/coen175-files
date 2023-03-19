@@ -24,3 +24,26 @@ bool SCCAST::performTypeChecking() {
     }
     return noError;
 }
+
+void SCCAST::generateCode(std::ostream& out) const {
+    using std::endl;
+    //! Generate Global Variables
+    for (SCCSymbol* statics : this->globalScope->getStatics()) {
+        if (statics->type().isFunc()) continue;
+        //! Declare global variables
+        out << ".comm   " << statics->id() << ", " << statics->type().sizeOf()
+            << endl;
+        statics->location = new SCCDataLocationStatic(statics->id());
+    }
+    out << endl;
+    //! Generate String Literals
+    for (SCCASTClasses::Function* funcDef : this->functionDefinitions) {
+        funcDef->generateStringLiterals(out);
+    }
+    out << endl;
+    //! Generate Functions
+    for (SCCASTClasses::Function* funcDef : this->functionDefinitions) {
+        funcDef->generateCode(out);
+        out << endl;
+    }
+}

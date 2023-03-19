@@ -23,6 +23,16 @@ class CFSFor : public CtrFlowStmt {
         SCCType expr1Type = expr1->getType();
         return checkTestExpr(expr1Type);
     }
+    // Code generation Interfaces
+    void generateStringLiterals(std::ostream& out) const {
+        assign1->generateStringLiterals(out);
+        expr1->generateStringLiterals(out);
+        assign2->generateStringLiterals(out);
+        body->generateStringLiterals(out);
+    }
+    void generateCode(std::ostream& out) const {
+        // TODO
+    }
 };
 }  // namespace SCCASTClasses
 

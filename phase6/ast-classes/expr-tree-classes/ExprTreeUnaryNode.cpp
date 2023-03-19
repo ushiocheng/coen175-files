@@ -6,6 +6,7 @@
 
 #include "../../GlobalConfig.hpp"
 #include "../../SCCOperators.hpp"
+#include "../../code-generation-classes/data-classes/SCCData.hpp"
 #include "../../exceptions/SCCError.hpp"
 #include "../../semantic-classes/SCCScope.hpp"
 #include "../../semantic-classes/SCCType.hpp"
@@ -32,6 +33,37 @@ static std::string unaryOperatorStr[5] = {
     "*",      // OP_DEREF
     "sizeof"  // OP_SIZEOF
 };
+
+SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeUnaryAddrOf::generateCode(
+    std::ostream& out) const {
+    // TODO
+}
+
+SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeUnaryDeref::generateCode(
+    std::ostream& out) const {
+    // TODO
+}
+
+SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeUnaryDeref::generateCode(
+    std::ostream& out, bool retLValue) const {
+    // TODO
+}
+
+SCCData*
+SCCASTClasses::ExprTreeClasses::ExprTreeNodeUnaryNegation::generateCode(
+    std::ostream& out) const {
+    // TODO
+}
+
+SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeUnaryNot::generateCode(
+    std::ostream& out) const {
+    // TODO
+}
+
+SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeUnarySizeof::generateCode(
+    std::ostream& out) const {
+    // TODO
+}
 
 SCCType typeOfUnaryExpression(SCC::SCCUnaryOperation op, SCCType operand1);
 

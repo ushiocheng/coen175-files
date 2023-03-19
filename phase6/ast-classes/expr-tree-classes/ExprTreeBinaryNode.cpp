@@ -6,6 +6,7 @@
 
 #include "../../GlobalConfig.hpp"
 #include "../../SCCOperators.hpp"
+#include "../../code-generation-classes/data-classes/SCCData.hpp"
 #include "../../exceptions/SCCError.hpp"
 #include "../../semantic-classes/SCCScope.hpp"
 #include "../../semantic-classes/SCCType.hpp"
@@ -40,6 +41,69 @@ static std::string binaryOperatorStr[14] = {
     "%",   // OP_MOD
     "[]"   // OP_SUBSCRIPT
 };
+
+SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryAdd::generateCode(
+    std::ostream& out) const {
+    // TODO
+}
+SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryAnd::generateCode(
+    std::ostream& out) const {
+    // TODO
+}
+SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryDiv::generateCode(
+    std::ostream& out) const {
+    // TODO
+}
+SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryEQ::generateCode(
+    std::ostream& out) const {
+    // TODO
+}
+SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryGE::generateCode(
+    std::ostream& out) const {
+    // TODO
+}
+SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryGT::generateCode(
+    std::ostream& out) const {
+    // TODO
+}
+SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryLE::generateCode(
+    std::ostream& out) const {
+    // TODO
+}
+SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryLT::generateCode(
+    std::ostream& out) const {
+    // TODO
+}
+SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryMinus::generateCode(
+    std::ostream& out) const {
+    // TODO
+}
+SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryMod::generateCode(
+    std::ostream& out) const {
+    // TODO
+}
+SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryMUL::generateCode(
+    std::ostream& out) const {
+    // TODO
+}
+SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryNEQ::generateCode(
+    std::ostream& out) const {
+    // TODO
+}
+SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryOR::generateCode(
+    std::ostream& out) const {
+    // TODO
+}
+SCCData*
+SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinarySubscript::generateCode(
+    std::ostream& out) const {
+    // TODO
+}
+SCCData*
+SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinarySubscript::generateCode(
+    std::ostream& out, bool retLValue) const {
+    // TODO
+}
 
 SCCType typeOfBinaryExpression(SCC::SCCBinaryOperation op, SCCType operand1,
                                SCCType operand2);

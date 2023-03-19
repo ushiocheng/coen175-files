@@ -18,6 +18,9 @@ class StmtBlock : public Statement {
     const SCCScope* scope() const;
     StmtType identify() const;
     bool performTypeChecking() const;
+    // Code generation Interfaces
+    void generateStringLiterals(std::ostream& out) const;
+    void generateCode(std::ostream& out) const;
 };
 }  // namespace SCCASTClasses
 
