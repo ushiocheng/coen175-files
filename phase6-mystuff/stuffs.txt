@@ -1,0 +1,26 @@
+run < ../phase6-mystuff/examples/array.c
+
+code-generation-classes/register-classes/SCCX86Register.cpp:52
+code-generation-classes/register-classes/SCCX86Register.cpp:30
+
+
+run < ../phase6-mystuff/examples/fib.c
+
+ast-classes/expr-tree-classes/ExprTreeTermNode.cpp:59
+
+print _physicalRegs
+
+code-generation-classes/data-classes/SCCDataTempValue.cpp:20
+
+
+run < ../phase6-mystuff/examples/my-test.c
+run < ../phase6-mystuff/examples/global.c
+
+ast-classes/expr-tree-classes/ExprTreeTermNode.cpp:84
+ast-classes/expr-tree-classes/ExprTreeTermNode.cpp:112
+ast-classes/expr-tree-classes/ExprTreeUnaryNode.cpp:81
+
+run < ../phase6-mystuff/examples/int.c
+code-generation-classes/data-classes/SCCDataTempValue.cpp:44
+
+run < ../phase6-mystuff/examples/qsort.c
