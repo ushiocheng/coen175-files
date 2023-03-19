@@ -295,6 +295,11 @@ void deallocateVReg(std::ostream& out, SCCVirtualRegister* reg) {
     assert(false);
 }
 
+void forcePreemptVReg(std::ostream& out, SCCVirtualRegister* reg) {
+    auto rte = findRegTableEntry(reg);
+    preemptVReg(out, rte);
+}
+
 void loadVReg(std::ostream& out, SCCVirtualRegister* reg) {
     if (reg->locationValid && (!reg->location->requireMemoryAccess())) {
         // Vreg already in register, set it to non-preemptable

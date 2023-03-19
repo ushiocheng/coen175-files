@@ -5,7 +5,7 @@ SCCDataWrapper::SCCDataWrapper(SCCData* original)
 
 SCCDataWrapper::~SCCDataWrapper() { _actual = nullptr; }
 
-SCCData::DataType SCCDataWrapper::ident() { return this->_actual->ident(); }
+SCCData::DataType SCCDataWrapper::ident() { return Wrapper; }
 
 //! Implement Interfaces
 

@@ -7,6 +7,8 @@ namespace X86InstructionHelper {
  * @param size size of operands, can be {1,2,4,8}
  */
 const char* movForSize(unsigned char size);
+const char* postfixForSize(unsigned char size);
+const unsigned char numBitForSize(unsigned char size);
 }  // namespace X86InstructionHelper
 
 #endif  // X86_INSTRUCTION_HELPER_HPP

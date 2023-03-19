@@ -26,10 +26,7 @@ class SCCVirtualRegister {
      */
     SCCVirtualRegister(unsigned char size = 8)
         : _size(size), location(nullptr) {}
-    SCCVirtualRegister(const SCCVirtualRegister& rhs)
-        : _size(rhs._size),
-          location(rhs.location->copy()),
-          locationValid(rhs.locationValid) {}
+    SCCVirtualRegister(const SCCVirtualRegister& rhs);
     ~SCCVirtualRegister();
 
     /**

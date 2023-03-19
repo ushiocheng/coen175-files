@@ -26,6 +26,8 @@ class SCCDataArgument : public SCCData {
      * @remark this should not be used to generate LValue access
      */
     std::string access();
+    void loadAddrTo(std::ostream& out,
+                    SCCX86Register::SizeIndependentRegCode regCode);
 };
 
 #endif  // SCC_DATA_ARGUMENT_HPP

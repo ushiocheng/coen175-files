@@ -6,7 +6,8 @@
 
 #include "../../GlobalConfig.hpp"
 #include "../../SCCOperators.hpp"
-#include "../../code-generation-classes/data-classes/SCCData.hpp"
+#include "../../code-generation-classes/data-classes/SCCData_All.hpp"
+#include "../../code-generation-classes/instruction-helper/X86InstructionHelper.hpp"
 #include "../../exceptions/SCCError.hpp"
 #include "../../semantic-classes/SCCScope.hpp"
 #include "../../semantic-classes/SCCType.hpp"
@@ -34,35 +35,103 @@ static std::string unaryOperatorStr[5] = {
     "sizeof"  // OP_SIZEOF
 };
 
+using std::endl;
+
 SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeUnaryAddrOf::generateCode(
     std::ostream& out) const {
-    // TODO
+    if (arg1->identify() == NodeType::OP_DEREF) {
+        auto tmp =
+            ((ExprTreeUnaryNode*)const_cast<ExprTreeNodeUnaryAddrOf*>(this)
+                 ->arg1);
+        const_cast<ExprTreeNodeUnaryAddrOf*>(this)->arg1 = tmp->arg1;
+        tmp->arg1 = nullptr;
+        delete tmp;
+        return arg1->generateCode(out);
+    }
+    SCCData* arg1Val = arg1->generateCode(out);
+    auto reg = SCCRegisterManager::useAnyReg(out, 8);
+    while (arg1Val->ident() == SCCData::Wrapper) {
+        auto tmp = arg1Val;
+        arg1Val = ((SCCDataWrapper*)arg1Val)->_actual;
+        delete tmp;
+    }
+    switch (arg1Val->ident()) {
+        case SCCData::StackVariable:
+            out << "    movq    %rbp, %" << reg.getName() << endl;
+            out << "    subq    $"
+                << ((SCCDataLocationStack*)(arg1Val->location()))->offset
+                << ", %" << reg.getName() << endl;
+            break;
+        case SCCData::StaticVariable:
+            out << "    leaq    "
+                << ((SCCDataLocationStatic*)(arg1Val->location()))->name
+                << ", %" << reg.getName() << endl;
+            break;
+        case SCCData::Indirect:
+            ((SCCDataContentOfAddress*)arg1Val)
+                ->loadAddrTo(out, reg.siRegCode());
+            break;
+        case SCCData::Arguments:
+            ((SCCDataArgument*)arg1Val)->loadAddrTo(out, reg.siRegCode());
+            break;
+        case SCCData::TempValue:
+            ((SCCDataTempValue*)arg1Val)->loadAddrTo(out, reg.siRegCode());
+            break;
+        default:
+            assert(false);
+    }
+    SCCRegisterManager::releaseReg(reg);
+    auto tmp = new SCCDataTempValue(reg);
+    delete arg1Val;
+    return tmp;
 }
 
 SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeUnaryDeref::generateCode(
     std::ostream& out) const {
-    // TODO
+    return new SCCDataContentOfAddress(this->getType().sizeOf(),
+                                       arg1->generateCode(out));
 }
 
 SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeUnaryDeref::generateCode(
     std::ostream& out, bool retLValue) const {
-    // TODO
+    return generateCode(out);
 }
 
 SCCData*
 SCCASTClasses::ExprTreeClasses::ExprTreeNodeUnaryNegation::generateCode(
     std::ostream& out) const {
-    // TODO
+    SCCData* arg1Val = arg1->generateCode(out);
+    auto reg = SCCRegisterManager::useAnyReg(out, arg1Val->size());
+    arg1Val->loadTo(out, reg.siRegCode());
+    reg.castTo(out, this->getType().sizeOf());
+    out << "    neg     %" << reg.getName() << endl;
+    SCCRegisterManager::releaseReg(reg);
+    auto tmp = new SCCDataTempValue(reg);
+    delete arg1Val;
+    return tmp;
 }
 
 SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeUnaryNot::generateCode(
     std::ostream& out) const {
-    // TODO
+    SCCData* arg1Val = arg1->generateCode(out);
+    auto reg = SCCRegisterManager::useAnyReg(out, arg1Val->size());
+    arg1Val->loadTo(out, reg.siRegCode());
+    reg.castTo(out, this->getType().sizeOf());
+    out << "    cmp" << X86InstructionHelper::postfixForSize(reg.getSize())
+        << "    $0, %" << reg.getName() << endl;
+    auto flagReg = SCCX86Register(reg.siRegCode(), 1);
+    out << "    setne   %" << flagReg.getName() << endl;
+    out << "    movzbq  %" << flagReg.getName() << ", %" << reg.get64bitName()
+        << endl;
+    SCCRegisterManager::releaseReg(reg);
+    auto tmp = new SCCDataTempValue(reg);
+    delete arg1Val;
+    return tmp;
 }
 
 SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeUnarySizeof::generateCode(
     std::ostream& out) const {
-    // TODO
+    return new SCCDataNumericLiteral(8, this->arg1->getType().sizeOf());
 }
 
 SCCType typeOfUnaryExpression(SCC::SCCUnaryOperation op, SCCType operand1);

@@ -92,6 +92,23 @@ SCCASTClasses::ExprTreeClasses::ExprTreeNodeTermLiteralString::generateCode(
 
 SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeTermVariable::generateCode(
     std::ostream& out) const {
+    if (this->getType().isArray()) {
+        auto locationOfThis = this->_symbol->data->location();
+        auto reg = SCCRegisterManager::useAnyReg(out, 8);
+        if (locationOfThis->ident() == SCCData::StackVariable) {
+            out << "    movq    %rbp, %" << reg.getName() << std::endl;
+            out << "    subq    $"
+                << ((SCCDataLocationStack*)locationOfThis)->offset << ", %"
+                << reg.getName() << std::endl;
+        } else {
+            assert(locationOfThis->ident() == SCCData::StaticVariable);
+            out << "    leaq    "
+                << ((SCCDataLocationStatic*)locationOfThis)->name << ", %"
+                << reg.getName() << std::endl;
+        }
+        SCCRegisterManager::releaseReg(reg);
+        return new SCCDataTempValue(reg);
+    }
     return new SCCDataWrapper(this->_symbol->data);
 }
 

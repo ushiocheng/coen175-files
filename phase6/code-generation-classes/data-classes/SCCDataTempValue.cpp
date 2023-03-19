@@ -22,3 +22,13 @@ SCCDataTempValue::~SCCDataTempValue() {
         vreg = nullptr;
     }
 }
+
+void SCCDataTempValue::loadAddrTo(
+    std::ostream& out, SCCX86Register::SizeIndependentRegCode regCode) {
+    auto reg = SCCX86Register(regCode);
+    SCCRegisterManager::forcePreemptVReg(out, this->vreg);
+    out << "    movq    %rbp, %" << reg.getName() << std::endl;
+    out << "    subq    $"
+        << ((SCCDataLocationStack*)this->vreg->location)->offset << ", %"
+        << reg.getName() << std::endl;
+}

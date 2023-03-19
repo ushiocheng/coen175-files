@@ -6,7 +6,9 @@
 
 #include "../../GlobalConfig.hpp"
 #include "../../SCCOperators.hpp"
-#include "../../code-generation-classes/data-classes/SCCData.hpp"
+#include "../../code-generation-classes/data-classes/SCCData_All.hpp"
+#include "../../code-generation-classes/instruction-helper/X86InstructionHelper.hpp"
+#include "../../code-generation-classes/label-classes/SCCLabelHelper.hpp"
 #include "../../exceptions/SCCError.hpp"
 #include "../../semantic-classes/SCCScope.hpp"
 #include "../../semantic-classes/SCCType.hpp"
@@ -42,67 +44,365 @@ static std::string binaryOperatorStr[14] = {
     "[]"   // OP_SUBSCRIPT
 };
 
-SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryAdd::generateCode(
-    std::ostream& out) const {
-    // TODO
-}
+using std::endl;
+
+//! AND and OR have short circuit evaluation -> special cases
+
 SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryAnd::generateCode(
     std::ostream& out) const {
-    // TODO
-}
-SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryDiv::generateCode(
-    std::ostream& out) const {
-    // TODO
-}
-SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryEQ::generateCode(
-    std::ostream& out) const {
-    // TODO
-}
-SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryGE::generateCode(
-    std::ostream& out) const {
-    // TODO
-}
-SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryGT::generateCode(
-    std::ostream& out) const {
-    // TODO
-}
-SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryLE::generateCode(
-    std::ostream& out) const {
-    // TODO
-}
-SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryLT::generateCode(
-    std::ostream& out) const {
-    // TODO
-}
-SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryMinus::generateCode(
-    std::ostream& out) const {
-    // TODO
-}
-SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryMod::generateCode(
-    std::ostream& out) const {
-    // TODO
-}
-SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryMUL::generateCode(
-    std::ostream& out) const {
-    // TODO
-}
-SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryNEQ::generateCode(
-    std::ostream& out) const {
-    // TODO
+    std::string shortCircuitLabel = SCCLabelHelper::reserveNewLabel("and1");
+    std::string exitLabel = SCCLabelHelper::reserveNewLabel("and2");
+    SCCData* arg1Val = arg1->generateCode(out);
+    auto reg = SCCRegisterManager::useAnyReg(out, arg1Val->size());
+    arg1Val->loadTo(out, reg.siRegCode());
+    delete arg1Val;
+    out << "    cmp" << X86InstructionHelper::postfixForSize(reg.getSize())
+        << "    $0, %" << reg.getName() << endl;
+    out << "    je      " << shortCircuitLabel << endl;
+    out << "    nop" << endl;
+    SCCData* arg2Val = arg2->generateCode(out);
+    arg2Val->loadTo(out, reg.siRegCode());
+    reg = SCCX86Register(reg.siRegCode(), arg2Val->size());
+    delete arg2Val;
+    out << "    cmp" << X86InstructionHelper::postfixForSize(reg.getSize())
+        << "    $0, %" << reg.getName() << endl;
+    out << "    je      " << shortCircuitLabel << endl;
+    out << "    nop" << endl;
+    //! Compute return value
+    out << "    movq    $1, %" << reg.get64bitName() << endl;
+    out << "    jmp     " << exitLabel << endl;
+    out << "    nop" << endl;
+    SCCLabelHelper::generateReservedLabel(out, shortCircuitLabel);
+    out << "    movq    $0, %" << reg.get64bitName() << endl;
+    SCCLabelHelper::generateReservedLabel(out, exitLabel);
+    SCCRegisterManager::releaseReg(reg);
+    return new SCCDataTempValue(SCCX86Register(reg.siRegCode()));
 }
 SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryOR::generateCode(
     std::ostream& out) const {
-    // TODO
+    std::string shortCircuitLabel = SCCLabelHelper::reserveNewLabel("and1");
+    std::string exitLabel = SCCLabelHelper::reserveNewLabel("and2");
+    SCCData* arg1Val = arg1->generateCode(out);
+    auto reg = SCCRegisterManager::useAnyReg(out, arg1Val->size());
+    arg1Val->loadTo(out, reg.siRegCode());
+    delete arg1Val;
+    out << "    cmp" << X86InstructionHelper::postfixForSize(reg.getSize())
+        << "    $0, %" << reg.getName() << endl;
+    out << "    jne     " << shortCircuitLabel << endl;
+    out << "    nop" << endl;
+    SCCData* arg2Val = arg2->generateCode(out);
+    arg2Val->loadTo(out, reg.siRegCode());
+    reg = SCCX86Register(reg.siRegCode(), arg2Val->size());
+    delete arg2Val;
+    out << "    cmp" << X86InstructionHelper::postfixForSize(reg.getSize())
+        << "    $0, %" << reg.getName() << endl;
+    out << "    jne     " << shortCircuitLabel << endl;
+    out << "    nop" << endl;
+    //! Compute return value
+    out << "    movq    $0, %" << reg.get64bitName() << endl;
+    out << "    jmp     " << exitLabel << endl;
+    out << "    nop" << endl;
+    SCCLabelHelper::generateReservedLabel(out, shortCircuitLabel);
+    out << "    movq    $1, %" << reg.get64bitName() << endl;
+    SCCLabelHelper::generateReservedLabel(out, exitLabel);
+    SCCRegisterManager::releaseReg(reg);
+    return new SCCDataTempValue(SCCX86Register(reg.siRegCode()));
 }
+
+//! Arithmatic Binary Ops
+
+SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryAdd::generateCode(
+    std::ostream& out) const {
+    SCCData* arg1Val = arg1->generateCode(out);
+    SCCData* arg2Val = arg2->generateCode(out);
+    auto reg2 = SCCRegisterManager::useAnyReg(out, arg2Val->size());
+    arg2Val->loadTo(out, reg2.siRegCode());
+    delete arg2Val;
+    //! Cast Size
+    unsigned char resSize = arg1Val->size();
+    if (arg2Val->size() > resSize) resSize = arg2Val->size();
+    reg2.castTo(out, resSize);
+    //! Add arg1Val reg2 -> reg2
+    out << "    add" << X86InstructionHelper::postfixForSize(resSize) << "    "
+        << arg1Val->access() << ", %" << reg2.getName() << endl;
+    SCCRegisterManager::releaseReg(reg2);
+    auto tmp = new SCCDataTempValue(reg2);
+    delete arg1Val;
+    return tmp;
+}
+
+SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryMinus::generateCode(
+    std::ostream& out) const {
+    SCCData* arg1Val = arg1->generateCode(out);
+    SCCData* arg2Val = arg2->generateCode(out);
+    auto reg2 = SCCRegisterManager::useAnyReg(out, arg2Val->size());
+    arg2Val->loadTo(out, reg2.siRegCode());
+    delete arg2Val;
+    //! Cast Size
+    unsigned char resSize = arg1Val->size();
+    if (arg2Val->size() > resSize) resSize = arg2Val->size();
+    reg2.castTo(out, resSize);
+    //! Minus arg1Val reg2 -> reg2
+    out << "    sub" << X86InstructionHelper::postfixForSize(resSize) << "    "
+        << arg1Val->access() << ", %" << reg2.getName() << endl;
+    SCCRegisterManager::releaseReg(reg2);
+    auto tmp = new SCCDataTempValue(reg2);
+    delete arg1Val;
+    return tmp;
+}
+
+SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryDiv::generateCode(
+    std::ostream& out) const {
+        SCCData* arg1Val = arg1->generateCode(out);
+        SCCData* arg2Val = arg2->generateCode(out);
+        unsigned char resSize = arg1Val->size();
+        if (arg2Val->size() > resSize) resSize = arg2Val->size();
+        auto reg10 = SCCX86Register(SCCX86Register::AX, resSize);
+        auto reg11 = SCCX86Register(SCCX86Register::DX, resSize);
+        SCCRegisterManager::useReg(out, reg10);
+        arg1Val->loadTo(out, reg10.siRegCode());
+        reg10.castTo(out, 8);
+        SCCRegisterManager::useReg(out, reg11);
+        out << "    " << X86InstructionHelper::movForSize(8) << "    "
+            << "%" << reg10.get64bitName() << ", %" << reg11.get64bitName()
+            << endl;
+        out << "    sar" << X86InstructionHelper::postfixForSize(8) << "    "
+            << "$" << X86InstructionHelper::numBitForSize(resSize) - 1 << ", %"
+            << reg11.getName() << endl;
+        out << "    idiv" << X86InstructionHelper::postfixForSize(resSize)
+            << "   " << arg2Val->access() << endl;
+        SCCRegisterManager::releaseReg(reg11);
+        SCCRegisterManager::releaseReg(reg10);
+        return new SCCDataTempValue(reg10);
+}
+SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryMod::generateCode(
+    std::ostream& out) const {
+        SCCData* arg1Val = arg1->generateCode(out);
+        SCCData* arg2Val = arg2->generateCode(out);
+        unsigned char resSize = arg1Val->size();
+        if (arg2Val->size() > resSize) resSize = arg2Val->size();
+        auto reg10 = SCCX86Register(SCCX86Register::AX, resSize);
+        auto reg11 = SCCX86Register(SCCX86Register::DX, resSize);
+        SCCRegisterManager::useReg(out, reg10);
+        arg1Val->loadTo(out, reg10.siRegCode());
+        reg10.castTo(out, 8);
+        SCCRegisterManager::useReg(out, reg11);
+        out << "    " << X86InstructionHelper::movForSize(8) << "    "
+            << "%" << reg10.get64bitName() << ", %" << reg11.get64bitName()
+            << endl;
+        out << "    sar" << X86InstructionHelper::postfixForSize(8) << "    "
+            << "$" << X86InstructionHelper::numBitForSize(resSize) - 1 << ", %"
+            << reg11.getName() << endl;
+        out << "    idiv" << X86InstructionHelper::postfixForSize(resSize)
+            << "   " << arg2Val->access() << endl;
+        SCCRegisterManager::releaseReg(reg10);
+        SCCRegisterManager::releaseReg(reg11);
+        return new SCCDataTempValue(reg11);
+}
+SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryMUL::generateCode(
+    std::ostream& out) const {
+        SCCData* arg1Val = arg1->generateCode(out);
+        SCCData* arg2Val = arg2->generateCode(out);
+        auto reg2 = SCCRegisterManager::useAnyReg(out, arg2Val->size());
+        arg2Val->loadTo(out, reg2.siRegCode());
+        delete arg2Val;
+        //! Cast Size
+        unsigned char resSize = arg1Val->size();
+        if (arg2Val->size() > resSize) resSize = arg2Val->size();
+        reg2.castTo(out, resSize);
+        //! Multiply arg1Val reg2 -> reg2
+        out << "    imul" << X86InstructionHelper::postfixForSize(resSize)
+            << "   " << arg1Val->access() << ", %" << reg2.getName() << endl;
+        SCCRegisterManager::releaseReg(reg2);
+        auto tmp = new SCCDataTempValue(reg2);
+        delete arg1Val;
+        return tmp;
+}
+
+//! Comparasions
+
+SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryEQ::generateCode(
+    std::ostream& out) const {
+    SCCData* arg1Val = arg1->generateCode(out);
+    SCCData* arg2Val = arg2->generateCode(out);
+    auto reg2 = SCCRegisterManager::useAnyReg(out, arg2Val->size());
+    arg2Val->loadTo(out, reg2.siRegCode());
+    delete arg2Val;
+    //! Cast Size
+    unsigned char resSize = arg1Val->size();
+    if (arg2Val->size() > resSize) resSize = arg2Val->size();
+    reg2.castTo(out, resSize);
+    //! Compare arg1Val reg2 -> reg2
+    out << "    cmp" << X86InstructionHelper::postfixForSize(resSize) << "    "
+        << arg1Val->access() << ", %" << reg2.getName() << endl;
+    out << "    sete    %" << SCCX86Register(reg2.siRegCode(), 1).getName()
+        << endl;
+    out << "    movzbq  %" << SCCX86Register(reg2.siRegCode(), 1).getName()
+        << ", %" << reg2.get64bitName() << endl;
+    SCCRegisterManager::releaseReg(reg2);
+    auto tmp = new SCCDataTempValue(reg2);
+    delete arg1Val;
+    return tmp;
+}
+
+SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryGE::generateCode(
+    std::ostream& out) const {
+    SCCData* arg1Val = arg1->generateCode(out);
+    SCCData* arg2Val = arg2->generateCode(out);
+    auto reg2 = SCCRegisterManager::useAnyReg(out, arg2Val->size());
+    arg2Val->loadTo(out, reg2.siRegCode());
+    delete arg2Val;
+    //! Cast Size
+    unsigned char resSize = arg1Val->size();
+    if (arg2Val->size() > resSize) resSize = arg2Val->size();
+    reg2.castTo(out, resSize);
+    //! Compare arg1Val reg2 -> reg2
+    out << "    cmp" << X86InstructionHelper::postfixForSize(resSize) << "    "
+        << arg1Val->access() << ", %" << reg2.getName() << endl;
+    out << "    setge   %" << SCCX86Register(reg2.siRegCode(), 1).getName()
+        << endl;
+    out << "    movzbq  %" << SCCX86Register(reg2.siRegCode(), 1).getName()
+        << ", %" << reg2.get64bitName() << endl;
+    SCCRegisterManager::releaseReg(reg2);
+    auto tmp = new SCCDataTempValue(reg2);
+    delete arg1Val;
+    return tmp;
+}
+SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryGT::generateCode(
+    std::ostream& out) const {
+    SCCData* arg1Val = arg1->generateCode(out);
+    SCCData* arg2Val = arg2->generateCode(out);
+    auto reg2 = SCCRegisterManager::useAnyReg(out, arg2Val->size());
+    arg2Val->loadTo(out, reg2.siRegCode());
+    delete arg2Val;
+    //! Cast Size
+    unsigned char resSize = arg1Val->size();
+    if (arg2Val->size() > resSize) resSize = arg2Val->size();
+    reg2.castTo(out, resSize);
+    //! Compare arg1Val reg2 -> reg2
+    out << "    cmp" << X86InstructionHelper::postfixForSize(resSize) << "    "
+        << arg1Val->access() << ", %" << reg2.getName() << endl;
+    out << "    setg    %" << SCCX86Register(reg2.siRegCode(), 1).getName()
+        << endl;
+    out << "    movzbq  %" << SCCX86Register(reg2.siRegCode(), 1).getName()
+        << ", %" << reg2.get64bitName() << endl;
+    SCCRegisterManager::releaseReg(reg2);
+    auto tmp = new SCCDataTempValue(reg2);
+    delete arg1Val;
+    return tmp;
+}
+SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryLE::generateCode(
+    std::ostream& out) const {
+    SCCData* arg1Val = arg1->generateCode(out);
+    SCCData* arg2Val = arg2->generateCode(out);
+    auto reg2 = SCCRegisterManager::useAnyReg(out, arg2Val->size());
+    arg2Val->loadTo(out, reg2.siRegCode());
+    delete arg2Val;
+    //! Cast Size
+    unsigned char resSize = arg1Val->size();
+    if (arg2Val->size() > resSize) resSize = arg2Val->size();
+    reg2.castTo(out, resSize);
+    //! Compare arg1Val reg2 -> reg2
+    out << "    cmp" << X86InstructionHelper::postfixForSize(resSize) << "    "
+        << arg1Val->access() << ", %" << reg2.getName() << endl;
+    out << "    setle   %" << SCCX86Register(reg2.siRegCode(), 1).getName()
+        << endl;
+    out << "    movzbq  %" << SCCX86Register(reg2.siRegCode(), 1).getName()
+        << ", %" << reg2.get64bitName() << endl;
+    SCCRegisterManager::releaseReg(reg2);
+    auto tmp = new SCCDataTempValue(reg2);
+    delete arg1Val;
+    return tmp;
+}
+SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryLT::generateCode(
+    std::ostream& out) const {
+    SCCData* arg1Val = arg1->generateCode(out);
+    SCCData* arg2Val = arg2->generateCode(out);
+    auto reg2 = SCCRegisterManager::useAnyReg(out, arg2Val->size());
+    arg2Val->loadTo(out, reg2.siRegCode());
+    delete arg2Val;
+    //! Cast Size
+    unsigned char resSize = arg1Val->size();
+    if (arg2Val->size() > resSize) resSize = arg2Val->size();
+    reg2.castTo(out, resSize);
+    //! Compare arg1Val reg2 -> reg2
+    out << "    cmp" << X86InstructionHelper::postfixForSize(resSize) << "    "
+        << arg1Val->access() << ", %" << reg2.getName() << endl;
+    out << "    setl     %" << SCCX86Register(reg2.siRegCode(), 1).getName()
+        << endl;
+    out << "    movzbq  %" << SCCX86Register(reg2.siRegCode(), 1).getName()
+        << ", %" << reg2.get64bitName() << endl;
+    SCCRegisterManager::releaseReg(reg2);
+    auto tmp = new SCCDataTempValue(reg2);
+    delete arg1Val;
+    return tmp;
+}
+SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryNEQ::generateCode(
+    std::ostream& out) const {
+    SCCData* arg1Val = arg1->generateCode(out);
+    SCCData* arg2Val = arg2->generateCode(out);
+    auto reg2 = SCCRegisterManager::useAnyReg(out, arg2Val->size());
+    arg2Val->loadTo(out, reg2.siRegCode());
+    delete arg2Val;
+    //! Cast Size
+    unsigned char resSize = arg1Val->size();
+    if (arg2Val->size() > resSize) resSize = arg2Val->size();
+    reg2.castTo(out, resSize);
+    //! Compare arg1Val reg2 -> reg2
+    out << "    cmp" << X86InstructionHelper::postfixForSize(resSize) << "    "
+        << arg1Val->access() << ", %" << reg2.getName() << endl;
+    out << "    setne   %" << SCCX86Register(reg2.siRegCode(), 1).getName()
+        << endl;
+    out << "    movzbq  %" << SCCX86Register(reg2.siRegCode(), 1).getName()
+        << ", %" << reg2.get64bitName() << endl;
+    SCCRegisterManager::releaseReg(reg2);
+    auto tmp = new SCCDataTempValue(reg2);
+    delete arg1Val;
+    return tmp;
+}
+
+//! Subscript operator => special case
+
 SCCData*
 SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinarySubscript::generateCode(
     std::ostream& out) const {
-    // TODO
+    SCCData* arg1Val = arg1->generateCode(out);
+    SCCData* arg2Val = arg2->generateCode(out);
+    auto reg2 = SCCRegisterManager::useAnyReg(out, arg2Val->size());
+    arg2Val->loadTo(out, reg2.siRegCode());
+    delete arg2Val;
+    //! Cast Size
+    unsigned char resSize = 8;
+    reg2.castTo(out, resSize);
+    //! *( arg2 * sizeof (*arg1) + arg1 )
+    unsigned char shift = 0;
+    switch (this->getType().sizeOf()) {
+        case 8:
+            shift = 3;
+            break;
+        case 4:
+            shift = 2;
+            break;
+        case 2:
+            shift = 1;
+            break;
+        default:
+            break;
+    }
+    if (shift > 0) {
+        out << "    salq    $" << shift << ", %" << reg2.get64bitName() << endl;
+    }
+    out << "    addq    " << arg1Val->access() << ", %" << reg2.get64bitName()
+        << endl;
+    SCCRegisterManager::releaseReg(reg2);
+    auto tmp = new SCCDataTempValue(reg2);
+    delete arg1Val;
+    return new SCCDataContentOfAddress(this->getType().sizeOf(), tmp);
 }
 SCCData*
 SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinarySubscript::generateCode(
     std::ostream& out, bool retLValue) const {
-    // TODO
+    return generateCode(out);
 }
 
 SCCType typeOfBinaryExpression(SCC::SCCBinaryOperation op, SCCType operand1,

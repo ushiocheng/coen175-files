@@ -9,9 +9,8 @@ namespace ExprTreeClasses {
 
 class ExprTreeUnaryNode : public ExprTreeNode {
    protected:
-    ExprTreeNode* arg1;
-
    public:
+    ExprTreeNode* arg1;
     ExprTreeUnaryNode(ExprTreeNode* arg1) : arg1(arg1) {
         this->performTypeChecking();
     }

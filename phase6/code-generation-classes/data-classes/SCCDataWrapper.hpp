@@ -5,9 +5,8 @@
 
 class SCCDataWrapper : public SCCData {
    private:
-    SCCData* _actual;
-
    public:
+    SCCData* _actual;
     SCCDataWrapper(SCCData* original);
     ~SCCDataWrapper();
 

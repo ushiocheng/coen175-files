@@ -3,6 +3,11 @@
 #include "../data-location-classes/SCCDataLocation.hpp"
 #include "SCCRegisterManager.hpp"
 
+SCCVirtualRegister::SCCVirtualRegister(const SCCVirtualRegister& rhs)
+    : _size(rhs._size),
+      location(rhs.location->copy()),
+      locationValid(rhs.locationValid) {}
+
 SCCVirtualRegister::~SCCVirtualRegister() {
     if (this->location) delete this->location;
 }

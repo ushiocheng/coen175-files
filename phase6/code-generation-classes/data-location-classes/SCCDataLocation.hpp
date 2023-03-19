@@ -55,9 +55,9 @@ class SCCDataLocationStackPositiveOffset : public SCCDataLocation {
    private:
     // Offset from rbp
     // Variable is at offset(rbp)
-    size_t _offset;
 
    public:
+    size_t _offset;
     SCCDataLocationStackPositiveOffset(size_t offset);
     bool requireMemoryAccess();
     LocationType ident();

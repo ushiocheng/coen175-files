@@ -42,6 +42,7 @@ void releaseCallerSaves(std::ostream& out);
 SCCVirtualRegister* allocateAndHoldVReg(std::ostream& out, unsigned char size);
 SCCVirtualRegister* createVRegFromReg(SCCX86Register reg);
 void deallocateVReg(std::ostream& out, SCCVirtualRegister* reg);
+void forcePreemptVReg(std::ostream& out, SCCVirtualRegister* reg);
 void loadVReg(std::ostream& out, SCCVirtualRegister* reg);
 void loadVReg(std::ostream& out, SCCVirtualRegister* reg, SCCX86Register dest);
 void releaseVReg(SCCVirtualRegister* reg);

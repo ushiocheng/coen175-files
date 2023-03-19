@@ -28,7 +28,8 @@ class SCCData {
         StackVariable,
         StaticVariable,
         TempValue,
-        Indirect
+        Indirect,
+        Wrapper
     };
 
     SCCData(unsigned char size);

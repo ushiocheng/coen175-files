@@ -48,6 +48,9 @@ class SCCDataTempValue : public SCCData {
     std::string access();
 
     SCCData* copy() const { return new SCCDataTempValue(*this); }
+
+    void loadAddrTo(std::ostream& out,
+                    SCCX86Register::SizeIndependentRegCode regCode);
 };
 
 #endif  // SCC_DATA_TEMP_VALUE_HPP
