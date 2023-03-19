@@ -17,6 +17,9 @@ SCCDataLocation* SCCDataLocationStatic::copy() {
 SCCDataLocation* SCCDataLocationStack::copy() {
     return new SCCDataLocationStack(_offset);
 }
+SCCDataLocation* SCCDataLocationStackPositiveOffset::copy() {
+    return new SCCDataLocationStackPositiveOffset(_offset);
+}
 SCCDataLocation* SCCDataLocationRegister::copy() {
     return new SCCDataLocationRegister(_register);
 }
@@ -35,6 +38,11 @@ std::string SCCDataLocationStatic::generateAccess() { return this->_name; }
 std::string SCCDataLocationStack::generateAccess() {
     std::stringstream ss;
     ss << "-" << _offset << "(%rbp)";
+    return ss.str();
+}
+std::string SCCDataLocationStackPositiveOffset::generateAccess() {
+    std::stringstream ss;
+    ss << _offset << "(%rbp)";
     return ss.str();
 }
 std::string SCCDataLocationRegister::generateAccess() {

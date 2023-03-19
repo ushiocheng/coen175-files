@@ -53,6 +53,20 @@ class SCCDataLocationStack : public SCCDataLocation {
     SCCDataLocation* copy();
 };
 
+class SCCDataLocationStackPositiveOffset : public SCCDataLocationStack {
+   private:
+    // Offset from rbp
+    // Variable is at offset(rbp)
+    size_t _offset;
+
+   public:
+    SCCDataLocationStackPositiveOffset(size_t offset) : _offset(offset) {}
+    bool requireMemoryAccess() { return true; }
+    LocationType ident() { return Stack; }
+    std::string generateAccess();
+    SCCDataLocation* copy();
+};
+
 class SCCDataLocationRegister : public SCCDataLocation {
    private:
     SCCX86Register _register;
