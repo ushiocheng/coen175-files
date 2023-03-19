@@ -12,19 +12,13 @@ class SCCDataTempValue : public SCCData {
     SCCVirtualRegister* vreg;
 
    public:
-    SCCDataTempValue(unsigned char size, std::ostream& out) : SCCData(size) {
-        vreg = SCCRegisterManager::allocateAndHoldVReg(out, size);
-    }
+    SCCDataTempValue(unsigned char size, std::ostream& out);
 
-    SCCDataTempValue(SCCX86Register reg) : SCCData(reg.getSize()) {
-        this->vreg = SCCRegisterManager::createVRegFromReg(reg);
-    }
+    SCCDataTempValue(SCCX86Register reg);
 
-    SCCDataTempValue(const SCCDataTempValue& that) : SCCData(that._size) {
-        this->vreg = new SCCVirtualRegister(*(that.vreg));
-    }
+    SCCDataTempValue(const SCCDataTempValue& that);
 
-    ~SCCDataTempValue();
+    virtual ~SCCDataTempValue();
 
     DataType ident();
 

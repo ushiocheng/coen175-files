@@ -8,7 +8,7 @@ class SCCDataWrapper : public SCCData {
    public:
     SCCData* _actual;
     SCCDataWrapper(SCCData* original);
-    ~SCCDataWrapper();
+    virtual ~SCCDataWrapper();
 
     DataType ident();
 
@@ -20,6 +20,9 @@ class SCCDataWrapper : public SCCData {
      */
     void loadTo(std::ostream& out,
                 SCCX86Register::SizeIndependentRegCode regCode);
+
+    void loadAddrTo(std::ostream& out,
+                    SCCX86Register::SizeIndependentRegCode regCode);
 
     bool requireMemoryAccess();
 

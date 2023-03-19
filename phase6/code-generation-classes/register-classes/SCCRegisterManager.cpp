@@ -227,12 +227,17 @@ SCCX86Register useAnyReg(std::ostream& out, unsigned char size) {
 
 void releaseReg(SCCX86Register reg) {
     auto rte = findRegTableEntry(reg.siRegCode());
+    if (rte->vRegPtr) {
+        rte->preemptable = true;
+        rte->movable = true;
+    } else {
+        rte->regInUse = false;
+    }
     // Don't assert this since release Caller saves does not guarrantee that
     // regs are marked to be in use assert(rte->regInUse);
     // assert(!rte->preemptable);
     // assert(!rte->movable);
     // assert(!rte->vRegPtr);
-    rte->regInUse = false;
 }
 
 void preemptCallerSaves(std::ostream& out) {
@@ -268,7 +273,7 @@ SCCVirtualRegister* allocateAndHoldVReg(std::ostream& out, unsigned char size) {
 SCCVirtualRegister* createVRegFromReg(SCCX86Register reg) {
     auto vreg = new SCCVirtualRegister(reg.getSize());
     auto i = findRegTableEntry(reg.siRegCode());
-    assert(!i->regInUse);
+    // assert(!i->regInUse);
     vreg->location = new SCCDataLocationRegister(
         SCCX86Register(nextAvailableReg->regCode, reg.getSize()));
     vreg->locationValid = true;
@@ -279,9 +284,10 @@ SCCVirtualRegister* createVRegFromReg(SCCX86Register reg) {
     return vreg;
 }
 
-void deallocateVReg(std::ostream& out, SCCVirtualRegister* reg) {
+void deallocateVReg(SCCVirtualRegister* reg) {
     // Check reg is allocated
     if (!reg->locationValid) return;
+    reg->locationValid = false;
     //! release Register allocation
     if (reg->location->requireMemoryAccess()) {
         // reg is on stack
@@ -289,10 +295,9 @@ void deallocateVReg(std::ostream& out, SCCVirtualRegister* reg) {
     } else {
         auto i = findRegTableEntry(reg);
         i->regInUse = false;
-        i->vRegPtr == nullptr;
+        i->vRegPtr = nullptr;
+        if (i == nextAvailableReg - 1) nextAvailableReg = i;
     }
-    // VReg not found
-    assert(false);
 }
 
 void forcePreemptVReg(std::ostream& out, SCCVirtualRegister* reg) {

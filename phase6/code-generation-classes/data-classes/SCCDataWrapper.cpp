@@ -1,5 +1,7 @@
 #include "SCCDataWrapper.hpp"
 
+#include "SCCData_All.hpp"
+
 SCCDataWrapper::SCCDataWrapper(SCCData* original)
     : SCCData(original->size()), _actual(original) {}
 
@@ -16,6 +18,39 @@ SCCData::DataType SCCDataWrapper::ident() { return Wrapper; }
 void SCCDataWrapper::loadTo(std::ostream& out,
                             SCCX86Register::SizeIndependentRegCode regCode) {
     _actual->loadTo(out, regCode);
+}
+
+void SCCDataWrapper::loadAddrTo(
+    std::ostream& out, SCCX86Register::SizeIndependentRegCode regCode) {
+    using std::endl;
+    auto reg = SCCX86Register(regCode);
+    switch (_actual->ident()) {
+        case SCCData::StackVariable:
+            out << "    movq    %rbp, %" << reg.getName() << endl;
+            out << "    subq    $"
+                << ((SCCDataLocationStack*)(_actual->location()))->offset
+                << ", %" << reg.getName() << endl;
+            break;
+        case SCCData::StaticVariable:
+            out << "    leaq    "
+                << ((SCCDataLocationStatic*)(_actual->location()))->name
+                << ", %" << reg.getName() << endl;
+            break;
+        case SCCData::Indirect:
+            ((SCCDataContentOfAddress*)_actual)
+                ->loadAddrTo(out, reg.siRegCode());
+            break;
+        case SCCData::Arguments:
+            ((SCCDataArgument*)_actual)->loadAddrTo(out, reg.siRegCode());
+            break;
+        case SCCData::TempValue:
+            ((SCCDataTempValue*)_actual)->loadAddrTo(out, reg.siRegCode());
+            break;
+        case SCCData::Wrapper:
+            ((SCCDataWrapper*)_actual)->loadAddrTo(out, reg.siRegCode());
+        default:
+            assert(false);
+    }
 }
 
 bool SCCDataWrapper::requireMemoryAccess() {

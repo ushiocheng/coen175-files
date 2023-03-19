@@ -9,7 +9,7 @@ class SCCDataContentOfAddress : public SCCData {
 
    public:
     SCCDataContentOfAddress(unsigned char size, SCCData* address);
-    ~SCCDataContentOfAddress();
+    virtual ~SCCDataContentOfAddress();
 
     DataType ident();
 

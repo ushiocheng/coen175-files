@@ -50,11 +50,6 @@ SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeUnaryAddrOf::generateCode(
     }
     SCCData* arg1Val = arg1->generateCode(out);
     auto reg = SCCRegisterManager::useAnyReg(out, 8);
-    while (arg1Val->ident() == SCCData::Wrapper) {
-        auto tmp = arg1Val;
-        arg1Val = ((SCCDataWrapper*)arg1Val)->_actual;
-        delete tmp;
-    }
     switch (arg1Val->ident()) {
         case SCCData::StackVariable:
             out << "    movq    %rbp, %" << reg.getName() << endl;
@@ -76,6 +71,9 @@ SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeUnaryAddrOf::generateCode(
             break;
         case SCCData::TempValue:
             ((SCCDataTempValue*)arg1Val)->loadAddrTo(out, reg.siRegCode());
+            break;
+        case SCCData::Wrapper:
+            ((SCCDataWrapper*)arg1Val)->loadAddrTo(out, reg.siRegCode());
             break;
         default:
             assert(false);

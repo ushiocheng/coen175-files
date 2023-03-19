@@ -78,6 +78,7 @@ SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryAnd::generateCode(
     SCCRegisterManager::releaseReg(reg);
     return new SCCDataTempValue(SCCX86Register(reg.siRegCode()));
 }
+
 SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryOR::generateCode(
     std::ostream& out) const {
     std::string shortCircuitLabel = SCCLabelHelper::reserveNewLabel("and1");
@@ -117,10 +118,10 @@ SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryAdd::generateCode(
     SCCData* arg2Val = arg2->generateCode(out);
     auto reg2 = SCCRegisterManager::useAnyReg(out, arg2Val->size());
     arg2Val->loadTo(out, reg2.siRegCode());
-    delete arg2Val;
     //! Cast Size
     unsigned char resSize = arg1Val->size();
     if (arg2Val->size() > resSize) resSize = arg2Val->size();
+    delete arg2Val;
     reg2.castTo(out, resSize);
     //! Add arg1Val reg2 -> reg2
     out << "    add" << X86InstructionHelper::postfixForSize(resSize) << "    "
@@ -137,10 +138,10 @@ SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryMinus::generateCode(
     SCCData* arg2Val = arg2->generateCode(out);
     auto reg2 = SCCRegisterManager::useAnyReg(out, arg2Val->size());
     arg2Val->loadTo(out, reg2.siRegCode());
-    delete arg2Val;
     //! Cast Size
     unsigned char resSize = arg1Val->size();
     if (arg2Val->size() > resSize) resSize = arg2Val->size();
+    delete arg2Val;
     reg2.castTo(out, resSize);
     //! Minus arg1Val reg2 -> reg2
     out << "    sub" << X86InstructionHelper::postfixForSize(resSize) << "    "
@@ -205,10 +206,10 @@ SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryMUL::generateCode(
         SCCData* arg2Val = arg2->generateCode(out);
         auto reg2 = SCCRegisterManager::useAnyReg(out, arg2Val->size());
         arg2Val->loadTo(out, reg2.siRegCode());
-        delete arg2Val;
         //! Cast Size
         unsigned char resSize = arg1Val->size();
         if (arg2Val->size() > resSize) resSize = arg2Val->size();
+        delete arg2Val;
         reg2.castTo(out, resSize);
         //! Multiply arg1Val reg2 -> reg2
         out << "    imul" << X86InstructionHelper::postfixForSize(resSize)
@@ -227,10 +228,10 @@ SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryEQ::generateCode(
     SCCData* arg2Val = arg2->generateCode(out);
     auto reg2 = SCCRegisterManager::useAnyReg(out, arg2Val->size());
     arg2Val->loadTo(out, reg2.siRegCode());
-    delete arg2Val;
     //! Cast Size
     unsigned char resSize = arg1Val->size();
     if (arg2Val->size() > resSize) resSize = arg2Val->size();
+    delete arg2Val;
     reg2.castTo(out, resSize);
     //! Compare arg1Val reg2 -> reg2
     out << "    cmp" << X86InstructionHelper::postfixForSize(resSize) << "    "
@@ -251,10 +252,10 @@ SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryGE::generateCode(
     SCCData* arg2Val = arg2->generateCode(out);
     auto reg2 = SCCRegisterManager::useAnyReg(out, arg2Val->size());
     arg2Val->loadTo(out, reg2.siRegCode());
-    delete arg2Val;
     //! Cast Size
     unsigned char resSize = arg1Val->size();
     if (arg2Val->size() > resSize) resSize = arg2Val->size();
+    delete arg2Val;
     reg2.castTo(out, resSize);
     //! Compare arg1Val reg2 -> reg2
     out << "    cmp" << X86InstructionHelper::postfixForSize(resSize) << "    "
@@ -274,10 +275,10 @@ SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryGT::generateCode(
     SCCData* arg2Val = arg2->generateCode(out);
     auto reg2 = SCCRegisterManager::useAnyReg(out, arg2Val->size());
     arg2Val->loadTo(out, reg2.siRegCode());
-    delete arg2Val;
     //! Cast Size
     unsigned char resSize = arg1Val->size();
     if (arg2Val->size() > resSize) resSize = arg2Val->size();
+    delete arg2Val;
     reg2.castTo(out, resSize);
     //! Compare arg1Val reg2 -> reg2
     out << "    cmp" << X86InstructionHelper::postfixForSize(resSize) << "    "
@@ -297,10 +298,10 @@ SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryLE::generateCode(
     SCCData* arg2Val = arg2->generateCode(out);
     auto reg2 = SCCRegisterManager::useAnyReg(out, arg2Val->size());
     arg2Val->loadTo(out, reg2.siRegCode());
-    delete arg2Val;
     //! Cast Size
     unsigned char resSize = arg1Val->size();
     if (arg2Val->size() > resSize) resSize = arg2Val->size();
+    delete arg2Val;
     reg2.castTo(out, resSize);
     //! Compare arg1Val reg2 -> reg2
     out << "    cmp" << X86InstructionHelper::postfixForSize(resSize) << "    "
@@ -320,10 +321,10 @@ SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryLT::generateCode(
     SCCData* arg2Val = arg2->generateCode(out);
     auto reg2 = SCCRegisterManager::useAnyReg(out, arg2Val->size());
     arg2Val->loadTo(out, reg2.siRegCode());
-    delete arg2Val;
     //! Cast Size
     unsigned char resSize = arg1Val->size();
     if (arg2Val->size() > resSize) resSize = arg2Val->size();
+    delete arg2Val;
     reg2.castTo(out, resSize);
     //! Compare arg1Val reg2 -> reg2
     out << "    cmp" << X86InstructionHelper::postfixForSize(resSize) << "    "
@@ -343,10 +344,10 @@ SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeBinaryNEQ::generateCode(
     SCCData* arg2Val = arg2->generateCode(out);
     auto reg2 = SCCRegisterManager::useAnyReg(out, arg2Val->size());
     arg2Val->loadTo(out, reg2.siRegCode());
-    delete arg2Val;
     //! Cast Size
     unsigned char resSize = arg1Val->size();
     if (arg2Val->size() > resSize) resSize = arg2Val->size();
+    delete arg2Val;
     reg2.castTo(out, resSize);
     //! Compare arg1Val reg2 -> reg2
     out << "    cmp" << X86InstructionHelper::postfixForSize(resSize) << "    "
