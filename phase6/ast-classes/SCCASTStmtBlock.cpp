@@ -24,9 +24,11 @@ bool SCCASTClasses::StmtBlock::performTypeChecking() const {
 }
 
 void SCCASTClasses::StmtBlock::generateStringLiterals(std::ostream& out) const {
-    // TODO
+    for (Statement* stmt : *innerStatements) stmt->generateStringLiterals(out);
 }
 
 void SCCASTClasses::StmtBlock::generateCode(std::ostream& out) const {
-    // TODO
+    for (Statement* stmt : *innerStatements) {
+        stmt->generateCode(out);
+    }
 }

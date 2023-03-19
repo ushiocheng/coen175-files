@@ -1,5 +1,8 @@
 #include "SCCASTAssign.hpp"
 
+#include "../code-generation-classes/data-classes/SCCData.hpp"
+#include "../code-generation-classes/instruction-helper/X86InstructionHelper.hpp"
+
 SCCASTClasses::Assignment::Assignment(ExprTreeClasses::ExprTreeNode* lhs,
                                       ExprTreeClasses::ExprTreeNode* rhs)
     : lhs(lhs), rhs(rhs) {}
@@ -28,5 +31,14 @@ bool SCCASTClasses::Assignment::performTypeChecking() const {
 }
 
 void SCCASTClasses::Assignment::generateCode(std::ostream& out) const {
-    // TODO
+    SCCData* lhsRes = lhs->generateCode(out, true);
+    SCCData* rhsRes = rhs->generateCode(out);
+    SCCX86Register tmp = SCCRegisterManager::useAnyReg(out, rhsRes->size());
+    rhsRes->loadTo(out, tmp.siRegCode());
+    if (rhsRes->size() != lhsRes->size()) {
+        tmp.castTo(out, lhsRes->size());
+    }
+    out << "    " << X86InstructionHelper::movForSize(lhsRes->size()) << "    "
+        << "%" << tmp.getName() << ", " << lhsRes->location()->generateAccess();
+    SCCRegisterManager::releaseReg(tmp);
 }

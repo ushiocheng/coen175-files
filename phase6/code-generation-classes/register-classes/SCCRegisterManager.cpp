@@ -196,7 +196,14 @@ void useReg(std::ostream& out, SCCX86Register reg) {
     rte->movable = false;
 }
 
-void releaseReg(std::ostream& out, SCCX86Register reg) {
+SCCX86Register useAnyReg(std::ostream& out, unsigned char size) {
+    getNextAvailableRegister(out);
+    auto res = SCCX86Register(nextAvailableReg->regCode, size);
+    useReg(out, res);
+    return res;
+}
+
+void releaseReg(SCCX86Register reg) {
     auto rte = findRegTableEntry(reg.siRegCode());
     assert(rte->regInUse);
     assert(!rte->preemptable);
@@ -218,15 +225,15 @@ void holdCallerSaves(std::ostream& out) {
 }
 
 void releaseCallerSaves(std::ostream& out) {
-    releaseReg(out, SCCX86Register(SCCX86Register::R11));
-    releaseReg(out, SCCX86Register(SCCX86Register::R10));
-    releaseReg(out, SCCX86Register(SCCX86Register::R9));
-    releaseReg(out, SCCX86Register(SCCX86Register::R8));
-    releaseReg(out, SCCX86Register(SCCX86Register::CX));
-    releaseReg(out, SCCX86Register(SCCX86Register::DX));
-    releaseReg(out, SCCX86Register(SCCX86Register::SI));
-    releaseReg(out, SCCX86Register(SCCX86Register::DI));
-    releaseReg(out, SCCX86Register(SCCX86Register::AX));
+    releaseReg(SCCX86Register(SCCX86Register::R11));
+    releaseReg(SCCX86Register(SCCX86Register::R10));
+    releaseReg(SCCX86Register(SCCX86Register::R9));
+    releaseReg(SCCX86Register(SCCX86Register::R8));
+    releaseReg(SCCX86Register(SCCX86Register::CX));
+    releaseReg(SCCX86Register(SCCX86Register::DX));
+    releaseReg(SCCX86Register(SCCX86Register::SI));
+    releaseReg(SCCX86Register(SCCX86Register::DI));
+    releaseReg(SCCX86Register(SCCX86Register::AX));
 }
 
 //! ========== Virtual Register Methods ==========

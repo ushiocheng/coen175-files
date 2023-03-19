@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "../GlobalConfig.hpp"
+#include "../code-generation-classes/data-classes/SCCDataStackVariable.hpp"
 #include "../exceptions/SCCError.hpp"
 #include "SCCType.hpp"
 
@@ -206,7 +207,8 @@ size_t SCCScope::maxSizeUtilization() const{
 void SCCScope::performStackAllocation(size_t stackBaseOffset) {
     for (SCCSymbol* sym : this->getStatics()) {
         stackBaseOffset+= sym->type().sizeOf();
-        sym->location = new SCCDataLocationStack(stackBaseOffset);
+        sym->data =
+            new SCCDataStackVariable(sym->type().sizeOf(), stackBaseOffset);
     }
     for (SCCScope* innerScope : this->_innerScopes) {
         // Intentional pass by value so nested stack var can be reclaimed.

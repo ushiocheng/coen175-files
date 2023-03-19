@@ -28,7 +28,7 @@ class ExprTreeNodeTermFuncCall : public ExprTreeTermNode {
 
     NodeType identify() const { return T_FUNC_CALL; }
     // Code generation Interfaces
-    void generateStringLiterals(std::ostream& out) const {}
+    void generateStringLiterals(std::ostream& out) const;
     SCCData* generateCode(std::ostream& out) const;
 
    private:
@@ -91,6 +91,7 @@ class ExprTreeNodeTermLiteralNumber : public ExprTreeTermNode {
 class ExprTreeNodeTermLiteralString : public ExprTreeTermNode {
    private:
     std::string _value;
+    std::string _label;
 
    public:
     ExprTreeNodeTermLiteralString(const std::string& value) : _value(value) {}

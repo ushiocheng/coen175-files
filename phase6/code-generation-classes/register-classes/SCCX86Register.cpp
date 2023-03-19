@@ -129,11 +129,18 @@ unsigned char SCCX86Register::getSize() {
 
 SCCX86Register::~SCCX86Register() {}
 
-SCCX86Register getRegForFPArgc() { return SCCX86Register(SCCX86Register::AX); }
-SCCX86Register getRegForArg0() { return SCCX86Register(SCCX86Register::DI); }
-SCCX86Register getRegForArg1() { return SCCX86Register(SCCX86Register::SI); }
-SCCX86Register getRegForArg2() { return SCCX86Register(SCCX86Register::DX); }
-SCCX86Register getRegForArg3() { return SCCX86Register(SCCX86Register::CX); }
-SCCX86Register getRegForArg4() { return SCCX86Register(SCCX86Register::R8); }
-SCCX86Register getRegForArg5() { return SCCX86Register(SCCX86Register::R9); }
-SCCX86Register getRegForRet() { return SCCX86Register(SCCX86Register::AX); }
+SCCX86Register::SizeIndependentRegCode getRegForFPArgc() {
+    return SCCX86Register::AX;
+}
+SCCX86Register::SizeIndependentRegCode getRegForArg(unsigned char i) {
+    if (i == 0) return SCCX86Register::DI;
+    if (i == 1) return SCCX86Register::SI;
+    if (i == 2) return SCCX86Register::DX;
+    if (i == 3) return SCCX86Register::CX;
+    if (i == 4) return SCCX86Register::R8;
+    if (i == 5) return SCCX86Register::R9;
+    assert(false);
+}
+SCCX86Register::SizeIndependentRegCode getRegForRet() {
+    return SCCX86Register::AX;
+}

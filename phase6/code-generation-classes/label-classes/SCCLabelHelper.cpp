@@ -22,4 +22,15 @@ std::string generateNewLabel(std::ostream& out, const char* postfix) {
     out << tmp << ":" << std::endl;
     return tmp;
 }
+
+std::string reserveNewLabel(const char* postfix = "") {
+    labeluid++;
+    std::stringstream ss;
+    ss << ".L" << labeluid << "." << postfix;
+    return ss.str();
+}
+
+void generateReservedLabel(std::ostream& out, std::string label) {
+    out << label << ":" << std::endl;
+}
 }  // namespace SCCLabelHelper

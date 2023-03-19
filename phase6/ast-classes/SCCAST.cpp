@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "../code-generation-classes/data-classes/SCCDataStaticVariable.hpp"
 #include "../semantic-classes/SCCScope.hpp"
 #include "SCCASTFunction.hpp"
 
@@ -33,7 +34,8 @@ void SCCAST::generateCode(std::ostream& out) const {
         //! Declare global variables
         out << ".comm   " << statics->id() << ", " << statics->type().sizeOf()
             << endl;
-        statics->location = new SCCDataLocationStatic(statics->id());
+        statics->data =
+            new SCCDataStaticVariable(statics->type().sizeOf(), statics->id());
     }
     out << endl;
     //! Generate String Literals

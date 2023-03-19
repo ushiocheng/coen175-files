@@ -100,13 +100,8 @@ class SCCX86Register {
     ~SCCX86Register();
 };
 
-SCCX86Register getRegForFPArgc();
-SCCX86Register getRegForArg0();
-SCCX86Register getRegForArg1();
-SCCX86Register getRegForArg2();
-SCCX86Register getRegForArg3();
-SCCX86Register getRegForArg4();
-SCCX86Register getRegForArg5();
-SCCX86Register getRegForRet();
+SCCX86Register::SizeIndependentRegCode getRegForFPArgc();
+SCCX86Register::SizeIndependentRegCode getRegForArg(unsigned char i);
+SCCX86Register::SizeIndependentRegCode getRegForRet();
 
 #endif  // SCC_X86_REGISTER_HPP

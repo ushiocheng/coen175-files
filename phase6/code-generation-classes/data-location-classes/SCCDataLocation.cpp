@@ -8,6 +8,9 @@
 
 SCCDataLocationStatic::SCCDataLocationStatic(std::string name) : _name(name) {}
 SCCDataLocationStack::SCCDataLocationStack(size_t offset) : _offset(offset) {}
+SCCDataLocationStackPositiveOffset::SCCDataLocationStackPositiveOffset(
+    size_t offset)
+    : _offset(offset) {}
 SCCDataLocationRegister::SCCDataLocationRegister(SCCX86Register reg)
     : _register(reg) {}
 
@@ -26,10 +29,14 @@ SCCDataLocation* SCCDataLocationRegister::copy() {
 
 bool SCCDataLocationStatic::requireMemoryAccess() { return true; };
 bool SCCDataLocationStack::requireMemoryAccess() { return true; };
+bool SCCDataLocationStackPositiveOffset::requireMemoryAccess() { return true; };
 bool SCCDataLocationRegister::requireMemoryAccess() { return false; };
 
 SCCDataLocation::LocationType SCCDataLocationStatic::ident() { return Static; }
 SCCDataLocation::LocationType SCCDataLocationStack::ident() { return Stack; }
+SCCDataLocation::LocationType SCCDataLocationStackPositiveOffset::ident() {
+    return Stack;
+}
 SCCDataLocation::LocationType SCCDataLocationRegister::ident() {
     return Register;
 }
@@ -57,6 +64,11 @@ std::string SCCDataLocationStatic::toString() {
     return ss.str();
 }
 std::string SCCDataLocationStack::toString() {
+    std::stringstream ss;
+    ss << "SCCDataLocationStack " << this->generateAccess();
+    return ss.str();
+}
+std::string SCCDataLocationStackPositiveOffset::toString() {
     std::stringstream ss;
     ss << "SCCDataLocationStack " << this->generateAccess();
     return ss.str();

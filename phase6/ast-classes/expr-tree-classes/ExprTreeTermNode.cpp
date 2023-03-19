@@ -1,7 +1,10 @@
 #include "ExprTreeTermNode.hpp"
 
+#include <string>
 #include <vector>
 
+#include "../../code-generation-classes/data-classes/SCCDataStringLiteral.hpp"
+#include "../../code-generation-classes/label-classes/SCCStringLiteralHelper.hpp"
 #include "../../exceptions/SCCError.hpp"
 #include "../../semantic-classes/SCCSymbol.hpp"
 #include "../SCCASTExpression.hpp"
@@ -26,7 +29,7 @@ SCCASTClasses::ExprTreeClasses::ExprTreeNodeTermLiteralNumber::generateCode(
 SCCData*
 SCCASTClasses::ExprTreeClasses::ExprTreeNodeTermLiteralString::generateCode(
     std::ostream& out) const {
-    // TODO
+    return new SCCDataStringLiteral(8, _label);
 }
 
 SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeTermVariable::generateCode(
@@ -39,9 +42,17 @@ SCCData* SCCASTClasses::ExprTreeClasses::ExprTreeNodeTermVariable::generateCode(
     // TODO
 }
 
+void SCCASTClasses::ExprTreeClasses::ExprTreeNodeTermFuncCall::
+    generateStringLiterals(std::ostream& out) const {
+    for (SCCASTClasses::Expression* param : *paramList) {
+        param->generateStringLiterals(out);
+    }
+}
+
 void SCCASTClasses::ExprTreeClasses::ExprTreeNodeTermLiteralString::
     generateStringLiterals(std::ostream& out) const {
-    // TODO
+    const_cast<ExprTreeNodeTermLiteralString*>(this)->_label =
+        SCCStringLiteralHelper::generateStringLiteral(out, this->_value);
 }
 
 SCCASTClasses::ExprTreeClasses::ExprTreeNodeTermFuncCall::
