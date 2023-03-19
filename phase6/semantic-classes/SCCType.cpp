@@ -7,16 +7,17 @@
 #include "../GlobalConfig.hpp"
 
 #ifdef DEBUG
-#define DEBUG_ADDITIONAL_WARNING
-#define DEBUG_PRINT_FUNC_TRACE_FLG
-#define PRINT_IF_DEBUG(sth) std::cout << sth << std::endl;
+// #define DEBUG_ADDITIONAL_WARNING
+// #define DEBUG_PRINT_FUNC_TRACE_FLG
+// #define DEBUG_PRINT_COMPARISON_FLG
+#define PRINT_IF_DEBUG(sth) std::cerr << sth << std::endl;
 #else
 #define PRINT_IF_DEBUG(sth) /* debug print: sth */
 #endif
 
 #ifdef DEBUG_PRINT_FUNC_TRACE_FLG
 #define PRINT_FUNC_IF_ENABLED                                              \
-    std::cout << "[DEBUG] Running " << __func__ << " on line " << __LINE__ \
+    std::cerr << "[DEBUG] Running " << __func__ << " on line " << __LINE__ \
               << std::endl
 #else
 #define PRINT_FUNC_IF_ENABLED ;
@@ -110,8 +111,8 @@ bool SCCType::isDereferencablePtr() const {
 
 bool SCCType::isCompatible(const SCCType &that) const {
     PRINT_FUNC_IF_ENABLED;
-#ifdef DEBUG
-    std::cout << "[DEBUG] Comparing: " << *this << " to " << that << std::endl;
+#ifdef DEBUG_PRINT_COMPARISON_FLG
+    std::cerr << "[DEBUG] Comparing: " << *this << " to " << that << std::endl;
 #endif
     // Is Compatible are not responsible for checking error
     // if (this->declaratorType() == ERROR) return true;
@@ -147,7 +148,7 @@ void SCCType::promoteFunc() {
     PRINT_FUNC_IF_ENABLED;
     if (this->isFunc()) {
         this->_declaratorType = SCALAR;
-        this->_parameters = nullptr;
+        this->_parameters = NULL;
         // Function return result cannot be an LValue
         this->_isLValue = false;
     }
@@ -156,7 +157,30 @@ void SCCType::promoteFunc() {
 size_t SCCType::sizeOf() const {
     if (this->_declaratorType == ERROR) return SIZEOF_ERROR;
     if (this->_declaratorType == FUNCTION) return SIZEOF_ERROR;
-    if (this->_declaratorType == ARRAY) return ARCH_PTR_SIZE;
+    if (this->_declaratorType == ARRAY) {
+        switch (this->_specifier) {
+            case INT:
+#ifdef SIZEOF_INT
+                return SIZEOF_INT * this->_arrLength;
+#else
+                return ARCH_PTR_SIZE * this->_arrLength;
+#endif
+            case LONG:
+#ifdef SIZEOF_LONG
+                return SIZEOF_LONG * this->_arrLength;
+#else
+                return ARCH_PTR_SIZE * this->_arrLength;
+#endif
+            case CHAR:
+#ifdef SIZEOF_CHAR
+                return SIZEOF_CHAR * this->_arrLength;
+#else
+                return ARCH_PTR_SIZE * this->_arrLength;
+#endif
+            default:
+                return SIZEOF_ERROR;
+        }
+    }
     if (this->_indirection > 0) return ARCH_PTR_SIZE;
     // Otherwise this can be one of 3 thing, int, long, char
     switch (this->_specifier) {
@@ -260,11 +284,11 @@ void SCCType::printTo(std::ostream &out, const std::string &base) const {
     out << base << "}" << std::endl;
 }
 
-void SCCType::_clearParams() { this->_parameters = nullptr; }
+void SCCType::_clearParams() { this->_parameters = NULL; }
 
 SCCType::~SCCType() {
     PRINT_FUNC_IF_ENABLED;
-    _parameters = nullptr;
+    _parameters = NULL;
     //! Intentionally choose not to delete _parameters
     //! Since SCCType are passed by value.
     //! Deletion is handled by `SCCScope` when main scope exits

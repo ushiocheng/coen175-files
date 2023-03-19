@@ -1,7 +1,6 @@
 #if !defined(SCC_SCOPE_HPP)
 #define SCC_SCOPE_HPP
 
-#include <cassert>
 #include <string>
 #include <vector>
 
@@ -11,7 +10,7 @@
 
 class SCCScope {
    private:
-    std::vector<SCCSymbol> _symbols;
+    std::vector<SCCSymbol*> _symbols;
     SCCSymbol* _enclosingFunc;
     SCCScope* _outerScope;
     std::vector<SCCScope*> _innerScopes;
@@ -23,7 +22,7 @@ class SCCScope {
      * Constructor
      * @remark should only be used to make global scope
      */
-    SCCScope(SCCScope* outerScope = nullptr);
+    SCCScope(SCCScope* outerScope = NULL);
     /**
      * Create a inner
      */
@@ -51,6 +50,22 @@ class SCCScope {
      * @return symbol with type error if symbol not found
      */
     const SCCSymbol* lookupSymbol(const std::string& id) const;
+    /**
+     * This will not return function params
+     */
+    std::vector<SCCSymbol*> getStatics();
+    /**
+     * Grab function params
+     * @remark this is based on the fact that func params are the first argc
+     * symbols
+     */
+    std::vector<SCCSymbol*> getFunctionParams();
+    std::vector<const SCCSymbol*> getStatics() const;
+    std::vector<const SCCSymbol*> getFunctionParams() const;
+
+    size_t maxSizeUtilization() const;
+    void performStackAllocation(size_t stackBaseOffset = 0);
+
     // Dump content for debug purpose
     void _dump() const;
     ~SCCScope();
